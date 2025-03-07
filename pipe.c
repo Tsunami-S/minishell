@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 12:33:10 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:16:51 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ pid_t	*init_pids(char **cmds, int sizeof_pipe, int **pipefd)
 	{
 		perror("malloc error");
 		free_pipefd(pipefd, sizeof_pipe);
-		// while (n < sizeof_pipe + 1)
-		// 	free(arg.path[n++]);
-		// free(arg.path);
 		exit(1);
 	}
 	return (pids);

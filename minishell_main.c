@@ -6,28 +6,11 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 14:54:20 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 20:13:09 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	count_pipe(char **cmds)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (cmds[i] != NULL)
-	{
-		if (!ft_strcmp(cmds[i], "|")
-			|| !ft_strcmp(cmds[i], "||") || !ft_strcmp(cmds[i], "&&"))
-			count++;
-		i++;
-	}
-	return (count);
-}
 
 int	continue_line(char *input, char **envp)
 {
@@ -41,13 +24,19 @@ int	continue_line(char *input, char **envp)
 	cmds = ft_split_sep(input, sep, (int)ft_strlen(input));
 	if (!cmds)
 		error_process();
-	sizeof_pipe = count_pipe(cmds);
+	sizeof_pipe = count_sep(input, sep, ft_strlen(input), 0);
 
+	int i = 0;
+	while (cmds[i])
+	{
+		printf("%s\n", cmds[i]);
+		i++;
+	}
 	// pids = make_pipe(cmds, sizeof_pipe, envp);
 
 	(void)envp;
 
-	int i = 0;
+	i = 0;
 	while (cmds[i])
 		free(cmds[i++]);
 	free(cmds);

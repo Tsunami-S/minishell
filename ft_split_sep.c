@@ -6,80 +6,84 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:00:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 15:57:19 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 19:51:51 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int	wordlen(const char *str, char **sep)
-// {
-// 	int	count;
-// 	int	length;
+int	is_sep(const char *str, int i, char **sep)
+{
+	int	n;
 
-// 	count = 0;
-// 	length = ft_strlen(str);
-// 	while (str[count])
-// 	{
-// 		while (i <= length && sep[++n])
-// 		{
-// 			if (i <= length - (int)ft_strlen(sep[n])
-// 				&& ft_strncmp(str + i, sep[n], (int)ft_strlen(sep[n])) == 0)
-// 			{
-// 				count++;
-// 				i += (int)ft_strlen(sep[n]);
-// 				break ;
-// 			}
-// 		}
-// 	}
-// 	return (count);
-// }
+	n = 0;
+	while (sep[n])
+	{
+		if (ft_strncmp(&str[i], sep[n], ft_strlen(sep[n])) == 0)
+			return (ft_strlen(sep[n]));
+		n++;
+	}
+	return (0);
+}
+
+int	wordlen(const char *str, char **sep)
+{
+	int	length;
+	int	i;
+	int	sep_len;
+
+	i = 0;
+	sep_len = 0;
+	length = ft_strlen(str);
+	while (i < length && str[i] == ' ')
+		i++;
+	while (i < length)
+	{
+		sep_len = is_sep(str, i, sep);
+		if (sep_len > 0)
+		{
+			i += sep_len;
+			break ;
+		}
+		i++;
+	}
+	return (i);
+}
 
 int	count_sep(const char *str, char **sep, int length, int count)
 {
 	int	i;
-	int	n;
+	int	sep_len;
 
 	i = 0;
-	while (str[i])
+	while (i < length)
 	{
-		n = -1;
 		while (i < length && str[i] == ' ')
 			i++;
-		while (i <= length && sep[++n])
+		sep_len = is_sep(str, i, sep);
+		if (sep_len > 0)
 		{
-			if (i <= length - (int)ft_strlen(sep[n])
-				&& ft_strncmp(str + i, sep[n], (int)ft_strlen(sep[n])) == 0)
-			{
-				count++;
-				i += (int)ft_strlen(sep[n]);
-				break ;
-			}
+			count++;
+			i += sep_len;
 		}
-		while (i < length && str[i] != ' ' && str[i] != '|'
-			&& (i <= length - (int)ft_strlen(sep[n])
-				&& ft_strncmp(str + i, sep[1], (int)ft_strlen(sep[1])) != 0))
+		else
 			i++;
 	}
 	return (count);
 }
 
-char	*put_word(const char *str, const char **sep, int *length_word)
+char	*put_word(const char *str, char **sep, int *length_word)
 {
-	int		i;
 	char	*word;
 
-	i = 0;
 	*length_word = wordlen(str, sep);
-	// word = (char *)malloc((*length_word + 1) * sizeof(char));
-	// if (word == 0)
-	// 	return (0);
-	// while (i < *length_word)
-	// {
-	// 	word[i] = str[i];
-	// 	i++;
-	// }
-	// word[i] = '\0';
+	printf("%d\n", *length_word);
+
+	word = (char *)malloc((*length_word + 1) * sizeof(char));
+	if (word == 0)
+		return (NULL);
+	ft_strncpy(word, str, *length_word);
+	word[*length_word] = '\0';
 	return (word);
 }
 
@@ -94,12 +98,11 @@ char	*put_word(const char *str, const char **sep, int *length_word)
 char	**ft_split_sep(const char *str, char **sep, int length)
 {
 	printf("pipes: %d\n", count_sep(str, sep, length, 0));
-	char	**ret;
-	int		n;
 	int		i;
 	int		count;
 	int		count_of_sep;
 	int		length_word;
+	char	**ret;
 
 	count_of_sep = count_sep(str, sep, length, 0);
 	ret = (char **)malloc((count_of_sep + 2) * sizeof(char *));
@@ -107,25 +110,13 @@ char	**ft_split_sep(const char *str, char **sep, int length)
 		return (NULL);
 	i = 0;
 	count = 0;
-	ret[count++] = put_word(str, sep, &length_word);
 	while (str[i] && count < count_of_sep + 1)
 	{
-		n = -1;
 		while (i < length && str[i] == ' ')
 			i++;
-		while (i <= length && sep[++n])
-		{
-			if (i <= length - (int)ft_strlen(sep[n])
-				&& ft_strncmp(str + i, sep[n], (int)ft_strlen(sep[n])) == 0)
-			{
-				ret[count++] = put_word(str + i, sep, &length_word);
-				i += length_word;
-				break ;
-			}
-		}
-		while (i < length && str[i] != ' ' && str[i] != '|'
-			&& (i <= length - (int)ft_strlen(sep[n])
-				&& ft_strncmp(str + i, sep[1], (int)ft_strlen(sep[1])) != 0))
+		ret[count++] = put_word(str + i, sep, &length_word);
+		i += length_word;
+		while (i < length && str[i] != ' ')
 			i++;
 	}
 	ret[count] = NULL;

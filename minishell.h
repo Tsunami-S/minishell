@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 14:55:41 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 20:06:12 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,11 @@ size_t	ft_strlen(const char *s);
 int		ft_strlen_sep(const char *str, const char c);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strncmp(const char *s1, const char *s2, int n);
+size_t	ft_strncpy(char *dest, const char *src, size_t size);
 char	*ft_strdup(const char *s);
 char	**ft_split(const char *str, char c);
 char	**ft_split_sep(const char *str, char **sep, int length);
 int		count_words(const char *str, char c);
-
+int	count_sep(const char *str, char **sep, int length, int count);
 
 #endif

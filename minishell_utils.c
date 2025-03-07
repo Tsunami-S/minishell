@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 12:35:47 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 19:58:29 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,21 @@ char	*ft_strdup(const char *s)
 	}
 	dest[i] = '\0';
 	return (dest);
+}
+
+size_t	ft_strncpy(char *dest, const char *src, size_t size)
+{
+	size_t	sizeof_src;
+	size_t	i;
+
+	i = 0;
+	sizeof_src = ft_strlen(src);
+	while (i < size && src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < size)
+		dest[i++] = '\0';
+	return (sizeof_src);
 }
