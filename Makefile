@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/07 09:55:43 by haito            ###   ########.fr        #
+#    Updated: 2025/03/07 13:24:08 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,12 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 SRCS =	minishell_main.c \
+		minishell_init.c \
 		minishell_error.c \
 		minishell_utils.c \
 		pipe.c \
-		ft_split.c
+		ft_split.c \
+		ft_split_sep.c
 OBJS = $(SRCS:.c=.o)
 INC = -I .
 

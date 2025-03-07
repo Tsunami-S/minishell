@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 00:01:31 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 12:35:47 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,24 @@ int	ft_strncmp(const char *s1, const char *s2, int n)
 	if (count == n)
 		return (0);
 	return ((unsigned char)s1[count] - (unsigned char)s2[count]);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dest;
+	int		i;
+	int		srclen;
+
+	i = 0;
+	srclen = ft_strlen(s);
+	dest = (char *)malloc(sizeof(char) * (srclen + 1));
+	if (dest == NULL)
+		return (NULL);
+	while (s[i] != '\0')
+	{
+		dest[i] = s[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }

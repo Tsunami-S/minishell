@@ -6,32 +6,33 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 09:57:09 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 12:33:10 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// pid_t	*init_pids(char **cmds, int sizeof_pipe, int **pipefd)
-// {
-// 	pid_t	*pids;
-// 	int		n;
+pid_t	*init_pids(char **cmds, int sizeof_pipe, int **pipefd)
+{
+	pid_t	*pids;
+	int		n;
 
-// 	pids = malloc(arg.size_cmd * sizeof(pid_t));
-// 	n = 0;
-// 	if (!pids)
-// 	{
-// 		perror("malloc error");
-// 		free_pipefd(pipefd, arg.size_cmd - 1);
-// 		if (ft_strcmp(arg.infile_name, "here_doc") == 0)
-// 			unlink("here_doc");
-// 		while (n < arg.size_cmd)
-// 			free(arg.path[n++]);
-// 		free(arg.path);
-// 		exit(1);
-// 	}
-// 	return (pids);
-// }
+	(void)cmds;
+
+
+	pids = malloc((sizeof_pipe + 1) * sizeof(pid_t));
+	n = 0;
+	if (!pids)
+	{
+		perror("malloc error");
+		free_pipefd(pipefd, sizeof_pipe);
+		// while (n < sizeof_pipe + 1)
+		// 	free(arg.path[n++]);
+		// free(arg.path);
+		exit(1);
+	}
+	return (pids);
+}
 
 void	free_pipefd(int **pipefd, int i)
 {
@@ -70,24 +71,23 @@ int	**init_pipefd(char **cmds, int sizeof_pipe)
 	return (pipefd);
 }
 
-pid_t	make_pipe(char **cmds, int sizeof_pipe, char **envp)
+pid_t	*make_pipe(char **cmds, int sizeof_pipe, char **envp)
 {
 	int		**pipefd;
-	pid_t	pid;
+	pid_t	*pids;
 	int		i;
 	int		status;
 
 
 (void)envp;
 
-
-
 	i = -1;
 	pipefd = init_pipefd(cmds, sizeof_pipe);
+	pids = init_pids(cmds, sizeof_pipe, pipefd);
 	while (++i <= sizeof_pipe)
 	{
-		pid = fork();
-		if (pid == -1)
+		pids[i] = fork();
+		if (pids[i] == -1)
 			error_process();
 		// if (pid == 0)
 		// 	continue_child(pipefd, cmds, i, envp);
@@ -109,5 +109,5 @@ pid_t	make_pipe(char **cmds, int sizeof_pipe, char **envp)
 		cmds++;
 	}
 	free_pipefd(pipefd, sizeof_pipe);
-	return (pid);
+	return (pids);
 }

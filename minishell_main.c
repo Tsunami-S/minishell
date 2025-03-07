@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 09:55:21 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/07 14:54:20 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,26 @@ int	continue_line(char *input, char **envp)
 	char	**cmds;
 	int		exit_status;
 	int		sizeof_pipe;
-	int		last_pid;
+	char	**sep;
+	// pid_t	*pids;
 
-	cmds = ft_split(input, ' ');
+	sep = init_sep();
+	cmds = ft_split_sep(input, sep, (int)ft_strlen(input));
 	if (!cmds)
 		error_process();
 	sizeof_pipe = count_pipe(cmds);
 
-	last_pid = make_pipe(cmds, sizeof_pipe, envp);
+	// pids = make_pipe(cmds, sizeof_pipe, envp);
 
-	int	i = 0;
+	(void)envp;
+
+	int i = 0;
 	while (cmds[i])
 		free(cmds[i++]);
 	free(cmds);
 
 	exit_status = 0;
-	// exit_status = wait_child(sizeof_pipe, last_pid);
+	// exit_status = wait_child(sizeof_pipe, pids);
 	exit(exit_status);
 }
 
@@ -84,7 +88,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		if (*input)
 			add_history(input);
-		// process_line(input, &status.last_exit_status, envp);
+		process_line(input, &status.last_exit_status, envp);
 		free(input);
 		input = NULL;
 	}
