@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/13 19:03:34 by haito            ###   ########.fr        #
+#    Updated: 2025/03/13 23:56:31 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,16 @@ SRCS =	minishell_main.c \
 		handle_node.c \
 		trim_space.c \
 		pipe.c \
-		ft_split.c
+		ft_split.c \
+		export_utils.c \
+		init_envlist.c \
+		replace_envp.c \
+		replace_envp_utils.c \
+		replace_envp_utils2.c \
+		tokenizer.c \
+		tunamis_expand.c
+
+		
 OBJS = $(SRCS:.c=.o)
 INC = -I .
 

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/13 18:54:01 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/13 23:47:34 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,21 @@ int	ft_isspace(char c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3);
 char	*ft_strndup(const char *s, int n);
-void	continue_child(char *str, char **envp);
-void	make_fullpath(char *cmd, char **envp, char **fullpath);
+
+char	*tunamis_expand(char *str, char **envp);
+
 t_tokens	*tokenizer(char *str);
+t_var	*init_envp(char **envp);
+void	free_var(t_var *var);
+t_var	*get_var(t_var **varlist, char *name);
+void	add_var(t_var **varlist, char *var_name, char *var_value);
+t_var	**remove_var(t_var **varlist, char *name);
+void	replace_envvar(t_tokens **tokens, t_var **varlist);
+char *count_plaintext_size(char *str);
+int	count_words_and_vars(char *str);
+char	**split_to_words_and_vars(char *token, int malloc_size, t_var **varlist);
+
+
+void	continue_child(char *str, char **envp);
 
 #endif

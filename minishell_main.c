@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/*************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell_main.c                                   :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/13 20:14:14 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/13 23:58:32 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	
 // }
 
-void	expand_cmds(t_status **st_head)
+void	expand_cmds(t_status **st_head, char **envp)
 {
 	t_status	*st;
 	char		*expanded_cmds;
@@ -27,7 +27,7 @@ void	expand_cmds(t_status **st_head)
 	st = *st_head;
 	while (st)
 	{
-		expanded_cmds = tunamis_expand(st->cmds);
+		expanded_cmds = tunamis_expand(st->cmds, envp);
 		if (!expanded_cmds)
 			error_process();
 		free(st->cmds);
@@ -75,7 +75,7 @@ int	continue_line(char *input, char **envp)
 		return (1);
 	state = sep_input_to_cmds(input, &brackets);
 	make_pipe(&state);
-	expand_cmds(&state);
+	expand_cmds(&state, envp);
 	check_built_in(&state, state);
 	while (state != NULL)
 	{
