@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/13 19:52:48 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/13 20:14:14 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	expand_cmds(t_status **st_head)
 		if (!expanded_cmds)
 			error_process();
 		free(st->cmds);
-		st->cmds = expand_cmds;
+		st->cmds = expanded_cmds;
 		st = st->next;
 	}
 }
