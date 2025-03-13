@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/10 00:07:43 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/13 18:54:01 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,48 @@ typedef struct s_var
 }	t_var;
 
 
+// typedef struct s_status
+// {
+// 	int		last_exit_status;
+// 	char	*location;
+// }	t_status;
+
+// added_by_haito
 typedef struct s_status
 {
-	int		last_exit_status;
-	char	*location;
+	struct s_status	*previous;
+	char			*cmds;
+	pid_t			pid;
+	pid_t			input_pipefd;
+	pid_t			output_pipefd;
+	int				has_brackets;
+	int				has_or;
+	int				has_and;
+	int				is_builtin;
+	struct s_status	*next;
 }	t_status;
 
-char	**init_sep(void);
-pid_t	*make_pipe(char **cmds, int sizeof_pipe, char **envp);
+# define MAX_STACK_BRACKETS 500
 
+typedef struct s_brackets
+{
+	int	top;
+	int	data[MAX_STACK_BRACKETS + 1];
+	int	pair[MAX_STACK_BRACKETS + 1][2];
+	int	countof_pair;
+	int	location;
+}	t_brackets;
+
+typedef struct s_parser
+{
+	int		i;
+	char	*cmds;
+}	t_parser;
+
+char	**init_builtin_cmds(void);
 void	error_process();
-void	free_pipefd(int **pipefd, int i);
+void	free_brackets();
+void	free_builtin_cmds(char **builtin_cmds);
 
 size_t	ft_strlen(const char *s);
 int		ft_strlen_sep(const char *str, const char c);
@@ -73,7 +104,21 @@ char	*ft_strdup(const char *s);
 char	**ft_split(const char *str, char c);
 char	**ft_split_sep(const char *str, char **sep, int length);
 int		count_words(const char *str, char c);
-int	count_sep(const char *str, char **sep, int length, int count);
+int		count_sep(const char *str, char **sep, int length, int count);
+
+int	find_brackets_pair(const char *input, t_brackets *b);
+int	get_brackets_pair(int i, t_brackets *brackets);
+t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets);
+t_status	*ft_new_node(const char *cmds, int has_brackets);
+void	ft_add_back_node(t_status **head, t_status *new_node);
+void	ft_remove_node(t_status **head, t_status *node);
+void	add_command_node(char **cmds, t_status **st_head);
+int	add_operator_node(const char *op, char **cmds, t_status **st_head, int i);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
+char	*add_char(char *cmds, char c);
+void	ft_strcpy(char *new_str, char *str);
+char *trim_spaces(const char *str, size_t i, size_t j);
+void	make_pipe(t_status **st_head);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);

@@ -6,66 +6,104 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/07 20:13:09 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/13 19:52:48 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	continue_line(char *input, char **envp)
+// void	fork_and_wait(t_status)
+// {
+	
+// }
+
+void	expand_cmds(t_status **st_head)
 {
-	char	**cmds;
-	int		exit_status;
-	int		sizeof_pipe;
-	char	**sep;
-	// pid_t	*pids;
+	t_status	*st;
+	char		*expanded_cmds;
 
-	sep = init_sep();
-	cmds = ft_split_sep(input, sep, (int)ft_strlen(input));
-	if (!cmds)
-		error_process();
-	sizeof_pipe = count_sep(input, sep, ft_strlen(input), 0);
-
-	int i = 0;
-	while (cmds[i])
+	if (!st_head || !*st_head)
+		return ;
+	st = *st_head;
+	while (st)
 	{
-		printf("%s\n", cmds[i]);
-		i++;
+		expanded_cmds = tunamis_expand(st->cmds);
+		if (!expanded_cmds)
+			error_process();
+		free(st->cmds);
+		st->cmds = expand_cmds;
+		st = st->next;
 	}
-	// pids = make_pipe(cmds, sizeof_pipe, envp);
-
-	(void)envp;
-
-	i = 0;
-	while (cmds[i])
-		free(cmds[i++]);
-	free(cmds);
-
-	exit_status = 0;
-	// exit_status = wait_child(sizeof_pipe, pids);
-	exit(exit_status);
 }
 
-void	process_line(char *input, int *exit_status, char **envp)
+void	check_built_in(t_status **st_head, t_status *st)
 {
-	pid_t	pid;
-	int		status;
+	char		**builtin_cmds;
+	int			i;
+	int			len;
 
-	pid = fork();
-	if (pid == -1)
-		error_process();
-	if (pid == 0)
-		continue_line(input, envp);
-	waitpid(pid, &status, 0);
-	*exit_status = WEXITSTATUS(status);
+	if (!st_head || !*st_head || !st)
+		return ;
+	builtin_cmds = init_builtin_cmds();
+	while (st)
+	{
+		i = -1;
+		while (builtin_cmds[++i])
+		{
+			len = ft_strlen(builtin_cmds[i]);
+			if (ft_strlen(st->cmds) >= (size_t)len && !ft_strncmp(st->cmds,
+					builtin_cmds[i], len) && (st->cmds[len] == '\0'
+					|| st->cmds[len] == ' '))
+			{
+				st->is_builtin = 1;
+				break ;
+			}
+		}
+		st = st->next;
+	}
+	free_builtin_cmds(builtin_cmds);
+}
+
+int	continue_line(char *input, char **envp)
+{
+	t_status	*state;
+	t_brackets	brackets;
+
+
+	(void)envp;
+	if (find_brackets_pair(input, &brackets) == -1)
+		return (1);
+	state = sep_input_to_cmds(input, &brackets);
+	make_pipe(&state);
+	expand_cmds(&state);
+	check_built_in(&state, state);
+	while (state != NULL)
+	{
+		printf("cmd:%s in:%d out:%d ():%d or:%d and:%d built:%d\n", state->cmds, state->input_pipefd, state->output_pipefd, state->has_brackets, state->has_or, state->has_and, state->is_builtin);
+		state = state->next;
+	}
+	// fork_and_wait();
+	return (0);
+}
+
+void	process_line(char *input, char **envp)
+{
+	// pid_t	pid;
+	// int		status;
+
+	// pid = fork();
+	// if (pid == -1)
+	// 	error_process();
+	// if (pid == 0)
+	continue_line(input, envp);
+	// waitpid(pid, &status, 0);
+	// *exit_status = WEXITSTATUS(status);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
-	t_status	status;
 
-	status.last_exit_status = 0;
 	if (argc != 1)
 		return (1);
 	(void)argv;
@@ -77,7 +115,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		if (*input)
 			add_history(input);
-		process_line(input, &status.last_exit_status, envp);
+		process_line(input, envp);
 		free(input);
 		input = NULL;
 	}

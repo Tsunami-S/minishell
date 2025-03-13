@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/07 13:24:08 by haito            ###   ########.fr        #
+#    Updated: 2025/03/13 19:03:34 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,17 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 SRCS =	minishell_main.c \
 		minishell_init.c \
+		minishell_free.c \
 		minishell_error.c \
 		minishell_utils.c \
+		minishell_utils2.c \
+		minishell_utils3.c \
+		find_brackets_pair.c \
+		sep_input_to_cmds.c \
+		handle_node.c \
+		trim_space.c \
 		pipe.c \
-		ft_split.c \
-		ft_split_sep.c
+		ft_split.c
 OBJS = $(SRCS:.c=.o)
 INC = -I .
 
