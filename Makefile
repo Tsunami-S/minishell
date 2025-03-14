@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/14 17:01:59 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/14 19:47:58 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,8 @@ SRCS =	minishell_main.c \
 		export_utils.c \
 		init_varlist.c \
 		replace_vars.c \
-		replace_envp_utils.c \
-		replace_envp_utils2.c \
+		replace_vars_count.c \
+		replace_vars_split.c \
 		tokenizer.c \
 		expander.c
 
