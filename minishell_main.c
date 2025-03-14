@@ -12,93 +12,6 @@
 
 #include "minishell.h"
 
-int	call_builtin(void)
-{
-	printf("builtin\n");
-	return (0);
-}
-
-void	continue_child(void)
-{
-	char **cmd;
-
-	cmd = malloc(sizeof(char *) * 2);
-	cmd[0] = malloc(3);
-	cmd[0][0] = 'l';
-	cmd[0][1] = 's';
-	cmd[0][2] = '\0';
-	cmd[1] = NULL;
-	execve("/usr/bin/ls", cmd, NULL);
-	exit(1);
-}
-
-void	fork_and_wait(t_status **st_head, t_var **varlist)
-{
-	t_status	*st;
-	t_status	*st_previous;
-	pid_t		last_pid;
-	int			result;
-	int			count_forked;
-	int			status;
-	int			exit_code;
-
-	st = *st_head;
-	count_forked = 0;
-	last_pid = -1;
-	while (st)
-	{
-		if (st->is_builtin && (!st->next || st->next->has_and
-				|| st->next->has_or))
-		{
-			result = call_builtin();
-			if ((st->next && st->next->has_and && result != 0)
-				|| (st->next && st->next->has_or && result == 0))
-				break ;
-		}
-		else
-		{
-			st->pid = fork();
-			if (st->pid == -1)
-				error_process();
-			count_forked++;
-			if (st->pid == 0)
-			{
-				if (st->input_pipefd != -1)
-					dup2(st->input_pipefd, STDIN_FILENO);
-				if (st->output_pipefd != -1)
-					dup2(st->output_pipefd, STDOUT_FILENO);
-				if (st->has_brackets)
-				{
-					if (continue_line(st->cmds, varlist) == -1)
-						error_process();
-					exit(0);
-				}
-				//countinue_child(st->token, varlist);
-				continue_child();
-			}
-			if (st->next && st->next->has_and)
-			{
-				waitpid(st->pid, &status, 0);
-				if (WEXITSTATUS(status) != 0)
-					break ;
-			}
-			if (st->next && st->next->has_or)
-			{
-				waitpid(st->pid, &status, 0);
-				if (WEXITSTATUS(status) == 0)
-					break ;
-			}
-			else
-				last_pid = st->pid;
-		}
-		st = st->next;
-	}
-	waitpid(last_pid, &status, 0);
-	exit_code = WEXITSTATUS(status);
-	while (count_forked-- > 1)
-		wait(NULL);
-}
-
 void	expand_cmds(t_status **st_head, t_var **varlist)
 {
 	t_status	*st;
@@ -151,8 +64,9 @@ int	continue_line(char *input, t_var **varlist)
 	t_status	*state;
 	t_brackets	brackets;
 
-
-	if (find_brackets_pair(input, &brackets) == -1)
+	if (!input)
+		return (0);
+	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
 		return (1);
 	state = sep_input_to_cmds(input, &brackets);
 	make_pipe(&state);
@@ -168,40 +82,30 @@ int	continue_line(char *input, t_var **varlist)
 	return (0);
 }
 
-void	process_line(char *input, t_var **varlist)
-{
-	// pid_t	pid;
-	// int		status;
-
-	// pid = fork();
-	// if (pid == -1)
-	// 	error_process();
-	// if (pid == 0)
-	continue_line(input, varlist);
-	// waitpid(pid, &status, 0);
-	// *exit_status = WEXITSTATUS(status);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
-	char		*input;
-	t_var *varlist;
+	char	*input;
+	t_var	*varlist;
 
 	if (argc != 1)
 		return (1);
 	(void)argv;
 	varlist = init_varlist(envp);
+	if (!varlist)
+		return (1);
 	while (1)
 	{
 		input = readline("minishell$ ");
 		if (!input)
+		{
+			printf("exit\n");
 			return (0);
+		}
 		if (*input)
 			add_history(input);
-		process_line(input, &varlist);
+		continue_line(input, &varlist);
 		free(input);
 		input = NULL;
 	}
-	printf("exit\n");
 	return (0);
 }

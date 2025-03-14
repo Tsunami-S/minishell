@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/14 17:54:01 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 02:46:19 by haito            ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -21,7 +21,9 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <stdbool.h>
- #include <sys/wait.h>
+# include <sys/wait.h>
+# include "error_num.h"
+# include "ft_eprintf/ft_eprintf.h"
 
 typedef enum e_exist
 {
@@ -111,7 +113,7 @@ char	**ft_split_sep(const char *str, char **sep, int length);
 int		count_words(const char *str, char c);
 int		count_sep(const char *str, char **sep, int length, int count);
 
-int	find_brackets_pair(const char *input, t_brackets *b);
+int	find_brackets_pair(const char *input, t_brackets *b, int length);
 int	get_brackets_pair(int i, t_brackets *brackets);
 t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets);
 t_status	*ft_new_node(const char *cmds, int has_brackets);
@@ -125,6 +127,7 @@ void	ft_strcpy(char *new_str, char *str);
 char *trim_spaces(const char *str, size_t i, size_t j);
 void	make_pipe(t_status **st_head);
 int	continue_line(char *input, t_var **varlist);
+void	fork_and_wait(t_status **st_head, t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);

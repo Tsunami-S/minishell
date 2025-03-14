@@ -1,4 +1,4 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,9 +6,9 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/14 19:47:58 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/15 02:13:18 by haito            ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 NAME = minishell
 CC = cc
@@ -26,6 +26,7 @@ SRCS =	minishell_main.c \
 		handle_node.c \
 		trim_space.c \
 		pipe.c \
+		fork.c \
 		ft_split.c \
 		export_utils.c \
 		init_varlist.c \
@@ -33,11 +34,15 @@ SRCS =	minishell_main.c \
 		replace_vars_count.c \
 		replace_vars_split.c \
 		tokenizer.c \
-		expander.c
+		expander.c \
+		ft_eprintf/ft_eprintf.c \
+		ft_eprintf/ft_eprintf_option.c \
+		ft_eprintf/ft_eprintf_option2.c \
+		ft_eprintf/ft_eprintf_utils.c \
+		ft_eprintf/ft_eprintf_utils2.c
 
-		
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
-INC = -I .
+INC = -I . -I ft_eprintf
 
 all: $(NAME)
 
