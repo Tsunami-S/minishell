@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   find_brackets_pair.c                               :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:50:47 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 02:50:30 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/15 03:18:21 by haito            ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -90,7 +90,7 @@ int	find_brackets_pair(const char *input, t_brackets *b, int length)
 	}
 	if (b->top >= 0)
 	{
-		ft_eprintf("minishell: syntax error nearunexpected token `('\n");
+		ft_eprintf("minishell: syntax error near unexpected token `('\n");
 		return (ERROR);
 	}
 	return (0);
