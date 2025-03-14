@@ -12,10 +12,92 @@
 
 #include "minishell.h"
 
-// void	fork_and_wait(t_status)
-// {
-	
-// }
+int	call_builtin(void)
+{
+	printf("builtin\n");
+	return (0);
+}
+
+void	continue_child(void)
+{
+	char **cmd;
+
+	cmd = malloc(sizeof(char *) * 2);
+	cmd[0] = malloc(3);
+	cmd[0][0] = 'l';
+	cmd[0][1] = 's';
+	cmd[0][2] = '\0';
+	cmd[1] = NULL;
+	execve("/usr/bin/ls", cmd, NULL);
+	exit(1);
+}
+
+void	fork_and_wait(t_status **st_head, t_var **varlist)
+{
+	t_status	*st;
+	t_status	*st_previous;
+	pid_t		last_pid;
+	int			result;
+	int			count_forked;
+	int			status;
+	int			exit_code;
+
+	st = *st_head;
+	count_forked = 0;
+	last_pid = -1;
+	while (st)
+	{
+		if (st->is_builtin && (!st->next || st->next->has_and
+				|| st->next->has_or))
+		{
+			result = call_builtin();
+			if ((st->next && st->next->has_and && result != 0)
+				|| (st->next && st->next->has_or && result == 0))
+				break ;
+		}
+		else
+		{
+			st->pid = fork();
+			if (st->pid == -1)
+				error_process();
+			count_forked++;
+			if (st->pid == 0)
+			{
+				if (st->input_pipefd != -1)
+					dup2(st->input_pipefd, STDIN_FILENO);
+				if (st->output_pipefd != -1)
+					dup2(st->output_pipefd, STDOUT_FILENO);
+				if (st->has_brackets)
+				{
+					if (continue_line(st->cmds, varlist) == -1)
+						error_process();
+					exit(0);
+				}
+				//countinue_child(st->token, varlist);
+				continue_child();
+			}
+			if (st->next && st->next->has_and)
+			{
+				waitpid(st->pid, &status, 0);
+				if (WEXITSTATUS(status) != 0)
+					break ;
+			}
+			if (st->next && st->next->has_or)
+			{
+				waitpid(st->pid, &status, 0);
+				if (WEXITSTATUS(status) == 0)
+					break ;
+			}
+			else
+				last_pid = st->pid;
+		}
+		st = st->next;
+	}
+	waitpid(last_pid, &status, 0);
+	exit_code = WEXITSTATUS(status);
+	while (count_forked-- > 1)
+		wait(NULL);
+}
 
 void	expand_cmds(t_status **st_head, t_var **varlist)
 {
@@ -76,12 +158,13 @@ int	continue_line(char *input, t_var **varlist)
 	make_pipe(&state);
 	expand_cmds(&state, varlist);
 	check_built_in(&state, state);
-	while (state != NULL)
+	t_status *st = state;
+	while (st != NULL)
 	{
-		printf("cmd:%s in:%d out:%d ():%d or:%d and:%d built:%d\n", state->cmds, state->input_pipefd, state->output_pipefd, state->has_brackets, state->has_or, state->has_and, state->is_builtin);
-		state = state->next;
+		printf("cmd:%s in:%d out:%d ():%d or:%d and:%d built:%d\n", st->cmds, st->input_pipefd, st->output_pipefd, st->has_brackets, st->has_or, st->has_and, st->is_builtin);
+		st = st->next;
 	}
-	// fork_and_wait();
+	fork_and_wait(&state, varlist);
 	return (0);
 }
 

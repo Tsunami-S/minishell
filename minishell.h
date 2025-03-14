@@ -21,6 +21,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <stdbool.h>
+ #include <sys/wait.h>
 
 typedef enum e_exist
 {
@@ -123,6 +124,7 @@ char	*add_char(char *cmds, char c);
 void	ft_strcpy(char *new_str, char *str);
 char *trim_spaces(const char *str, size_t i, size_t j);
 void	make_pipe(t_status **st_head);
+int	continue_line(char *input, t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
@@ -149,6 +151,7 @@ char	**split_token(char *token, int malloc_size, t_var **varlist);
 void	free_words(char **words, int size);
 
 
-void	continue_child(char *str, char **envp);
+//void	continue_child(char *str, char **envp);
+void	continue_child(void);
 
 #endif
