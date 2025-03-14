@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   replace_envp.c                                     :+:      :+:    :+:   */
+/*   replace_vars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 16:59:31 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:50:36 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*concat_words(char **words, int size)
 	}
 	expanded_token = (char *)malloc(sizeof(char) * (total_len + 1));
 	if (!expanded_token)
-		return NULL;
+		return (NULL);
 	expanded_token[0] = '\0';
 	i = 0;
 	while (i < size)
@@ -63,23 +63,20 @@ void	replace_vars(t_tokens **tokens, t_var **varlist)
 	head = *tokens;
 	while (head)
 	{
-		if (head->kind == WORD)
+		words_size = count_words_and_vars(head->token);
+		words = split_token(head->token, words_size, varlist);
+		if (!words)
 		{
-			words_size = count_words_and_vars(head->token);
-			words = split_token(head->token, words_size, varlist);
-			if(!words)
-			{
-				free_tokens(tokens);
-				return;
-			}
-			free(head->token);
-			head->token = NULL;
-			head->token = concat_words(words, words_size);
-			if(!head->token)
-			{
-				free_tokens(tokens);
-				return;
-			}
+			free_tokens(tokens);
+			return ;
+		}
+		free(head->token);
+		head->token = NULL;
+		head->token = concat_words(words, words_size);
+		if (!head->token)
+		{
+			free_tokens(tokens);
+			return ;
 		}
 		head = head->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 16:59:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:51:05 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 {
 	char	*end;
-	char *name;
-	t_var *var;
+	char	*name;
+	t_var	*var;
 
 	end = str;
 	end++;
@@ -27,7 +27,8 @@ static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 	if (!name)
 		return (NULL);
 	var = get_var(varlist, name);
-	if(!var)
+	free(name);
+	if (!var)
 		words[*i] = ft_strdup("");
 	else
 		words[*i] = ft_strdup(var->value);
@@ -37,7 +38,25 @@ static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 	return (end);
 }
 
-static char	*dup_doublequot_text(char *str, char **words, int *i, t_var **varlist)
+static char	*dup_singlequot_text(char *str, char **words, int *i)
+{
+	char	*end;
+
+	str++;
+	end = str;
+	while (*end && *end != '\'')
+		end++;
+	words[*i] = ft_strndup(str, end - str);
+	if (!words[*i])
+		return (NULL);
+	*i += 1;
+	if (*end == '\'')
+		end++;
+	return (end);
+}
+
+static char	*dup_doublequot_text(char *str, char **words, int *i,
+		t_var **varlist)
 {
 	char	*end;
 	char	*start;
@@ -69,28 +88,13 @@ static char	*dup_plain_text(char *str, char **words, int *i)
 {
 	char	*end;
 
-	end = count_plaintext_size(str);
-	words[*i] = ft_strndup(str, end - str);
-	if (!words[*i])
-		return (NULL);
-	*i += 1;
-	return (end);
-}
-
-static char	*dup_singlequot_text(char *str, char **words, int *i)
-{
-	char	*end;
-
-	str++;
 	end = str;
-	while (*end && *end != '\'')
+	while (*end && *end != '$' && *end != '\'' && *end != '\"')
 		end++;
 	words[*i] = ft_strndup(str, end - str);
 	if (!words[*i])
 		return (NULL);
 	*i += 1;
-	if (*end == '\'')
-		end++;
 	return (end);
 }
 
@@ -105,18 +109,18 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 	i = 0;
 	while (*token)
 	{
-		if (*token == '\"')
-			token = dup_doublequot_text(token, words, &i, varlist);
+		if (*token == '$')
+			token = dup_var(token, words, &i, varlist);
 		else if (*token == '\'')
 			token = dup_singlequot_text(token, words, &i);
-		else if (*token == '$')
-			token = dup_var(token, words, &i, varlist);
+		else if (*token == '\"')
+			token = dup_doublequot_text(token, words, &i, varlist);
 		else
 			token = dup_plain_text(token, words, &i);
-		if(!token)
+		if (!token)
 		{
 			free_words(words, malloc_size);
-			return NULL;
+			return (NULL);
 		}
 	}
 	words[i] = NULL;

@@ -6,17 +6,17 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/13 23:38:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:50:44 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *count_plaintext_size(char *str)
+char	*count_plaintext_size(char *str)
 {
-	while(*str && *str != '$' && *str != '\'' && *str != '\"')
+	while (*str && *str != '$' && *str != '\'' && *str != '\"')
 		str++;
-	return str;
+	return (str);
 }
 
 static char	*count_singlequot_text_size(char *str)
