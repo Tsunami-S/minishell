@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:15:06 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/08 00:26:45 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 13:04:09 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,3 @@ char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3)
 	ft_strlcat(ans, s3, s1_len + s2_len + s3_len + 1);
 	return (ans);
 }
-

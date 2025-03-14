@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 22:58:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/13 11:10:58 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/14 13:54:20 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,16 @@ char	*add_char(char *cmds, char c)
 	new_cmds[len + 1] = '\0';
 	free(cmds);
 	return (new_cmds);
+}
+
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+	write(fd, "\n", 1);
 }

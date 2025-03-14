@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:09:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/13 23:37:37 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 16:46:30 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,16 @@ static void	make_new_token(char *str, int len, t_tokens **tokens)
 
 	new_token = (t_tokens *)malloc(sizeof(t_tokens));
 	if (!new_token)
+	{
+		free_tokens(tokens);
 		return ;
+	}
 	new_token->token = ft_strndup(str, len);
 	if (!new_token->token)
+	{
+		free_tokens(tokens);
 		return ;
-	if (str[len - 1] == '<' || str[len - 1] == '>')
-		new_token->kind = REDIRECT;
-	else
-		new_token->kind = WORD;
+	}
 	new_token->next = NULL;
 	if (!*tokens)
 		*tokens = new_token;
@@ -102,6 +104,8 @@ t_tokens	*tokenizer(char *str)
 		start = str;
 		str = get_token_size(start, start);
 		make_new_token(start, str - start, &tokens);
+		if (!tokens)
+			return (NULL);
 	}
 	return (tokens);
 }

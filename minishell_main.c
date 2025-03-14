@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/13 23:58:32 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 13:29:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	
 // }
 
-void	expand_cmds(t_status **st_head, char **envp)
+void	expand_cmds(t_status **st_head, t_var **varlist)
 {
 	t_status	*st;
 	char		*expanded_cmds;
@@ -27,7 +27,7 @@ void	expand_cmds(t_status **st_head, char **envp)
 	st = *st_head;
 	while (st)
 	{
-		expanded_cmds = tunamis_expand(st->cmds, envp);
+		expanded_cmds = expander(st->cmds, varlist);
 		if (!expanded_cmds)
 			error_process();
 		free(st->cmds);
@@ -64,18 +64,17 @@ void	check_built_in(t_status **st_head, t_status *st)
 	free_builtin_cmds(builtin_cmds);
 }
 
-int	continue_line(char *input, char **envp)
+int	continue_line(char *input, t_var **varlist)
 {
 	t_status	*state;
 	t_brackets	brackets;
 
 
-	(void)envp;
 	if (find_brackets_pair(input, &brackets) == -1)
 		return (1);
 	state = sep_input_to_cmds(input, &brackets);
 	make_pipe(&state);
-	expand_cmds(&state, envp);
+	expand_cmds(&state, varlist);
 	check_built_in(&state, state);
 	while (state != NULL)
 	{
@@ -86,7 +85,7 @@ int	continue_line(char *input, char **envp)
 	return (0);
 }
 
-void	process_line(char *input, char **envp)
+void	process_line(char *input, t_var **varlist)
 {
 	// pid_t	pid;
 	// int		status;
@@ -95,7 +94,7 @@ void	process_line(char *input, char **envp)
 	// if (pid == -1)
 	// 	error_process();
 	// if (pid == 0)
-	continue_line(input, envp);
+	continue_line(input, varlist);
 	// waitpid(pid, &status, 0);
 	// *exit_status = WEXITSTATUS(status);
 }
@@ -103,11 +102,12 @@ void	process_line(char *input, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
+	t_var *varlist;
 
 	if (argc != 1)
 		return (1);
 	(void)argv;
-	(void)envp;
+	varlist = init_varlist(envp);
 	while (1)
 	{
 		input = readline("minishell$ ");
@@ -115,7 +115,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		if (*input)
 			add_history(input);
-		process_line(input, envp);
+		process_line(input, &varlist);
 		free(input);
 		input = NULL;
 	}

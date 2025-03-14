@@ -6,13 +6,14 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/13 23:56:31 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/14 17:01:59 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+OBJDIR = objs
 SRCS =	minishell_main.c \
 		minishell_init.c \
 		minishell_free.c \
@@ -27,15 +28,15 @@ SRCS =	minishell_main.c \
 		pipe.c \
 		ft_split.c \
 		export_utils.c \
-		init_envlist.c \
-		replace_envp.c \
+		init_varlist.c \
+		replace_vars.c \
 		replace_envp_utils.c \
 		replace_envp_utils2.c \
 		tokenizer.c \
-		tunamis_expand.c
+		expander.c
 
 		
-OBJS = $(SRCS:.c=.o)
+OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 INC = -I .
 
 all: $(NAME)
@@ -46,12 +47,13 @@ $(NAME): $(OBJS)
 bonus: $(NAME)
 
 clean:
-		rm -f $(OBJS)
+	$(RM) -r $(OBJDIR)
 
 fclean: clean
 		rm -f $(NAME)
 
 re: fclean all
 
-%.o: %.c
-		$(CC) $(CFLAGS) $(INC) -c $< -o $@
+$(OBJDIR)/%.o:%.c
+	mkdir -p $(@D)
+	$(CC) $(WFLAG) $(IFLAG) -c $< -o $@
