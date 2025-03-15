@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 21:38:54 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/15 22:03:43 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_child
 	char		*fullpath;
 	char		**envp;
 	char		**paths;
+	char		*tmpfile;
 }	t_child;
 
 typedef struct s_status

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 21:21:13 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 22:03:18 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	continue_child(t_tokens **tokens, t_var **varlist)
 	child.envp = NULL;
 	child.paths = NULL;
 	child.fullpath = NULL;
+	child.tmpfile = NULL;
 	child.tokens = tokens;
 	child.varlist = varlist;
 	check_syntax(&child, child.tokens);

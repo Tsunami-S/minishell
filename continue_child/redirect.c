@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 20:51:33 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 22:05:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,19 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 void	redirect_fds(t_child *child, t_tokens **tokens)
 {
 	t_tokens	*head;
-	char		*file;
 
 	head = *tokens;
 	while (head)
 	{
 		if (head->type == HEREDOC)
-			file = heredoc(child, head->next->token);
+			child->tmpfile = heredoc(child, head->next->token);
 		head = head->next;
 	}
 	head = *tokens;
 	while (head)
 	{
 		if (head->type == HEREDOC)
-			redirect(child, 0, head->type, file);
+			redirect(child, 0, head->type, child->tmpfile);
 		else if (head->type == INPUT)
 			redirect(child, 0, head->type, head->next->token);
 		else if (head->type != WORD)

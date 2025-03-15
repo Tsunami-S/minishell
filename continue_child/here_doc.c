@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 21:21:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 22:07:16 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char	*heredoc(t_child *child, char *limiter)
 			free(buf);
 			break ;
 		}
-		ft_putstr_fd(buf, filefd);
+		ft_putendl_fd(buf, filefd);
 		free(buf);
 	}
 	if (close(filefd) == -1)

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 21:20:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 22:04:51 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,10 @@ void	exit_child(t_child *child, int status, int errnum, char *msg)
 		free_strs(child->envp);
 	if (child->paths)
 		free_strs(child->paths);
+	if (child->tmpfile)
+	{
+		unlink(child->tmpfile);
+		free(child->tmpfile);
+	}
 	exit(status);
 }
