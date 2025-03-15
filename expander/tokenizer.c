@@ -6,50 +6,30 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:09:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 17:32:55 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 19:53:13 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	isdigit_words(const char *str, int len)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && i < len)
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-static int	isredirect(char c)
-{
-	return (c == '<' || c == '>');
-}
-
-static char	*get_token_size(const char *start, char *str)
+static char	*get_token_size(char *str)
 {
 	char	ope;
 
-	while (*str)
+	if (*str == '<' || *str == '>')
 	{
-		if (ft_isspace(*str))
+		while (*str && (*str == '<' || *str == '>'))
+			str++;
+		return (str);
+	}
+	while (*str && !ft_isspace(*str))
+	{
+		if (*str == '<' || *str == '>')
 			break ;
-		if (isredirect(*str))
-		{
-			if (isdigit_words(start, str - start))
-				while (*str && isredirect(*str))
-					str++;
-			break ;
-		}
 		else if (*str == '\'' || *str == '\"')
 		{
 			ope = *str++;
-			while (*str && *str != ope && !isredirect(*str))
+			while (*str && *str != ope && *str != '<' && *str != '>')
 				str++;
 			if (*str == ope)
 				str++;
@@ -60,41 +40,48 @@ static char	*get_token_size(const char *start, char *str)
 	return (str);
 }
 
-static void	make_new_token(char *str, int len, t_tokens **tokens)
+static t_type	get_token_type(char *str)
+{
+	if (*str && !ft_strncmp(str, ">", 2))
+		return (TRUNC);
+	else if (*str && !ft_strncmp(str, ">>", 2))
+		return (APPEND);
+	else if (*str && !ft_strncmp(str, "<", 2))
+		return (INPUT);
+	else if (*str && !ft_strncmp(str, "<<", 2))
+		return (HEREDOC);
+	else
+		return (WORD);
+}
+
+static t_tokens	*make_new_token(char *str, int len, t_tokens **tokens,
+		t_tokens *last)
 {
 	t_tokens	*new_token;
-	t_tokens	*prev_token;
 
 	new_token = (t_tokens *)malloc(sizeof(t_tokens));
 	if (!new_token)
-	{
-		free_tokens(tokens);
-		return ;
-	}
+		return (NULL);
 	new_token->token = ft_strndup(str, len);
 	if (!new_token->token)
-	{
-		free_tokens(tokens);
-		return ;
-	}
+		return (NULL);
+	new_token->type = get_token_type(new_token->token);
 	new_token->next = NULL;
 	if (!*tokens)
 		*tokens = new_token;
 	else
-	{
-		prev_token = *tokens;
-		while (prev_token->next)
-			prev_token = prev_token->next;
-		prev_token->next = new_token;
-	}
+		last->next = new_token;
+	return (new_token);
 }
 
 t_tokens	*tokenizer(char *str)
 {
 	t_tokens	*tokens;
+	t_tokens	*last_token;
 	char		*start;
 
 	tokens = NULL;
+	last_token = NULL;
 	while (*str)
 	{
 		while (ft_isspace(*str))
@@ -102,10 +89,13 @@ t_tokens	*tokenizer(char *str)
 		if (!*str)
 			break ;
 		start = str;
-		str = get_token_size(start, start);
-		make_new_token(start, str - start, &tokens);
-		if (!tokens)
+		str = get_token_size(start);
+		last_token = make_new_token(start, str - start, &tokens, last_token);
+		if (!last_token)
+		{
+			free_tokens(&tokens);
 			return (NULL);
+		}
 	}
 	return (tokens);
 }

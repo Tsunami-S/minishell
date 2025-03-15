@@ -6,27 +6,11 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 22:09:13 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 15:40:02 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 12:11:05 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_varlist(t_var **varlist)
-{
-	t_var	*head;
-	t_var	*tmp;
-
-	head = *varlist;
-	while (head)
-	{
-		tmp = head;
-		head = head->next;
-		free(tmp->name);
-		free(tmp->value);
-		free(tmp);
-	}
-}
 
 t_var	*get_var(t_var **varlist, char *name)
 {

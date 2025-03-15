@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/14 13:29:54 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 13:41:46 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	expand_cmds(t_status **st_head, t_var **varlist)
 	st = *st_head;
 	while (st)
 	{
-		expanded_cmds = expander(st->cmds, varlist);
+		st->token = expander(st->cmds, varlist);
+		expanded_cmds = "";
 		if (!expanded_cmds)
 			error_process();
 		free(st->cmds);

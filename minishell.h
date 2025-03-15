@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 02:46:19 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/15 20:55:47 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,7 +20,9 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <fcntl.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <sys/wait.h>
 # include "error_num.h"
 # include "ft_eprintf/ft_eprintf.h"
@@ -31,25 +33,21 @@ typedef enum e_exist
 	EXIST,
 }	t_exist;
 
-typedef enum e_kind
+typedef enum e_type
 {
 	WORD,
-	REDIRECT,
-}	t_kind;
+	TRUNC,
+	APPEND,
+	INPUT,
+	HEREDOC,
+}	t_type;
 
 typedef struct s_tokens
 {
 	char *token;
-	t_kind kind;
+	t_type type;
 	struct s_tokens *next;
 }	t_tokens;
-
-typedef struct s_redirect
-{
-	t_kind kind;
-	char *fd;
-	struct s_redirect *next;
-}	t_redirect;
 
 typedef struct s_var
 {
@@ -57,6 +55,16 @@ typedef struct s_var
 	char *value;
 	struct s_var *next;
 }	t_var;
+
+typedef struct s_child
+{
+	t_var		**varlist;
+	t_tokens	**tokens;
+	char		**cmds;
+	char		*fullpath;
+	char		**envp;
+	char		**paths;
+}	t_child;
 
 
 // typedef struct s_status
@@ -78,6 +86,7 @@ typedef struct s_status
 	int				has_and;
 	int				is_builtin;
 	struct s_status	*next;
+	t_tokens *token;
 }	t_status;
 
 # define MAX_STACK_BRACKETS 500
@@ -137,24 +146,39 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3);
 char	*ft_strndup(const char *s, int n);
 void	ft_putendl_fd(char *s, int fd);
+void	ft_putstr_fd(char *s, int fd);
+char	*ft_itoa(int n);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+char	*get_next_line(int fd);
+void free_strs(char **strs);
 
-char	*expander(char *str, t_var **varlist);
-void free_tokens(t_tokens **tokens);
-
-t_tokens	*tokenizer(char *str);
+/* set varlist */
 t_var	*init_varlist(char **envp);
 void	free_varlist(t_var **varlist);
 t_var	*get_var(t_var **varlist, char *name);
 void	add_var(t_var **varlist, char *var_name, char *var_value);
 t_var	**remove_var(t_var **varlist, char *name);
+
+/* expander */
+t_tokens	*expander(char *str, t_var **varlist);
+t_tokens	*tokenizer(char *str);
 void	replace_vars(t_tokens **tokens, t_var **varlist);
 char *count_plaintext_size(char *str);
 int	count_words_and_vars(char *str);
 char	**split_token(char *token, int malloc_size, t_var **varlist);
+
+/* continue_child */
+void	continue_child(t_tokens **tokens, t_var **varlist);
+void	redirect_fds(t_child *child, t_tokens **tokens);
+char	*heredoc(t_child *child, char *limiter);
+void	make_cmds(t_child *child, t_tokens **tokens);
+void	make_envp(t_child *child, t_var **varlist);
+void	make_fullpath(t_child *child, char *cmd, t_var **varlist);
+void	exit_child(t_child *child, int status, int errnum, char *msg);
+
+/* others */
+void free_tokens(t_tokens **tokens);
 void	free_words(char **words, int size);
 
-
-//void	continue_child(char *str, char **envp);
-void	continue_child(void);
 
 #endif
