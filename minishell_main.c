@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 13:41:46 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/14 13:29:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	expand_cmds(t_status **st_head, t_var **varlist)
 {
 	t_status	*st;
-	char		*expanded_cmds;
 
 	if (!st_head || !*st_head)
 		return ;
@@ -23,11 +22,8 @@ void	expand_cmds(t_status **st_head, t_var **varlist)
 	while (st)
 	{
 		st->token = expander(st->cmds, varlist);
-		expanded_cmds = "";
-		if (!expanded_cmds)
+		if (!st->token)
 			error_process();
-		free(st->cmds);
-		st->cmds = expanded_cmds;
 		st = st->next;
 	}
 }
@@ -36,7 +32,6 @@ void	check_built_in(t_status **st_head, t_status *st)
 {
 	char		**builtin_cmds;
 	int			i;
-	int			len;
 
 	if (!st_head || !*st_head || !st)
 		return ;
@@ -46,10 +41,7 @@ void	check_built_in(t_status **st_head, t_status *st)
 		i = -1;
 		while (builtin_cmds[++i])
 		{
-			len = ft_strlen(builtin_cmds[i]);
-			if (ft_strlen(st->cmds) >= (size_t)len && !ft_strncmp(st->cmds,
-					builtin_cmds[i], len) && (st->cmds[len] == '\0'
-					|| st->cmds[len] == ' '))
+			if (!ft_strcmp(st->token->token, builtin_cmds[i]))
 			{
 				st->is_builtin = 1;
 				break ;
@@ -89,11 +81,14 @@ int	main(int argc, char **argv, char **envp)
 	t_var	*varlist;
 
 	if (argc != 1)
-		return (1);
+	{
+		ft_eprintf("minishell: error: too many argument");
+		return (FAILED);
+	}
 	(void)argv;
 	varlist = init_varlist(envp);
 	if (!varlist)
-		return (1);
+		return (FAILED);
 	while (1)
 	{
 		input = readline("minishell$ ");

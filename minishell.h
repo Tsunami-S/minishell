@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 20:55:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 21:38:54 by haito            ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -18,7 +18,6 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <sys/wait.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <stdbool.h>
@@ -26,6 +25,8 @@
 # include <sys/wait.h>
 # include "error_num.h"
 # include "ft_eprintf/ft_eprintf.h"
+
+# define MAX_STACK_BRACKETS 500
 
 typedef enum e_exist
 {
@@ -41,6 +42,7 @@ typedef enum e_type
 	INPUT,
 	HEREDOC,
 }	t_type;
+
 
 typedef struct s_tokens
 {
@@ -66,18 +68,11 @@ typedef struct s_child
 	char		**paths;
 }	t_child;
 
-
-// typedef struct s_status
-// {
-// 	int		last_exit_status;
-// 	char	*location;
-// }	t_status;
-
-// added_by_haito
 typedef struct s_status
 {
 	struct s_status	*previous;
 	char			*cmds;
+	t_tokens		*token;
 	pid_t			pid;
 	pid_t			input_pipefd;
 	pid_t			output_pipefd;
@@ -86,10 +81,7 @@ typedef struct s_status
 	int				has_and;
 	int				is_builtin;
 	struct s_status	*next;
-	t_tokens *token;
 }	t_status;
-
-# define MAX_STACK_BRACKETS 500
 
 typedef struct s_brackets
 {
@@ -179,6 +171,5 @@ void	exit_child(t_child *child, int status, int errnum, char *msg);
 /* others */
 void free_tokens(t_tokens **tokens);
 void	free_words(char **words, int size);
-
 
 #endif
