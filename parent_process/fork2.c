@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 18:15:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 19:39:55 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,18 @@ void	handle_parent_process(t_status *st)
 void	handle_child_process(t_status *st, t_var **varlist)
 {
 	t_tokens	*token;
+	int			result;
 
 	if (st->input_pipefd != -1)
 		dup2(st->input_pipefd, STDIN_FILENO);
 	if (st->output_pipefd != -1)
 		dup2(st->output_pipefd, STDOUT_FILENO);
 	if (st->has_brackets)
-		exit(recursive_continue_line(st->cmds, varlist));
+	{
+		result = recursive_continue_line(st->cmds, varlist);
+		free_lst_status(st, 1);
+		exit(result);
+	}
 	if (st->is_builtin)
 	{
 		token = st->token;
