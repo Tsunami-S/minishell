@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 18:28:56 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 18:48:05 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,13 @@ typedef struct s_parser
 	int		i;
 	char	*cmds;
 }	t_parser;
+
+typedef struct s_last_process
+{
+	pid_t		last_pid;
+	int			result;
+	int			count_forked;
+}	t_lp;
 
 char	**init_builtin_cmds(void);
 void	free_builtin_cmds(char **builtin_cmds);

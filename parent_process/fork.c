@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 17:39:51 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 18:54:55 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,31 @@ int	update_exit_code(int exit_code, t_var **varlist)
 	return (SUCCESS);
 }
 
-int	wait_process(int count_forked, pid_t last_pid,
-		int result, t_var **varlist)
+int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 {
-	int	status;
-	int	exit_code;
+	t_status	*st;
+	int			status;
+	int			exit_code;
+	int			wait_count;
 
-	if (count_forked != 0)
+	st = *st_head;
+	wait_count = 0;
+	if (lp->count_forked != 0)
 	{
-		waitpid(last_pid, &status, 0);
+		waitpid(lp->last_pid, &status, 0);
 		exit_code = WEXITSTATUS(status);
 	}
 	else
-		exit_code = result;
-	while (count_forked-- > 1)
-		wait(NULL);
+		exit_code = lp->result;
+	while (st && wait_count < lp->count_forked)
+	{
+		if (st->pid > 0)
+		{
+			waitpid(st->pid, NULL, 0);
+			wait_count++;
+		}
+		st = st->next;
+	}
 	return (update_exit_code(exit_code, varlist));
 }
 
@@ -68,28 +78,26 @@ void	fork_process(t_status *st, t_var **varlist,
 int	fork_and_wait(t_status **st_head, t_var **varlist)
 {
 	t_status	*st;
-	pid_t		last_pid;
-	int			result;
-	int			count_forked;
+	t_lp		lp;
 
 	st = *st_head;
-	count_forked = 0;
-	last_pid = -1;
-	result = 0;
+	lp.count_forked = 0;
+	lp.last_pid = -1;
+	lp.result = 0;
 	while (st)
 	{
-		if ((st->has_and && result != 0) || (st->has_or && result == 0))
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
 		else if (st->is_builtin && (!st->next || st->next->has_and
 				|| st->next->has_or))
-			result = call_builtin(&st->token, varlist);
+			lp.result = call_builtin(&st->token, varlist);
 		else
 		{
-			fork_process(st, varlist, &result, &count_forked);
+			fork_process(st, varlist, &lp.result, &lp.count_forked);
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
-				last_pid = st->pid;
+				lp.last_pid = st->pid;
 		}
 		st = st->next;
 	}
-	return (wait_process(count_forked, last_pid, result, varlist));
+	return (wait_process(&lp, varlist, st_head));
 }
