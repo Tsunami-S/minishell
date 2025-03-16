@@ -6,15 +6,11 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:42:18 by haito             #+#    #+#             */
-/*   Updated: 2025/03/13 18:45:53 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 18:06:41 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_brackets()
-{
-}
 
 void	free_builtin_cmds(char **builtin_cmds)
 {
@@ -24,4 +20,34 @@ void	free_builtin_cmds(char **builtin_cmds)
 	while (builtin_cmds[i])
 		free(builtin_cmds[i++]);
 	free(builtin_cmds);
+}
+
+void	free_lst_status(t_status *st_head, int num)
+{
+	t_status	*current;
+	t_status	*next_node;
+
+	if (!st_head)
+		return ;
+	current = st_head;
+	while (current)
+	{
+		next_node = current->next;
+		if (current->cmds)
+			free(current->cmds);
+		if (current->token && num == 1)
+			free_tokens(&current->token);
+		if (current->input_pipefd != -1)
+			close(current->input_pipefd);
+		if (current->output_pipefd != -1)
+			close(current->output_pipefd);
+		free(current);
+		current = next_node;
+	}
+}
+
+void	frees(t_status *st_head, int num, t_var **varlist)
+{
+	free_lst_status(st_head, num);
+	free_varlist(varlist);
 }

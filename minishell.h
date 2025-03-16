@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 22:03:43 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 18:28:56 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,16 @@ typedef enum e_type
 
 typedef struct s_tokens
 {
-	char *token;
-	t_type type;
-	struct s_tokens *next;
+	char			*token;
+	t_type			type;
+	struct s_tokens	*next;
 }	t_tokens;
 
 typedef struct s_var
 {
-	char *name;
-	char *value;
-	struct s_var *next;
+	char			*name;
+	char			*value;
+	struct s_var	*next;
 }	t_var;
 
 typedef struct s_child
@@ -100,8 +100,6 @@ typedef struct s_parser
 }	t_parser;
 
 char	**init_builtin_cmds(void);
-void	error_process();
-void	free_brackets();
 void	free_builtin_cmds(char **builtin_cmds);
 
 size_t	ft_strlen(const char *s);
@@ -117,19 +115,42 @@ int		count_sep(const char *str, char **sep, int length, int count);
 
 int	find_brackets_pair(const char *input, t_brackets *b, int length);
 int	get_brackets_pair(int i, t_brackets *brackets);
-t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets);
+int	add_operator_node(const char *op, char **cmds, t_status **st_head, int i);
 t_status	*ft_new_node(const char *cmds, int has_brackets);
 void	ft_add_back_node(t_status **head, t_status *new_node);
 void	ft_remove_node(t_status **head, t_status *node);
-void	add_command_node(char **cmds, t_status **st_head);
-int	add_operator_node(const char *op, char **cmds, t_status **st_head, int i);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
-char	*add_char(char *cmds, char c);
 void	ft_strcpy(char *new_str, char *str);
-char *trim_spaces(const char *str, size_t i, size_t j);
-void	make_pipe(t_status **st_head);
 int	continue_line(char *input, t_var **varlist);
-void	fork_and_wait(t_status **st_head, t_var **varlist);
+/* added by haruki */
+//changed
+char	*trim_spaces(char *str);
+char	*add_char(char *cmds, char c, int *i);
+int		add_command_node(char **cmds, t_status **st_head);
+t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
+	t_status *st_head);
+	int	make_pipe(t_status **st_head);
+	int	fork_and_wait(t_status **st_head, t_var **varlist);
+	
+//new
+void	*error_add_char(int *i, char *cmds);
+void	free_lst_status(t_status *st_head, int num);
+int		error_handle_brackets(int error_num);
+int		error_node(int error_num);
+int		error_pipe(int error_num);
+int	call_builtin(t_tokens **tokens, t_var **varlist);
+void	handle_and_or(t_status *st, int *result);
+void	handle_parent_process(t_status *st);
+void	handle_child_process(t_status *st, t_var **varlist);
+int	builtin_echo(t_tokens **tokens, t_var **varlist);
+int	builtin_cd(t_tokens **tokens, t_var **varlist);
+int	builtin_pwd(t_tokens **tokens, t_var **varlist);
+int	builtin_exit(t_tokens **tokens, t_var **varlist);
+int	builtin_export(t_tokens **tokens, t_var **varlist);
+int	builtin_unset(t_tokens **tokens, t_var **varlist);
+int	builtin_env(t_tokens **tokens, t_var **varlist);
+void	frees(t_status *st_head, int num, t_var **varlist);
+int	recursive_continue_line(char *input, t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
@@ -146,7 +167,8 @@ char	*get_next_line(int fd);
 void free_strs(char **strs);
 
 /* set varlist */
-t_var	*init_varlist(char **envp);
+//t_var	*init_varlist(char **envp);
+t_var	*init_varlist(char **envp, char *c1, char *c2);
 void	free_varlist(t_var **varlist);
 t_var	*get_var(t_var **varlist, char *name);
 void	add_var(t_var **varlist, char *var_name, char *var_value);

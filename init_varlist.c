@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_varlist.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 15:40:13 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 18:28:20 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,15 @@ static void	split_var(t_var **varlist, char *envp, char **name, char **value)
 	}
 }
 
-t_var	*init_varlist(char **envp)
+t_var	*init_varlist(char **envp, char *c1, char *c2)
 {
 	t_var	*varlist;
 	int		var_size;
 	char	*var_name;
 	char	*var_value;
 
+	if (!c1 || !c2)
+		return (error_node(ERRNO_ONE), NULL);
 	if (!envp)
 		return (NULL);
 	varlist = NULL;
@@ -54,5 +56,6 @@ t_var	*init_varlist(char **envp)
 		add_var(&varlist, var_name, var_value);
 		var_size++;
 	}
+	add_var(&varlist, c1, c2);
 	return (varlist);
 }

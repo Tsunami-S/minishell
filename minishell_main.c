@@ -12,30 +12,33 @@
 
 #include "minishell.h"
 
-void	expand_cmds(t_status **st_head, t_var **varlist)
+int	expand_cmds(t_status **st_head, t_var **varlist)
 {
 	t_status	*st;
 
 	if (!st_head || !*st_head)
-		return ;
+		return (ERROR);
 	st = *st_head;
 	while (st)
 	{
 		st->token = expander(st->cmds, varlist);
 		if (!st->token)
-			error_process();
+			return (ERROR);
 		st = st->next;
 	}
+	return (SUCCESS);
 }
 
-void	check_built_in(t_status **st_head, t_status *st)
+int	check_built_in(t_status **st_head, t_status *st)
 {
 	char		**builtin_cmds;
 	int			i;
 
 	if (!st_head || !*st_head || !st)
-		return ;
+		return (ERROR);
 	builtin_cmds = init_builtin_cmds();
+	if (!builtin_cmds)
+		return (error_node(ERRNO_ONE), ERROR);
 	while (st)
 	{
 		i = -1;
@@ -50,6 +53,33 @@ void	check_built_in(t_status **st_head, t_status *st)
 		st = st->next;
 	}
 	free_builtin_cmds(builtin_cmds);
+	return (SUCCESS);
+}
+
+int	recursive_continue_line(char *input, t_var **varlist)
+{
+	t_status	*state;
+	t_brackets	brackets;
+
+	(void)varlist;
+
+	if (!input)
+		return (0);
+	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
+		return (free_varlist(varlist), ERROR);
+	state = sep_input_to_cmds(input, &brackets, NULL);
+	if (!state)
+		return (free_varlist(varlist), ERROR);
+	if (make_pipe(&state) == ERROR)
+		return (frees(state, 1, varlist), ERROR);
+	if (expand_cmds(&state, varlist) == ERROR)
+		return (frees(state, 1, varlist), ERROR);
+	if (check_built_in(&state, state))
+		return (frees(state, 1, varlist), ERROR);
+	if (fork_and_wait(&state, varlist) == ERROR)
+		return (frees(state, 1, varlist), ERROR);
+	frees(state, 1, varlist);
+	return (SUCCESS);
 }
 
 int	continue_line(char *input, t_var **varlist)
@@ -57,22 +87,25 @@ int	continue_line(char *input, t_var **varlist)
 	t_status	*state;
 	t_brackets	brackets;
 
+	(void)varlist;
+
 	if (!input)
 		return (0);
 	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
-		return (1);
-	state = sep_input_to_cmds(input, &brackets);
-	make_pipe(&state);
-	expand_cmds(&state, varlist);
-	check_built_in(&state, state);
-	t_status *st = state;
-	while (st != NULL)
-	{
-		printf("cmd:%s in:%d out:%d ():%d or:%d and:%d built:%d\n", st->cmds, st->input_pipefd, st->output_pipefd, st->has_brackets, st->has_or, st->has_and, st->is_builtin);
-		st = st->next;
-	}
-	fork_and_wait(&state, varlist);
-	return (0);
+		return (ERROR);
+	state = sep_input_to_cmds(input, &brackets, NULL);
+	if (!state)
+		return (ERROR);
+	if (make_pipe(&state) == ERROR)
+		return (free_lst_status(state, 1), ERROR);
+	if (expand_cmds(&state, varlist) == ERROR)
+		return (free_lst_status(state, 1), ERROR);
+	if (check_built_in(&state, state))
+		return (free_lst_status(state, 1), ERROR);
+	if (fork_and_wait(&state, varlist) == ERROR)
+		return (free_lst_status(state, 1), ERROR);
+	free_lst_status(state, 1);
+	return (SUCCESS);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -81,12 +114,9 @@ int	main(int argc, char **argv, char **envp)
 	t_var	*varlist;
 
 	if (argc != 1)
-	{
-		ft_eprintf("minishell: error: too many argument");
-		return (FAILED);
-	}
+		return (ft_eprintf("minishell: too many argument\n"), FAILED);
 	(void)argv;
-	varlist = init_varlist(envp);
+	varlist = init_varlist(envp, ft_strdup("?"), ft_strdup("0"));
 	if (!varlist)
 		return (FAILED);
 	while (1)
@@ -95,7 +125,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!input)
 		{
 			printf("exit\n");
-			return (0);
+			return (free_varlist(&varlist), 0);
 		}
 		if (*input)
 			add_history(input);
@@ -103,5 +133,5 @@ int	main(int argc, char **argv, char **envp)
 		free(input);
 		input = NULL;
 	}
-	return (0);
+	return (free_varlist(&varlist), 0);
 }

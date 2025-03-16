@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 22:58:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/14 13:54:20 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 01:10:12 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strndup(const char *s, int n)
 
 	i = 0;
 	dest = (char *)malloc(sizeof(char) * (n + 1));
-	if (dest == NULL)
+	if (!dest)
 		return (NULL);
 	while (s[i] != '\0' && i < n)
 	{
@@ -42,7 +42,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 		len = sizeof_str - start;
 	dest = (char *)malloc(len + 1);
 	if (!dest)
-		return (0);
+		return (NULL);
 	ft_strncpy(dest, s + start, len);
 	dest[len] = '\0';
 	return (dest);
@@ -61,7 +61,7 @@ void	ft_strcpy(char *new_str, char *str)
 	new_str[i] = '\0';
 }
 
-char	*add_char(char *cmds, char c)
+char	*add_char(char *cmds, char c, int *i)
 {
 	size_t	len;
 	char	*new_cmds;
@@ -70,7 +70,7 @@ char	*add_char(char *cmds, char c)
 	{
 		new_cmds = (char *)malloc(2);
 		if (!new_cmds)
-			return (NULL);
+			return (error_add_char(i, NULL));
 		new_cmds[0] = c;
 		new_cmds[1] = '\0';
 		return (new_cmds);
@@ -78,7 +78,7 @@ char	*add_char(char *cmds, char c)
 	len = ft_strlen(cmds);
 	new_cmds = (char *)malloc(len + 2);
 	if (!new_cmds)
-		return (NULL);
+		return (error_add_char(i, cmds));
 	ft_strcpy(new_cmds, cmds);
 	new_cmds[len] = c;
 	new_cmds[len + 1] = '\0';

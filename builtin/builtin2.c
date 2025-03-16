@@ -1,32 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_num.h                                        :+:      :+:    :+:   */
+/*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 14:17:22 by haito            ###   ########.fr       */
+/*   Created: 2025/03/16 17:04:30 by haito             #+#    #+#             */
+/*   Updated: 2025/03/16 17:46:49 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERROR_NUM_H
-# define ERROR_NUM_H
+#include "minishell.h"
 
-# define ERROR -1
-# define FAILED 1
-# define SUCCESS 0
-# define SYNTAXERROR -400
-# define CMDERROR -401
-# define EXIT_NOCMD 127
-# define EXIT_SYNTAX 2
+int	builtin_export(t_tokens **tokens, t_var **varlist)
+{
+	(void)tokens;
+	(void)varlist;
+	printf("is export\n");
+	return (0);
+}
 
-# define ERRNO_ONE 1
-# define ERRNO_TWO 2
-# define ERRNO_THREE 3
-# define ERRNO_FOUR 4
+int	builtin_unset(t_tokens **tokens, t_var **varlist)
+{
+	(void)tokens;
+	(void)varlist;
+	printf("is unset\n");
+	return (0);
+}
 
-# define IS_OR 1
-# define IS_AND 2
-
-#endif
+int	builtin_env(t_tokens **tokens, t_var **varlist)
+{
+	(void)tokens;
+	(void)varlist;
+	printf("is env\n");
+	return (0);
+}

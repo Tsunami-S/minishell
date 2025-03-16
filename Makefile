@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/15 21:43:54 by haito            ###   ########.fr        #
+#    Updated: 2025/03/16 17:49:58 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,16 @@ SRCS =	minishell_main.c \
 		minishell_utils2.c \
 		minishell_utils3.c \
 		minishell_utils4.c \
-		find_brackets_pair.c \
-		sep_input_to_cmds.c \
-		handle_node.c \
-		trim_space.c \
-		pipe.c \
-		fork.c \
+		minishell_utils5.c \
+		builtin/builtin.c \
+		builtin/builtin2.c \
+		parent_process/find_brackets_pair.c \
+		parent_process/sep_input_to_cmds.c \
+		parent_process/handle_node.c \
+		parent_process/trim_space.c \
+		parent_process/pipe.c \
+		parent_process/fork.c \
+		parent_process/fork2.c \
 		ft_split.c \
 		export_utils.c \
 		init_varlist.c \
@@ -48,7 +52,7 @@ SRCS =	minishell_main.c \
 		continue_child/make_fullpath.c \
 		continue_child/redirect.c \
 		continue_child/here_doc.c \
-		free_utils.c 
+		free_utils.c
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 INC = -I . -I ft_eprintf

@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_num.h                                        :+:      :+:    :+:   */
+/*   minishell_utils5.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 14:17:22 by haito            ###   ########.fr       */
+/*   Created: 2025/03/16 17:49:36 by haito             #+#    #+#             */
+/*   Updated: 2025/03/16 17:49:50 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERROR_NUM_H
-# define ERROR_NUM_H
+#include "minishell.h"
 
-# define ERROR -1
-# define FAILED 1
-# define SUCCESS 0
-# define SYNTAXERROR -400
-# define CMDERROR -401
-# define EXIT_NOCMD 127
-# define EXIT_SYNTAX 2
+size_t	ft_strncpy(char *dest, const char *src, size_t size)
+{
+	size_t	sizeof_src;
+	size_t	i;
 
-# define ERRNO_ONE 1
-# define ERRNO_TWO 2
-# define ERRNO_THREE 3
-# define ERRNO_FOUR 4
-
-# define IS_OR 1
-# define IS_AND 2
-
-#endif
+	i = 0;
+	sizeof_src = ft_strlen(src);
+	while (i < size && src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < size)
+		dest[i++] = '\0';
+	return (sizeof_src);
+}
