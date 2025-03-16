@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 19:07:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 19:53:29 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,18 @@ static int check_syntax(char *token)
 	flag = 0;
 	if(ft_isdigit(token[0]))
 		flag = 1;
-	i = 1;
+	i = 0;
 	while(token[i] && token[i] != '=')
 	{
 		if(ft_isalnum(token[i]) || token[i] == '_')
 			i++;
-		else if(!ft_strncmp(&token[i], "+2", 2))
+		else if(!ft_strncmp(&token[i], "+=", 2))
 				break;
 		else
+		{
 			flag = 1;
+			i++;
+		}
 	}
 	if(!flag)
 		return SUCCESS;
@@ -115,8 +118,9 @@ int	builtin_export(t_tokens **tokens, t_var **varlist)
 	int i;
 
 	head = (*tokens)->next;
-//	if(!head)
-//		return (sort_varlist(varlist));
+	if(!head)
+		return  0;
+		//return (sort_varlist(varlist));
 	while(head)
 	{
 		if(check_syntax(head->token) == SUCCESS)

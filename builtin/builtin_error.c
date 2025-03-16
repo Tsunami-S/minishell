@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 16:58:00 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 19:58:18 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,20 @@ static void	put_exporterr_msg(char *msg)
 	int		total_len;
 	char	*strerr;
 
-	total_len = ft_strlen("minishell: export`");
-	total_len = ft_strlen("': not a valid identifier\n");
+	total_len = ft_strlen("minishell: export: `");
+	total_len += ft_strlen("': not a valid identifier\n");
 	total_len += ft_strlen(msg) + 2;
 	strerr = (char *)malloc(sizeof(char) * total_len);
 	if (!strerr)
+	{
+		free(msg);
 		return ;
-	ft_strlcpy(strerr, "minishell: export`", total_len);
+	}
+	ft_strlcpy(strerr, "minishell: export: `", total_len);
 	ft_strlcat(strerr, msg, total_len);
 	ft_strlcat(strerr, "': not a valid identifier\n", total_len);
 	ft_eprintf("%s", strerr);
+	free(msg);
 	free(strerr);
 }
 

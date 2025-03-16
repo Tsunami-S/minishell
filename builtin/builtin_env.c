@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 16:15:24 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 19:34:55 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	builtin_env(t_tokens **tokens, t_var **varlist)
 	head = *varlist;
 	while (head)
 	{
-		if (head->value && ft_strncmp(head->value, "?", 2))
+		if (head->value && ft_strncmp(head->name, "?", 2))
 		{
 			total_len = ft_strlen(head->name) + ft_strlen(head->value) + 3;
 			var = (char *)malloc(sizeof(char) * total_len);
