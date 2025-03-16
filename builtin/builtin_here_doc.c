@@ -1,35 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   builtin_here_doc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 12:50:42 by tssaito          ###   ########.fr       */
+/*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
+/*   Updated: 2025/03/16 16:14:36 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*make_filename(t_child *child, char *basename, int i)
+static char	*make_filename(char *basename, int i)
 {
 	char	*index;
 	char	*file;
 
 	index = ft_itoa(i);
 	if (!index)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+	{
+		builtin_error(errno, "cannot create temp file for here-document");
+		return (NULL);
+	}
 	file = ft_strjoin(basename, index);
 	free(index);
 	if (!file)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+	{
+		builtin_error(errno, "cannot create temp file for here-document");
+		return (NULL);
+	}
 	return (file);
 }
 
-static char	*get_filename(t_child *child)
+static char	*get_filename(void)
 {
 	char	*file;
 	char	*basename;
@@ -37,15 +41,17 @@ static char	*get_filename(t_child *child)
 
 	basename = ft_strdup("/tmp/.tmp");
 	if (!basename)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+	{
+		builtin_error(errno, "cannot create temp file for here-document");
+		return (NULL);
+	}
 	file = basename;
 	while (!access(file, F_OK))
 	{
 		i = 0;
 		while (i <= INT_MAX)
 		{
-			file = make_filename(child, basename, i);
+			file = make_filename(basename, i);
 			if (access(file, F_OK))
 				break ;
 			free(file);
@@ -57,26 +63,29 @@ static char	*get_filename(t_child *child)
 	return (file);
 }
 
-static int	open_tmpfile(t_child *child, char **file)
+static int	open_tmpfile(char **file)
 {
 	int	fd;
 
 	if (!*file)
-		*file = get_filename(child);
+		*file = get_filename();
+	if (!*file)
+		return (EXIT_FAILURE);
 	fd = open(*file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		exit_child(child, EXIT_FAILURE, errno, *file);
+		return (builtin_error(errno, *file));
 	return (fd);
 }
 
-char	*heredoc(t_child *child, char *limiter)
+static int	builtin_heredoc(char **tmpfile, char *limiter)
 {
-	int			lim_len;
-	int			filefd;
-	char		*buf;
-	static char	*file;
+	int		lim_len;
+	int		filefd;
+	char	*buf;
 
-	filefd = open_tmpfile(child, &file);
+	filefd = open_tmpfile(tmpfile);
+	if (filefd < 0)
+		return (EXIT_FAILURE);
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
@@ -93,6 +102,29 @@ char	*heredoc(t_child *child, char *limiter)
 		free(buf);
 	}
 	if (close(filefd) == -1)
-		exit_child(child, EXIT_FAILURE, errno, file);
-	return (file);
+		return (builtin_error(errno, *tmpfile));
+	return (SUCCESS);
+}
+
+int	check_here_doc(t_tokens **tokens, char **tmpfile)
+{
+	t_tokens	*head;
+	int			status;
+
+	head = *tokens;
+	while (head)
+	{
+		if (head->type == HEREDOC)
+		{
+			status = builtin_heredoc(tmpfile, head->next->token);
+			if (status != SUCCESS)
+			{
+				unlink(*tmpfile);
+				free(*tmpfile);
+				return (EXIT_FAILURE);
+			}
+		}
+		head = head->next;
+	}
+	return (EXIT_SUCCESS);
 }

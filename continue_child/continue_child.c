@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 22:03:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 18:22:29 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static void	check_syntax(t_child *child, t_tokens **tokens)
 		if (head->type != WORD)
 		{
 			if (!head->next)
-				exit_child(child, EXIT_SYNTAX, SYNTAXERROR, "newline");
+				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, "newline");
 			else if (head->next->type != WORD)
-				exit_child(child, EXIT_SYNTAX, SYNTAXERROR, head->next->token);
+				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->next->token);
 			head = head->next->next;
 		}
 		else

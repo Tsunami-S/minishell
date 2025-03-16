@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 22:05:08 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/15 23:46:41 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ void	redirect_fds(t_child *child, t_tokens **tokens)
 	while (head)
 	{
 		if (head->type == HEREDOC)
-			redirect(child, 0, head->type, child->tmpfile);
+			redirect(child, STDIN_FILENO, head->type, child->tmpfile);
 		else if (head->type == INPUT)
-			redirect(child, 0, head->type, head->next->token);
+			redirect(child, STDIN_FILENO, head->type, head->next->token);
 		else if (head->type != WORD)
-			redirect(child, 1, head->type, head->next->token);
+			redirect(child, STDOUT_FILENO, head->type, head->next->token);
 		head = head->next;
 	}
 }

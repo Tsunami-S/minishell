@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:45 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 20:51:51 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 12:51:07 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,6 @@ void	make_cmds(t_child *child, t_tokens **tokens)
 
 	malloc_size = count_cmds(child->tokens);
 	child->cmds = copy_cmds(child, tokens, malloc_size);
+	if (!*child->cmds)
+		exit_child(child, EXIT_SUCCESS, errno, NULL);
 }

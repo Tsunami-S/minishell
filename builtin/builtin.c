@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 17:46:42 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 19:18:33 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,26 @@ int	builtin_echo(t_tokens **tokens, t_var **varlist)
 int	call_builtin(t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*token;
+	t_saved saved;
+	int status;
 
 	token = *tokens;
+	if(redirect_builtin(tokens, &saved))
+		return (ERROR);
 	if (ft_strcmp(token->token, "echo") == 0)
-		return (builtin_echo(tokens, varlist));
+		status = builtin_echo(tokens, varlist);
 	if (ft_strcmp(token->token, "cd") == 0)
-		return (builtin_cd(tokens, varlist));
+		status = builtin_cd(tokens, varlist);
 	if (ft_strcmp(token->token, "pwd") == 0)
-		return (builtin_pwd(tokens, varlist));
+		status = builtin_pwd(tokens, varlist);
 	if (ft_strcmp(token->token, "export") == 0)
-		return (builtin_export(tokens, varlist));
+		status = builtin_export(tokens, varlist);
 	if (ft_strcmp(token->token, "unset") == 0)
-		return (builtin_unset(tokens, varlist));
+		status = builtin_unset(tokens, varlist);
 	if (ft_strcmp(token->token, "env") == 0)
-		return (builtin_env(tokens, varlist));
+		status = builtin_env(tokens, varlist);
 	if (ft_strcmp(token->token, "exit") == 0)
-		return (builtin_exit(tokens, varlist));
-	return (ERROR);
+		status = builtin_exit(tokens, varlist);
+	builtin_reset_stdio(&saved);
+	return status;
 }

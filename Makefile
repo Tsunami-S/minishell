@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/16 17:49:58 by haito            ###   ########.fr        #
+#    Updated: 2025/03/16 19:06:16 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,13 @@ SRCS =	minishell_main.c \
 		minishell_utils4.c \
 		minishell_utils5.c \
 		builtin/builtin.c \
-		builtin/builtin2.c \
+		builtin/builtin_error.c \
+		builtin/builtin_set_stdio.c \
+		builtin/builtin_redirect.c \
+		builtin/builtin_here_doc.c \
+		builtin/builtin_export.c \
+		builtin/builtin_env.c \
+		builtin/builtin_unset.c \
 		parent_process/find_brackets_pair.c \
 		parent_process/sep_input_to_cmds.c \
 		parent_process/handle_node.c \

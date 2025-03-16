@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:03:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 12:12:17 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 13:53:40 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,25 @@ void	free_tokens(t_tokens **tokens)
 		free(tmp->token);
 		free(tmp);
 	}
+}
+
+void	free_one_token(t_tokens **tokens, t_tokens *rm_token)
+{
+	t_tokens	*head;
+
+	if (!tokens)
+		return ;
+	head = *tokens;
+	while (head && head->next != rm_token)
+		head = head->next;
+	if (!head)
+		return ;
+	if (head == rm_token)
+		*tokens = (*tokens)->next;
+	else
+		head->next = head->next->next;
+	free(rm_token->token);
+	free(rm_token);
 }
 
 void	free_varlist(t_var **varlist)

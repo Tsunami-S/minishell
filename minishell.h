@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 18:48:05 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 19:07:57 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 
 # define MAX_STACK_BRACKETS 500
 
+typedef struct s_saved
+{
+	int in;
+	int out;
+}	t_saved;
+
 typedef enum e_exist
 {
 	NONE,
@@ -42,7 +48,6 @@ typedef enum e_type
 	INPUT,
 	HEREDOC,
 }	t_type;
-
 
 typedef struct s_tokens
 {
@@ -170,8 +175,9 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);
 char	*ft_itoa(int n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
-char	*get_next_line(int fd);
 void free_strs(char **strs);
+int	ft_isalnum(int c);
+int	ft_isdigit(int c);
 
 /* set varlist */
 //t_var	*init_varlist(char **envp);
@@ -179,7 +185,6 @@ t_var	*init_varlist(char **envp, char *c1, char *c2);
 void	free_varlist(t_var **varlist);
 t_var	*get_var(t_var **varlist, char *name);
 void	add_var(t_var **varlist, char *var_name, char *var_value);
-t_var	**remove_var(t_var **varlist, char *name);
 
 /* expander */
 t_tokens	*expander(char *str, t_var **varlist);
@@ -200,6 +205,17 @@ void	exit_child(t_child *child, int status, int errnum, char *msg);
 
 /* others */
 void free_tokens(t_tokens **tokens);
+void 	free_one_token(t_tokens **tokens, t_tokens *rm_token);
 void	free_words(char **words, int size);
+
+/* builtin */
+int	redirect_builtin(t_tokens **tokens, t_saved *saved);
+int	check_here_doc(t_tokens **tokens, char **tmpfile);
+int	builtin_save_stdio(t_tokens **tokens, t_saved *saved);
+int	builtin_reset_stdio(t_saved *saved);
+int builtin_error(int errnum, char *msg);
+int builtin_unset(t_tokens **tokens, t_var **varlist);
+int	builtin_env(t_tokens **tokens, t_var **varlist);
+int	builtin_export(t_tokens **tokens, t_var **varlist);
 
 #endif
