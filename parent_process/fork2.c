@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 19:39:55 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/16 20:16:55 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_child_process(t_status *st, t_var **varlist)
 	{
 		token = st->token;
 		free_lst_status(st, 2);
-		exit(call_builtin(&token, varlist));
+		exit(child_call_builtin(&token, varlist));
 	}
 	else
 	{

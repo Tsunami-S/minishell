@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 19:07:57 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/16 20:16:17 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ int	builtin_unset(t_tokens **tokens, t_var **varlist);
 int	builtin_env(t_tokens **tokens, t_var **varlist);
 void	frees(t_status *st_head, int num, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
+int	child_call_builtin(t_tokens **tokens, t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
