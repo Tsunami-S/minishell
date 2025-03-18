@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 00:17:29 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 00:22:40 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_tokens	*expander(char *str, t_var **varlist)
 		free_tokens(&tokens);
 		return (NULL);
 	}
-	while (!tokens->token[0])
+	while (tokens && !tokens->token[0])
 	{
 		tmp = tokens;
 		tokens = tokens->next;
