@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:46:09 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 23:55:47 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int	check_syntax(t_tokens **tokens)
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD)
+		if (head->type != WORD && head->type != HAVE_QUOTE)
 		{
 			if (!head->next)
 				return (builtin_error(REDIRECTERROR, "newline"));
-			else if (head->next->type != WORD)
+			else if (head->next->type != WORD && head->next->type != HAVE_QUOTE)
 				return (builtin_error(REDIRECTERROR, head->next->token));
 			head = head->next->next;
 		}
@@ -76,7 +76,7 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 			status = redirect(STDIN_FILENO, head->type, tmpfile, fd);
 		else if (head->type == INPUT)
 			status = redirect(STDIN_FILENO, head->type, head->next->token, fd);
-		else if (head->type != WORD)
+		else if (head->type != WORD && head->type != HAVE_QUOTE)
 			status = redirect(STDOUT_FILENO, head->type, head->next->token, fd);
 		if (status != SUCCESS)
 			return (EXIT_FAILURE);
@@ -93,7 +93,7 @@ static int	delete_redirect(t_tokens **tokens)
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD)
+		if (head->type != WORD && head->type != HAVE_QUOTE)
 		{
 			tmp = head;
 			head = head->next;

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:24:04 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 00:02:38 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 		return (NULL);
 	var = get_var(varlist, name);
 	free(name);
-	if (!var)
+	if (!var || !var->value)
 		words[*i] = ft_strdup("");
 	else
 		words[*i] = ft_strdup(var->value);
