@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 00:02:38 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 00:38:18 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,11 @@ static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 
 	end = str;
 	end++;
-	while (*end && (ft_isalnum(*end) || *end == '_'))
+	if (*end == '?')
 		end++;
+	else
+		while (*end && (ft_isalnum(*end) || *end == '_'))
+			end++;
 	name = ft_strndup(str + 1, end - str - 1);
 	if (!name)
 		return (NULL);
@@ -109,6 +112,8 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 	{
 		if (*token == '$' && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
 			token = dup_var(token, words, &i, varlist);
+		else if (!ft_strncmp(token, "$?", 2))
+			token = dup_var(token, words, &i, varlist);
 		else if (*token == '\'')
 			token = dup_singlequot_text(token, words, &i);
 		else if (*token == '\"')
@@ -116,10 +121,7 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 		else
 			token = dup_plain_text(token, words, &i);
 		if (!token)
-		{
-			free_words(words, malloc_size);
-			return (NULL);
-		}
+			return (free_words(words, malloc_size), NULL);
 	}
 	words[i] = NULL;
 	return (words);

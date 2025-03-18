@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:24:02 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 00:38:20 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ int	count_words_and_vars(char *str)
 		malloc_size++;
 		if (*str == '$' && (ft_isalnum(*(str + 1)) || *(str + 1) == '_'))
 			str = count_envvar_size(str);
+		else if (!ft_strncmp(str, "$?", 2))
+			str += 2;
 		else if (*str && *str != '\'' && *str != '\"')
 			str = count_plaintext_size(str);
 		else if (*str == '\'')
