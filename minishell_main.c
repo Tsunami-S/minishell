@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/14 13:29:54 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/17 15:28:30 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	check_built_in(t_status **st_head, t_status *st)
 
 	if (!st_head || !*st_head || !st)
 		return (ERROR);
+	if (!st->token)
+		return (SUCCESS);
 	builtin_cmds = init_builtin_cmds();
 	if (!builtin_cmds)
 		return (error_node(ERRNO_ONE), ERROR);

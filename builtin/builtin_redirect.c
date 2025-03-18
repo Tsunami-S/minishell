@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 16:53:55 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 21:46:09 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 
 	head = *tokens;
 	status = SUCCESS;
-	fd = 0;
+	fd = -1;
 	while (head)
 	{
 		if (head->type == HEREDOC)
@@ -78,13 +78,7 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 			status = redirect(STDIN_FILENO, head->type, head->next->token, fd);
 		else if (head->type != WORD)
 			status = redirect(STDOUT_FILENO, head->type, head->next->token, fd);
-		if (status != SUCCESS && head->type == HEREDOC)
-		{
-			unlink(tmpfile);
-			free(tmpfile);
-			return (EXIT_FAILURE);
-		}
-		else if (status != SUCCESS)
+		if (status != SUCCESS)
 			return (EXIT_FAILURE);
 		head = head->next;
 	}
@@ -114,7 +108,7 @@ static int	delete_redirect(t_tokens **tokens)
 	return (SUCCESS);
 }
 
-int	redirect_builtin(t_tokens **tokens, t_saved *saved)
+int	redirect_builtin(t_tokens **tokens, t_saved *saved, t_var **varlist)
 {
 	int		status;
 	char	*tmpfile;
@@ -126,17 +120,17 @@ int	redirect_builtin(t_tokens **tokens, t_saved *saved)
 	status = builtin_save_stdio(tokens, saved);
 	if (status != SUCCESS)
 		return (EXIT_FAILURE);
-	status = check_here_doc(tokens, &tmpfile);
+	status = check_here_doc(tokens, &tmpfile, varlist);
 	if (status != SUCCESS)
 		return (EXIT_FAILURE);
 	status = redirects(tokens, tmpfile);
-	if (status != SUCCESS)
-		return (EXIT_FAILURE);
 	if (tmpfile)
 	{
-		free(tmpfile);
 		unlink(tmpfile);
+		free(tmpfile);
 	}
+	if (status != SUCCESS)
+		return (EXIT_FAILURE);
 	delete_redirect(tokens);
 	return (EXIT_SUCCESS);
 }

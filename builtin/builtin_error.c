@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 19:58:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 18:45:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void	put_errmsg(char *msg, int errnum)
 	free(strerr);
 }
 
-int builtin_error(int errnum, char *msg)
+int	builtin_error(int errnum, char *msg)
 {
 	if (errnum == CMDERROR)
 		put_cmderr_msg(msg);

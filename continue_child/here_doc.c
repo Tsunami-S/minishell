@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 12:50:42 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 22:06:14 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ static int	open_tmpfile(t_child *child, char **file)
 	return (fd);
 }
 
-char	*heredoc(t_child *child, char *limiter)
+char	*child_heredoc(t_child *child, char *limiter, t_type type,
+		t_var **varlist)
 {
 	int			lim_len;
 	int			filefd;
@@ -80,7 +81,6 @@ char	*heredoc(t_child *child, char *limiter)
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
-		buf = NULL;
 		buf = readline("> ");
 		if (!buf)
 			break ;
@@ -89,6 +89,8 @@ char	*heredoc(t_child *child, char *limiter)
 			free(buf);
 			break ;
 		}
+		if (type == WORD)
+			buf = heredoc_expand_var(buf, varlist);
 		ft_putendl_fd(buf, filefd);
 		free(buf);
 	}

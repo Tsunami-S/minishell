@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 16:14:36 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 22:13:47 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,9 @@ static char	*get_filename(void)
 
 	basename = ft_strdup("/tmp/.tmp");
 	if (!basename)
-	{
 		builtin_error(errno, "cannot create temp file for here-document");
+	if (!basename)
 		return (NULL);
-	}
 	file = basename;
 	while (!access(file, F_OK))
 	{
@@ -77,15 +76,11 @@ static int	open_tmpfile(char **file)
 	return (fd);
 }
 
-static int	builtin_heredoc(char **tmpfile, char *limiter)
+static int	builtin_heredoc(int fd, char *limiter, t_type type, t_var **varlist)
 {
 	int		lim_len;
-	int		filefd;
 	char	*buf;
 
-	filefd = open_tmpfile(tmpfile);
-	if (filefd < 0)
-		return (EXIT_FAILURE);
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
@@ -98,31 +93,34 @@ static int	builtin_heredoc(char **tmpfile, char *limiter)
 			free(buf);
 			break ;
 		}
-		ft_putendl_fd(buf, filefd);
+		if (type == WORD)
+			buf = heredoc_expand_var(buf, varlist);
+		ft_putendl_fd(buf, fd);
 		free(buf);
 	}
-	if (close(filefd) == -1)
-		return (builtin_error(errno, *tmpfile));
 	return (SUCCESS);
 }
 
-int	check_here_doc(t_tokens **tokens, char **tmpfile)
+int	check_here_doc(t_tokens **tokens, char **tmpfile, t_var **varlist)
 {
 	t_tokens	*head;
 	int			status;
+	int			fd;
 
 	head = *tokens;
 	while (head)
 	{
 		if (head->type == HEREDOC)
 		{
-			status = builtin_heredoc(tmpfile, head->next->token);
-			if (status != SUCCESS)
-			{
-				unlink(*tmpfile);
-				free(*tmpfile);
+			fd = open_tmpfile(tmpfile);
+			if (fd < 0)
 				return (EXIT_FAILURE);
-			}
+			status = builtin_heredoc(fd, head->next->token, head->type,
+					varlist);
+			if (close(fd) == -1)
+				return (builtin_error(errno, *tmpfile));
+			if (status != SUCCESS)
+				return (unlink(*tmpfile), free(*tmpfile), EXIT_FAILURE);
 		}
 		head = head->next;
 	}

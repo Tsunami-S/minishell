@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/16 19:06:16 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/18 21:59:57 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,9 @@ SRCS =	minishell_main.c \
 		builtin/builtin_redirect.c \
 		builtin/builtin_here_doc.c \
 		builtin/builtin_export.c \
+		builtin/builtin_export_list.c \
 		builtin/builtin_env.c \
+		builtin/builtin_echo.c \
 		builtin/builtin_unset.c \
 		parent_process/find_brackets_pair.c \
 		parent_process/sep_input_to_cmds.c \
@@ -42,7 +44,8 @@ SRCS =	minishell_main.c \
 		export_utils.c \
 		init_varlist.c \
 		expander/expander.c \
-		expander/tokenizer.c \
+		expander/pre_tokenizer.c \
+		expander/more_tokenizer.c \
 		expander/replace_vars.c \
 		expander/replace_vars_count.c \
 		expander/replace_vars_split.c \
@@ -58,6 +61,9 @@ SRCS =	minishell_main.c \
 		continue_child/make_fullpath.c \
 		continue_child/redirect.c \
 		continue_child/here_doc.c \
+		here_doc/heredoc_expand_vars.c \
+		here_doc/heredoc_vars_count.c \
+		here_doc/heredoc_vars_split.c \
 		free_utils.c
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 20:16:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/18 22:16:48 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef enum e_type
 	APPEND,
 	INPUT,
 	HEREDOC,
+	HAVE_QUOTE,
 }	t_type;
 
 typedef struct s_tokens
@@ -154,13 +155,9 @@ int	call_builtin(t_tokens **tokens, t_var **varlist);
 void	handle_and_or(t_status *st, int *result);
 void	handle_parent_process(t_status *st);
 void	handle_child_process(t_status *st, t_var **varlist);
-int	builtin_echo(t_tokens **tokens, t_var **varlist);
 int	builtin_cd(t_tokens **tokens, t_var **varlist);
 int	builtin_pwd(t_tokens **tokens, t_var **varlist);
 int	builtin_exit(t_tokens **tokens, t_var **varlist);
-int	builtin_export(t_tokens **tokens, t_var **varlist);
-int	builtin_unset(t_tokens **tokens, t_var **varlist);
-int	builtin_env(t_tokens **tokens, t_var **varlist);
 void	frees(t_status *st_head, int num, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
 int	child_call_builtin(t_tokens **tokens, t_var **varlist);
@@ -189,20 +186,26 @@ void	add_var(t_var **varlist, char *var_name, char *var_value);
 
 /* expander */
 t_tokens	*expander(char *str, t_var **varlist);
-t_tokens	*tokenizer(char *str);
-void	replace_vars(t_tokens **tokens, t_var **varlist);
+t_tokens	*pre_tokenizer(char *str);
+int more_tokenizer(t_tokens **tokens);
+int	replace_vars(t_tokens **tokens, t_var **varlist);
 char *count_plaintext_size(char *str);
 int	count_words_and_vars(char *str);
 char	**split_token(char *token, int malloc_size, t_var **varlist);
 
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);
-void	redirect_fds(t_child *child, t_tokens **tokens);
-char	*heredoc(t_child *child, char *limiter);
+void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist);
+char	*child_heredoc(t_child *child, char *limiter, t_type type, t_var **varlist);
 void	make_cmds(t_child *child, t_tokens **tokens);
 void	make_envp(t_child *child, t_var **varlist);
 void	make_fullpath(t_child *child, char *cmd, t_var **varlist);
 void	exit_child(t_child *child, int status, int errnum, char *msg);
+
+/* here_doc */
+char *heredoc_expand_var(char *buf, t_var **varlist);
+int	heredoc_vars_count(char *str);
+char	**heredoc_split_token(char *token, int malloc_size, t_var **varlist);
 
 /* others */
 void free_tokens(t_tokens **tokens);
@@ -210,13 +213,15 @@ void 	free_one_token(t_tokens **tokens, t_tokens *rm_token);
 void	free_words(char **words, int size);
 
 /* builtin */
-int	redirect_builtin(t_tokens **tokens, t_saved *saved);
-int	check_here_doc(t_tokens **tokens, char **tmpfile);
+int	redirect_builtin(t_tokens **tokens, t_saved *saved, t_var **varlist);
+int	check_here_doc(t_tokens **tokens, char **tmpfile, t_var **varlist);
 int	builtin_save_stdio(t_tokens **tokens, t_saved *saved);
 int	builtin_reset_stdio(t_saved *saved);
 int builtin_error(int errnum, char *msg);
 int builtin_unset(t_tokens **tokens, t_var **varlist);
 int	builtin_env(t_tokens **tokens, t_var **varlist);
 int	builtin_export(t_tokens **tokens, t_var **varlist);
+int builtin_export_list(t_var **varlist);
+int	builtin_echo(t_tokens **tokens, t_var **varlist);
 
 #endif

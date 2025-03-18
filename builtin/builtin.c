@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 20:15:59 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/18 21:42:50 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,14 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 	return (0);
 }
 
-int	builtin_echo(t_tokens **tokens, t_var **varlist)
-{
-	(void)tokens;
-	(void)varlist;
-	printf("is echo\n");
-	return (0);
-}
-
 int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*token;
-	t_saved saved;
-	int status;
+	t_saved		saved;
+	int			status;
 
 	token = *tokens;
-	if (redirect_builtin(tokens, &saved))
+	if (redirect_builtin(tokens, &saved, varlist))
 		return (ERROR);
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
@@ -70,17 +62,17 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 	builtin_reset_stdio(&saved);
 	free_varlist(varlist);
 	free_tokens(tokens);
-	return status;
+	return (status);
 }
 
 int	call_builtin(t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*token;
-	t_saved saved;
-	int status;
+	t_saved		saved;
+	int			status;
 
 	token = *tokens;
-	if(redirect_builtin(tokens, &saved))
+	if (redirect_builtin(tokens, &saved, varlist))
 		return (ERROR);
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
@@ -97,5 +89,5 @@ int	call_builtin(t_tokens **tokens, t_var **varlist)
 	if (ft_strcmp(token->token, "exit") == 0)
 		status = builtin_exit(tokens, varlist);
 	builtin_reset_stdio(&saved);
-	return status;
+	return (status);
 }

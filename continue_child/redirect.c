@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 23:46:41 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 22:04:49 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 		exit_child(child, EXIT_FAILURE, errno, file);
 }
 
-void	redirect_fds(t_child *child, t_tokens **tokens)
+void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*head;
 
@@ -49,7 +49,8 @@ void	redirect_fds(t_child *child, t_tokens **tokens)
 	while (head)
 	{
 		if (head->type == HEREDOC)
-			child->tmpfile = heredoc(child, head->next->token);
+			child->tmpfile = child_heredoc(child, head->next->token,
+					head->next->type, varlist);
 		head = head->next;
 	}
 	head = *tokens;
@@ -59,7 +60,7 @@ void	redirect_fds(t_child *child, t_tokens **tokens)
 			redirect(child, STDIN_FILENO, head->type, child->tmpfile);
 		else if (head->type == INPUT)
 			redirect(child, STDIN_FILENO, head->type, head->next->token);
-		else if (head->type != WORD)
+		else if (head->type != WORD && head->type != HAVE_QUOTE)
 			redirect(child, STDOUT_FILENO, head->type, head->next->token);
 		head = head->next;
 	}

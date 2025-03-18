@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:45 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 12:51:07 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 21:09:52 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	count_cmds(t_tokens **tokens)
 	count = 0;
 	while (head)
 	{
-		if (head->type != WORD)
+		if (head->type != WORD && head->type != HAVE_QUOTE)
 			head = head->next->next;
 		else if (head->token && *head->token)
 		{
@@ -45,7 +45,7 @@ static char	**copy_cmds(t_child *child, t_tokens **tokens, int malloc_size)
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD)
+		if (head->type != WORD && head->type != HAVE_QUOTE)
 			head = head->next->next;
 		else if (head->token && *head->token)
 		{

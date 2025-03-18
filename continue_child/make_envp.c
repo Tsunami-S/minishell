@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 20:51:45 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 18:46:25 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	count_vars(t_var **varlist)
 	head = *varlist;
 	while (head)
 	{
-		if (head->value)
+		if (head->name && head->value)
 			count++;
 		head = head->next;
 	}
@@ -41,7 +41,7 @@ static char	**concat_name_with_value(t_child *child, t_var **varlist, int size)
 	head = *varlist;
 	while (head)
 	{
-		if (head->value)
+		if (head->name && head->value)
 		{
 			envp[i] = ft_strjoin_three(head->name, "=", head->value);
 			if (!envp[i])

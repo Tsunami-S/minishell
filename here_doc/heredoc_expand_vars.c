@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   replace_vars.c                                     :+:      :+:    :+:   */
+/*   heredoc_expand_vars.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:24:01 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 22:06:39 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_words(char **words, int size)
-{
-	int	i;
-
-	i = 0;
-	while (i < size)
-	{
-		if (words[i])
-			free(words[i]);
-		i++;
-	}
-	free(words);
-}
 
 static char	*concat_words(char **words, int size)
 {
@@ -71,27 +57,21 @@ static char	**dup_null(void)
 	return (words);
 }
 
-int	replace_vars(t_tokens **tokens, t_var **varlist)
+char	*heredoc_expand_var(char *buf, t_var **varlist)
 {
-	t_tokens	*head;
-	char		**words;
-	int			words_size;
+	int		words_size;
+	char	**words;
 
-	head = *tokens;
-	while (head)
-	{
-		words_size = count_words_and_vars(head->token);
-		if (!words_size)
-			words = dup_null();
-		else
-			words = split_token(head->token, words_size, varlist);
-		if (!words)
-			return (ERROR);
-		free(head->token);
-		head->token = concat_words(words, words_size);
-		if (!head->token)
-			return (ERROR);
-		head = head->next;
-	}
-	return (SUCCESS);
+	words_size = heredoc_vars_count(buf);
+	if (!words_size)
+		words = dup_null();
+	else
+		words = heredoc_split_token(buf, words_size, varlist);
+	if (!words)
+		return (NULL);
+	free(buf);
+	buf = concat_words(words, words_size);
+	if (!buf)
+		return (NULL);
+	return (buf);
 }

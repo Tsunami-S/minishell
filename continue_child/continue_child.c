@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 18:22:29 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/18 21:10:32 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@ static void	check_syntax(t_child *child, t_tokens **tokens)
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD)
+		if (head->type != WORD && head->type != HAVE_QUOTE)
 		{
-			if (!head->next)
+			head = head->next;
+			if (!head)
 				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, "newline");
-			else if (head->next->type != WORD)
-				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->next->token);
-			head = head->next->next;
+			if (head->type != WORD && head->type != HAVE_QUOTE)
+				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->token);
+			head = head->next;
 		}
 		else
 			head = head->next;
@@ -44,7 +45,7 @@ void	continue_child(t_tokens **tokens, t_var **varlist)
 	child.tokens = tokens;
 	child.varlist = varlist;
 	check_syntax(&child, child.tokens);
-	redirect_fds(&child, child.tokens);
+	redirect_fds(&child, child.tokens, varlist);
 	make_cmds(&child, child.tokens);
 	make_envp(&child, child.varlist);
 	make_fullpath(&child, child.cmds[0], child.varlist);
