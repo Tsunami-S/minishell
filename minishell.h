@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 16:35:36 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 18:28:38 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void	handle_and_or(t_status *st, t_lp *lp);
 void	handle_parent_process(t_status *st);
 void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head);
-int	builtin_cd(t_tokens **tokens);
+int	builtin_cd(t_tokens **tokens, t_var **varlist);
 int	builtin_pwd(void);
 int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void	frees(t_status *st_head, t_var **varlist);

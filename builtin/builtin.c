@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 15:25:40 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/19 18:29:41 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,6 @@ int	builtin_pwd(void)
 	return (0);
 }
 
-int	builtin_cd(t_tokens **tokens)
-{
-	t_tokens	*token;
-
-	token = *tokens;
-	if (token->next && token->next->next)
-	{
-		ft_eprintf("minishell: cd: too many arguments\n");
-		return (1);
-	}
-	if (token->next)
-	{
-		if (chdir(token->next->token) == -1)
-		{
-			perror("minishell: cd:");
-			return (1);
-		}
-	}
-	return (0);
-}
-
 int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 {
 	t_tokens	*token;
@@ -63,7 +42,7 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
 	if (ft_strcmp(token->token, "cd") == 0)
-		status = builtin_cd(tokens);
+		status = builtin_cd(tokens, varlist);
 	if (ft_strcmp(token->token, "pwd") == 0)
 		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)
@@ -92,7 +71,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
 	if (ft_strcmp(token->token, "cd") == 0)
-		status = builtin_cd(tokens);
+		status = builtin_cd(tokens, varlist);
 	if (ft_strcmp(token->token, "pwd") == 0)
 		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)

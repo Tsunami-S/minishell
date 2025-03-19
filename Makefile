@@ -6,7 +6,7 @@
 #    By: hito <hito@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/19 16:33:07 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/19 18:30:48 by hito             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS =	minishell_main.c \
 		builtin/builtin_env.c \
 		builtin/builtin_echo.c \
 		builtin/builtin_unset.c \
+		builtin/builtin_cd.c \
 		builtin/builtin_exit.c \
 		parent_process/find_brackets_pair.c \
 		parent_process/sep_input_to_cmds.c \
