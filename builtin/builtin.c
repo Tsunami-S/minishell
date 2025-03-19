@@ -3,40 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/18 21:42:50 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 15:25:40 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_exit(t_tokens **tokens, t_var **varlist)
+int	builtin_pwd(void)
 {
-	(void)tokens;
-	(void)varlist;
-	printf("is exit\n");
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		printf("%s\n", cwd);
+		free(cwd);
+	}
+	else
+	{
+		perror("minishell: pwd:");
+		return (1);
+	}
 	return (0);
 }
 
-int	builtin_pwd(t_tokens **tokens, t_var **varlist)
+int	builtin_cd(t_tokens **tokens)
 {
-	(void)tokens;
-	(void)varlist;
-	printf("is pwd\n");
+	t_tokens	*token;
+
+	token = *tokens;
+	if (token->next && token->next->next)
+	{
+		ft_eprintf("minishell: cd: too many arguments\n");
+		return (1);
+	}
+	if (token->next)
+	{
+		if (chdir(token->next->token) == -1)
+		{
+			perror("minishell: cd:");
+			return (1);
+		}
+	}
 	return (0);
 }
 
-int	builtin_cd(t_tokens **tokens, t_var **varlist)
-{
-	(void)tokens;
-	(void)varlist;
-	printf("is cd\n");
-	return (0);
-}
-
-int	child_call_builtin(t_tokens **tokens, t_var **varlist)
+int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 {
 	t_tokens	*token;
 	t_saved		saved;
@@ -48,9 +63,9 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
 	if (ft_strcmp(token->token, "cd") == 0)
-		status = builtin_cd(tokens, varlist);
+		status = builtin_cd(tokens);
 	if (ft_strcmp(token->token, "pwd") == 0)
-		status = builtin_pwd(tokens, varlist);
+		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)
 		status = builtin_export(tokens, varlist);
 	if (ft_strcmp(token->token, "unset") == 0)
@@ -58,14 +73,14 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 	if (ft_strcmp(token->token, "env") == 0)
 		status = builtin_env(tokens, varlist);
 	if (ft_strcmp(token->token, "exit") == 0)
-		status = builtin_exit(tokens, varlist);
+		status = builtin_exit(tokens, varlist, st_head);
 	builtin_reset_stdio(&saved);
 	free_varlist(varlist);
 	free_tokens(tokens);
 	return (status);
 }
 
-int	call_builtin(t_tokens **tokens, t_var **varlist)
+int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 {
 	t_tokens	*token;
 	t_saved		saved;
@@ -77,9 +92,9 @@ int	call_builtin(t_tokens **tokens, t_var **varlist)
 	if (ft_strcmp(token->token, "echo") == 0)
 		status = builtin_echo(tokens, varlist);
 	if (ft_strcmp(token->token, "cd") == 0)
-		status = builtin_cd(tokens, varlist);
+		status = builtin_cd(tokens);
 	if (ft_strcmp(token->token, "pwd") == 0)
-		status = builtin_pwd(tokens, varlist);
+		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)
 		status = builtin_export(tokens, varlist);
 	if (ft_strcmp(token->token, "unset") == 0)
@@ -87,7 +102,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist)
 	if (ft_strcmp(token->token, "env") == 0)
 		status = builtin_env(tokens, varlist);
 	if (ft_strcmp(token->token, "exit") == 0)
-		status = builtin_exit(tokens, varlist);
+		status = builtin_exit(tokens, varlist, st_head);
 	builtin_reset_stdio(&saved);
 	return (status);
 }

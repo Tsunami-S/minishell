@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 13:59:49 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/19 15:15:38 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			;
 		else if (st->is_builtin && (!st->next || st->next->has_and
 				|| st->next->has_or) && st->has_brackets == 0)
-			lp.result = call_builtin(&st->token, varlist);
+			lp.result = call_builtin(&st->token, varlist, *st_head);
 		else
 		{
 			fork_process(st, varlist, &lp, *st_head);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
+#    By: hito <hito@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/18 21:59:57 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/19 15:40:49 by hito             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS =	minishell_main.c \
 		builtin/builtin_env.c \
 		builtin/builtin_echo.c \
 		builtin/builtin_unset.c \
+		builtin/builtin_exit.c \
 		parent_process/find_brackets_pair.c \
 		parent_process/sep_input_to_cmds.c \
 		parent_process/handle_node.c \

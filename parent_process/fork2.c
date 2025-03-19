@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 14:00:29 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/19 15:15:10 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		exit(child_call_builtin(&token, varlist));
+		exit(child_call_builtin(&token, varlist, st_head));
 	}
 	else
 	{

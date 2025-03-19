@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 14:00:55 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/19 15:14:45 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,16 +151,17 @@ void	free_lst_status(t_status *st_head, t_status *st);
 int		error_handle_brackets(int error_num);
 int		error_node(int error_num);
 int		error_pipe(int error_num);
-int	call_builtin(t_tokens **tokens, t_var **varlist);
+int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void	handle_and_or(t_status *st, t_lp *lp);
 void	handle_parent_process(t_status *st);
 void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head);
-int	builtin_cd(t_tokens **tokens, t_var **varlist);
-int	builtin_pwd(t_tokens **tokens, t_var **varlist);
-int	builtin_exit(t_tokens **tokens, t_var **varlist);
+int	builtin_cd(t_tokens **tokens);
+int	builtin_pwd(void);
+int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void	frees(t_status *st_head, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
-int	child_call_builtin(t_tokens **tokens, t_var **varlist);
+int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
+int	ft_atoi(const char *str);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
