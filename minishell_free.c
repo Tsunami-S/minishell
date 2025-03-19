@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:42:18 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 18:06:41 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/19 13:58:35 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	free_builtin_cmds(char **builtin_cmds)
 	free(builtin_cmds);
 }
 
-void	free_lst_status(t_status *st_head, int num)
+void	free_lst_status(t_status *st_head, t_status *st)
 {
 	t_status	*current;
 	t_status	*next_node;
@@ -35,7 +35,7 @@ void	free_lst_status(t_status *st_head, int num)
 		next_node = current->next;
 		if (current->cmds)
 			free(current->cmds);
-		if (current->token && num == 1)
+		if (current->token && (!st || (st && st != current)))
 			free_tokens(&current->token);
 		if (current->input_pipefd != -1)
 			close(current->input_pipefd);
@@ -46,8 +46,8 @@ void	free_lst_status(t_status *st_head, int num)
 	}
 }
 
-void	frees(t_status *st_head, int num, t_var **varlist)
+void	frees(t_status *st_head, t_var **varlist)
 {
-	free_lst_status(st_head, num);
+	free_lst_status(st_head, NULL);
 	free_varlist(varlist);
 }

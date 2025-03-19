@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/18 22:16:48 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:00:55 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,18 +147,18 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 	
 //new
 void	*error_add_char(int *i, char *cmds);
-void	free_lst_status(t_status *st_head, int num);
+void	free_lst_status(t_status *st_head, t_status *st);
 int		error_handle_brackets(int error_num);
 int		error_node(int error_num);
 int		error_pipe(int error_num);
 int	call_builtin(t_tokens **tokens, t_var **varlist);
-void	handle_and_or(t_status *st, int *result);
+void	handle_and_or(t_status *st, t_lp *lp);
 void	handle_parent_process(t_status *st);
-void	handle_child_process(t_status *st, t_var **varlist);
+void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head);
 int	builtin_cd(t_tokens **tokens, t_var **varlist);
 int	builtin_pwd(t_tokens **tokens, t_var **varlist);
 int	builtin_exit(t_tokens **tokens, t_var **varlist);
-void	frees(t_status *st_head, int num, t_var **varlist);
+void	frees(t_status *st_head, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
 int	child_call_builtin(t_tokens **tokens, t_var **varlist);
 

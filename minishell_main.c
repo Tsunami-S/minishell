@@ -73,14 +73,14 @@ int	recursive_continue_line(char *input, t_var **varlist)
 	if (!state)
 		return (free_varlist(varlist), ERROR);
 	if (make_pipe(&state) == ERROR)
-		return (frees(state, 1, varlist), ERROR);
+		return (frees(state, varlist), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
-		return (frees(state, 1, varlist), ERROR);
+		return (frees(state, varlist), ERROR);
 	if (check_built_in(&state, state))
-		return (frees(state, 1, varlist), ERROR);
+		return (frees(state, varlist), ERROR);
 	if (fork_and_wait(&state, varlist) == ERROR)
-		return (frees(state, 1, varlist), ERROR);
-	frees(state, 1, varlist);
+		return (frees(state, varlist), ERROR);
+	frees(state, varlist);
 	return (SUCCESS);
 }
 
@@ -99,14 +99,14 @@ int	continue_line(char *input, t_var **varlist)
 	if (!state)
 		return (ERROR);
 	if (make_pipe(&state) == ERROR)
-		return (free_lst_status(state, 1), ERROR);
+		return (free_lst_status(state, NULL), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
-		return (free_lst_status(state, 1), ERROR);
+		return (free_lst_status(state, NULL), ERROR);
 	if (check_built_in(&state, state))
-		return (free_lst_status(state, 1), ERROR);
+		return (free_lst_status(state, NULL), ERROR);
 	if (fork_and_wait(&state, varlist) == ERROR)
-		return (free_lst_status(state, 1), ERROR);
-	free_lst_status(state, 1);
+		return (free_lst_status(state, NULL), ERROR);
+	free_lst_status(state, NULL);
 	return (SUCCESS);
 }
 

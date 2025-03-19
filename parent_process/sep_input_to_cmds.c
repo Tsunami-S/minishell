@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sep_input_to_cmds.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 14:36:24 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/19 13:57:09 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 		else
 			ps.cmds = add_char(ps.cmds, input[ps.i], &ps.i);
 		if (ps.i == ERROR)
-			return (free_lst_status(st_head, 1), NULL);
+			return (free_lst_status(st_head, NULL), NULL);
 	}
 	if (add_command_node(&ps.cmds, &st_head) == ERROR)
-		return (free_lst_status(st_head, 1), NULL);
+		return (free_lst_status(st_head, NULL), NULL);
 	return (st_head);
 }

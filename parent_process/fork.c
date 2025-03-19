@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 19:27:18 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/19 13:59:49 by hito             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 
 	st = *st_head;
 	wait_count = 0;
+	status = 0;
 	if (lp->count_forked != 0)
 	{
 		waitpid(lp->last_pid, &status, 0);
@@ -59,20 +60,20 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 }
 
 void	fork_process(t_status *st, t_var **varlist,
-		int *result, int *count_forked)
+		t_lp *lp, t_status *st_head)
 {
 	st->pid = fork();
 	if (st->pid == -1)
 	{
 		perror("minishell: fork: ");
-		*result = FAILED;
+		lp->result = FAILED;
 		return ;
 	}
-	(*count_forked)++;
+	lp->count_forked++;
 	if (st->pid == 0)
-		handle_child_process(st, varlist);
+		handle_child_process(st, varlist, st_head);
 	handle_parent_process(st);
-	handle_and_or(st, result);
+	handle_and_or(st, lp);
 }
 
 int	fork_and_wait(t_status **st_head, t_var **varlist)
@@ -93,7 +94,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			lp.result = call_builtin(&st->token, varlist);
 		else
 		{
-			fork_process(st, varlist, &lp.result, &lp.count_forked);
+			fork_process(st, varlist, &lp, *st_head);
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
 				lp.last_pid = st->pid;
 		}
