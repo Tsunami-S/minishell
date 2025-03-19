@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 15:14:45 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/19 16:35:36 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ int	replace_vars(t_tokens **tokens, t_var **varlist);
 char *count_plaintext_size(char *str);
 int	count_words_and_vars(char *str);
 char	**split_token(char *token, int malloc_size, t_var **varlist);
-
+char	*skip_space(char *str);;
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);
 void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist);

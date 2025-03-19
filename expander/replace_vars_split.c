@@ -6,13 +6,13 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 00:38:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 16:31:23 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
+static char	*dup_var(char *str, char **words, t_type type, t_var **varlist)
 {
 	char	*end;
 	char	*name;
@@ -31,12 +31,13 @@ static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
 	var = get_var(varlist, name);
 	free(name);
 	if (!var || !var->value)
-		words[*i] = ft_strdup("");
+		*words = ft_strdup("");
 	else
-		words[*i] = ft_strdup(var->value);
-	if (!words[*i])
+		*words = ft_strdup(var->value);
+	if (!*words)
 		return (NULL);
-	*i += 1;
+	if (type == WORD)
+		*words = skip_space(*words);
 	return (end);
 }
 
@@ -68,7 +69,11 @@ static char	*dup_doublequot_text(char *str, char **words, int *i,
 	while (*end && *end != '\"')
 	{
 		if (*start == '$')
-			end = dup_var(start, words, i, varlist);
+		{
+			end = dup_var(start, &words[*i], HAVE_QUOTE, varlist);
+			if (!end)
+				return (NULL);
+		}
 		else
 		{
 			while (*end && *end != '\"' && *end != '$')
@@ -76,8 +81,8 @@ static char	*dup_doublequot_text(char *str, char **words, int *i,
 			words[*i] = ft_strndup(start, end - start);
 			if (!words[*i])
 				return (NULL);
-			*i += 1;
 		}
+		*i += 1;
 		start = end;
 	}
 	return (end + 1);
@@ -111,9 +116,9 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 	while (*token)
 	{
 		if (*token == '$' && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
-			token = dup_var(token, words, &i, varlist);
+			token = dup_var(token, &words[i++], WORD, varlist);
 		else if (!ft_strncmp(token, "$?", 2))
-			token = dup_var(token, words, &i, varlist);
+			token = dup_var(token, words, i++, varlist);
 		else if (*token == '\'')
 			token = dup_singlequot_text(token, words, &i);
 		else if (*token == '\"')

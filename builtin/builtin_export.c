@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:14:44 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 11:22:45 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,34 +38,6 @@ static int	check_syntax(char *token)
 	return (builtin_error(EXPORTERROR, var));
 }
 
-char	*get_new_value(char *str)
-{
-	char	*value;
-	char	**words;
-	int		value_size;
-	int		i;
-
-	words = ft_split(str, ' ');
-	if (!words)
-		return (NULL);
-	value_size = 0;
-	i = 0;
-	while (words[i])
-		value_size += ft_strlen(words[i++]) + 1;
-	value = (char *)malloc(sizeof(char) * (value_size + 1));
-	if (!value)
-		return (free_strs(words), NULL);
-	ft_strlcpy(value, words[0], value_size);
-	i = 1;
-	while (words[i])
-	{
-		ft_strlcat(value, " ", value_size);
-		ft_strlcat(value, words[i++], value_size);
-	}
-	free_strs(words);
-	return (value);
-}
-
 static int	append_var(t_var **varlist, char *str, int name_len)
 {
 	char	*name;
@@ -76,7 +48,7 @@ static int	append_var(t_var **varlist, char *str, int name_len)
 	name = ft_strndup(str, name_len);
 	if (!name)
 		return (builtin_error(errno, "malloc error"));
-	value = get_new_value(&str[name_len + 2]);
+	value = ft_strdup(&str[name_len + 2]);
 	if (!value)
 		return (free(name), builtin_error(errno, "malloc error"));
 	base = get_var(varlist, name);
@@ -107,7 +79,7 @@ static int	add_newvar(t_var **varlist, char *str, int name_len)
 		value = NULL;
 	else
 	{
-		value = get_new_value(&str[name_len + 1]);
+		value = ft_strdup(&str[name_len + 1]);
 		if (!value)
 		{
 			free(name);

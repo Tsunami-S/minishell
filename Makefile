@@ -6,7 +6,7 @@
 #    By: hito <hito@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/19 15:40:49 by hito             ###   ########.fr        #
+#    Updated: 2025/03/19 16:33:07 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRCS =	minishell_main.c \
 		expander/replace_vars.c \
 		expander/replace_vars_count.c \
 		expander/replace_vars_split.c \
+		expander/replace_vars_split2.c \
 		ft_eprintf/ft_eprintf.c \
 		ft_eprintf/ft_eprintf_option.c \
 		ft_eprintf/ft_eprintf_option2.c \

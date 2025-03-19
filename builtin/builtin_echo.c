@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:14:18 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:54:41 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:22:13 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,13 @@ static char	*make_total_str(t_tokens **tokens, int malloc_size, int option)
 	while (head && check_option(head->token))
 		head = head->next;
 	total_str[0] = '\0';
-	if (head)
-	{
-		ft_strlcpy(total_str, head->token, malloc_size);
-		head = head->next;
-	}
 	while (head)
 	{
-		ft_strlcat(total_str, " ", malloc_size);
-		ft_strlcat(total_str, head->token, malloc_size);
+		if (head->token[0])
+			ft_strlcat(total_str, head->token, malloc_size);
 		head = head->next;
+		if (head && total_str[0])
+			ft_strlcat(total_str, " ", malloc_size);
 	}
 	if (!option)
 		ft_strlcat(total_str, "\n", malloc_size);
@@ -82,7 +79,7 @@ static char	*make_total_str(t_tokens **tokens, int malloc_size, int option)
 int	builtin_echo(t_tokens **tokens, t_var **varlist)
 {
 	int			option;
-	int			malloc_size;
+	size_t		malloc_size;
 	char		*total_str;
 	t_tokens	*head;
 
