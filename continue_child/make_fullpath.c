@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:53 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 21:12:13 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 19:37:52 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,15 @@ static char	*check_original_path(t_child *child, char *cmd)
 	if (!fullpath)
 		exit_child(child, EXIT_FAILURE, errno, "malloc error");
 	if (access(fullpath, F_OK))
+	{
+		free(fullpath);
 		exit_child(child, EXIT_FAILURE, ENOENT, cmd);
+	}
 	if (access(fullpath, X_OK))
+	{
+		free(fullpath);
 		exit_child(child, EXIT_FAILURE, EACCES, cmd);
+	}
 	return (fullpath);
 }
 

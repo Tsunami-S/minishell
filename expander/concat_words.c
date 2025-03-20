@@ -1,12 +1,11 @@
-/* ************************************************************************** */
-/*                                                                            */
+/* ************************************************************************** */ /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   concat_words.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:39:26 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:23:55 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 23:20:39 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +26,7 @@ static char	*concat_words(char **words, int size)
 	}
 	expanded_token = (char *)malloc(sizeof(char) * (total_len + 1));
 	if (!expanded_token)
-		return (NULL);
+		return (free_words(words, size), NULL);
 	expanded_token[0] = '\0';
 	i = 0;
 	while (i < size)

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 23:55:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 19:28:03 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,18 @@
 static int	check_syntax(t_tokens **tokens)
 {
 	t_tokens	*head;
+	t_type		type;
 
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD && head->type != HAVE_QUOTE)
+		type = head->type;
+		if (type != WORD && type != HAVE_QUOTE && type != VAR)
 		{
 			if (!head->next)
 				return (builtin_error(REDIRECTERROR, "newline"));
-			else if (head->next->type != WORD && head->next->type != HAVE_QUOTE)
+			type = head->next->type;
+			if (type != WORD && type != HAVE_QUOTE && type != VAR)
 				return (builtin_error(REDIRECTERROR, head->next->token));
 			head = head->next->next;
 		}
@@ -64,20 +67,27 @@ static int	redirect(int oldfd, t_type type, char *file, int filefd)
 static int	redirects(t_tokens **tokens, char *tmpfile)
 {
 	t_tokens	*head;
+	t_tokens	*next;
+	struct stat	path_stat;
 	int			status;
-	int			fd;
 
 	head = *tokens;
 	status = SUCCESS;
-	fd = -1;
 	while (head)
 	{
+		next = head->next;
 		if (head->type == HEREDOC)
-			status = redirect(STDIN_FILENO, head->type, tmpfile, fd);
+			status = redirect(STDIN_FILENO, head->type, tmpfile, -1);
+		else if (next && next->token[0] == '$' && next->type == VAR)
+			return (builtin_error(AMBIGUOUS, head->next->token));
 		else if (head->type == INPUT)
-			status = redirect(STDIN_FILENO, head->type, head->next->token, fd);
-		else if (head->type != WORD && head->type != HAVE_QUOTE)
-			status = redirect(STDOUT_FILENO, head->type, head->next->token, fd);
+			status = redirect(STDIN_FILENO, head->type, head->next->token, -1);
+		else if (head->type == TRUNC || head->type == APPEND)
+		{
+			if (!stat(head->next->token, &path_stat) && S_ISDIR(path_stat.st_mode))
+				return (builtin_error(EISDIR, head->next->token));
+			status = redirect(STDOUT_FILENO, head->type, head->next->token, -1);
+		}
 		if (status != SUCCESS)
 			return (EXIT_FAILURE);
 		head = head->next;

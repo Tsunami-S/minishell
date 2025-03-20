@@ -6,11 +6,20 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:04:49 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 20:08:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_dir(t_child *child, char *file)
+{
+	struct stat	path_stat;
+
+	if (!stat(file, &path_stat) && S_ISDIR(path_stat.st_mode))
+		exit_child(child, EXIT_FAILURE, EISDIR, file);
+	return (SUCCESS);
+}
 
 static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 {
@@ -18,7 +27,7 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 
 	if (type == TRUNC || type == APPEND)
 	{
-		if (!access(file, F_OK) && access(file, W_OK))
+		if (is_dir(child, file) && !access(file, F_OK) && access(file, W_OK))
 			exit_child(child, EXIT_FAILURE, EACCES, file);
 		if (type == TRUNC)
 			filefd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -44,6 +53,7 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*head;
+	t_tokens	*next;
 
 	head = *tokens;
 	while (head)
@@ -56,11 +66,14 @@ void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist)
 	head = *tokens;
 	while (head)
 	{
+		next = head->next;
 		if (head->type == HEREDOC)
 			redirect(child, STDIN_FILENO, head->type, child->tmpfile);
+		else if (next && next->token[0] == '$' && next->type == VAR)
+			exit_child(child, EXIT_FAILURE, AMBIGUOUS, head->next->token);
 		else if (head->type == INPUT)
 			redirect(child, STDIN_FILENO, head->type, head->next->token);
-		else if (head->type != WORD && head->type != HAVE_QUOTE)
+		else if (head->type == TRUNC || head->type == APPEND)
 			redirect(child, STDOUT_FILENO, head->type, head->next->token);
 		head = head->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:14:18 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 14:22:13 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 23:07:38 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*make_total_str(t_tokens **tokens, int malloc_size, int option)
 		if (head->token[0])
 			ft_strlcat(total_str, head->token, malloc_size);
 		head = head->next;
-		if (head && total_str[0])
+		if (head)
 			ft_strlcat(total_str, " ", malloc_size);
 	}
 	if (!option)

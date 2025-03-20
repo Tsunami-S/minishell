@@ -6,7 +6,7 @@
 #    By: hito <hito@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/19 18:30:48 by hito             ###   ########.fr        #
+#    Updated: 2025/03/20 20:09:54 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRCS =	minishell_main.c \
 		expander/expander.c \
 		expander/pre_tokenizer.c \
 		expander/more_tokenizer.c \
+		expander/tokenize_split.c \
 		expander/replace_vars.c \
 		expander/replace_vars_count.c \
 		expander/replace_vars_split.c \

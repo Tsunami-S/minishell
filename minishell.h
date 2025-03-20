@@ -6,7 +6,7 @@
 /*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 18:28:38 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/20 20:11:51 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <stdbool.h>
 # include <stdint.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include "error_num.h"
 # include "ft_eprintf/ft_eprintf.h"
 
@@ -48,6 +50,7 @@ typedef enum e_type
 	INPUT,
 	HEREDOC,
 	HAVE_QUOTE,
+	VAR,
 }	t_type;
 
 typedef struct s_tokens
@@ -188,12 +191,14 @@ void	add_var(t_var **varlist, char *var_name, char *var_value);
 /* expander */
 t_tokens	*expander(char *str, t_var **varlist);
 t_tokens	*pre_tokenizer(char *str);
-int more_tokenizer(t_tokens **tokens);
+int more_tokenizer(t_tokens **tokens, t_type flag);
 int	replace_vars(t_tokens **tokens, t_var **varlist);
 char *count_plaintext_size(char *str);
 int	count_words_and_vars(char *str);
 char	**split_token(char *token, int malloc_size, t_var **varlist);
-char	*skip_space(char *str);;
+char	**split_words(char *str, t_type flag);
+char	*dup_var(char *str, char **words, t_type type, t_var **varlist);
+
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);
 void	redirect_fds(t_child *child, t_tokens **tokens, t_var **varlist);

@@ -6,13 +6,13 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:06:42 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/19 17:43:49 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*dup_var(char *str, char **words, int *i, t_var **varlist)
+static char	*heredoc_dup_var(char *str, char **words, int *i, t_var **varlist)
 {
 	char	*end;
 	char	*name;
@@ -65,7 +65,7 @@ char	**heredoc_split_token(char *token, int malloc_size, t_var **varlist)
 	while (*token)
 	{
 		if (*token == '$' && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
-			token = dup_var(token, words, &i, varlist);
+			token = heredoc_dup_var(token, words, &i, varlist);
 		else
 			token = dup_plain_text(token, words, &i);
 		if (!token)

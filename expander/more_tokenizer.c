@@ -6,76 +6,86 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:30:29 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 14:45:53 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 17:23:20 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_tokens	*make_new_token(char *str, t_tokens *prev, t_tokens *next)
+static void	remove_quotes(char **words)
+{
+	int		i;
+	char	ope;
+	char	*str;
+
+	str = *words;
+	i = 0;
+	while (1)
+	{
+		i = 0;
+		while (str[i] && str[i] != '\'' && str[i] != '\"')
+			i++;
+		if (!str[i])
+			break ;
+		ope = str[i];
+		ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+		while (str[i] && str[i] != ope)
+			i++;
+		ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+	}
+}
+
+static t_tokens	*add_new_tokens(t_tokens **prev, char **words)
 {
 	t_tokens	*new;
-	int			len;
+	t_tokens	*token_prev;
+	int			i;
 
-	new = (t_tokens *)malloc(sizeof(t_tokens));
-	if (!new)
-		return (NULL);
-	new->token = ft_strdup(str);
-	if (!new->token)
+	token_prev = *prev;
+	free(token_prev->token);
+	token_prev->token = words[0];
+	i = 1;
+	while (words[i])
 	{
-		free(new);
-		return (NULL);
+		new = (t_tokens *)malloc(sizeof(t_tokens));
+		if (!new)
+			return (NULL);
+		new->type = WORD;
+		new->token = words[i];
+		new->next = token_prev->next;
+		token_prev->next = new;
+		token_prev = new;
+		i++;
 	}
-	len = ft_strlen(new->token);
-	len--;
-	if (ft_isspace(new->token[len]))
-	{
-		while (ft_isspace(new->token[len]))
-			len--;
-		new->token[len + 1] = '\0';
-	}
-	prev->next = new;
-	new->next = next;
-	new->type = WORD;
 	return (new);
 }
 
-static int	trim_space(t_tokens *prev, t_tokens *next, char **token)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	str = *token;
-	while (ft_isspace(str[i]))
-		i++;
-	ft_strlcpy(str, &str[i], ft_strlen(&str[i]) + 1);
-	i = 0;
-	while (str[i] && !ft_isspace(str[i]) && str[i] != '=')
-		i++;
-	j = 0;
-	while (ft_isspace(str[i + j]))
-		j++;
-	if (str[i + j] && str[i] != '=')
-	{
-		if (!make_new_token(&str[i + j], prev, next))
-			return (ERROR);
-		str[i] = '\0';
-	}
-	return (SUCCESS);
-}
-
-int	more_tokenizer(t_tokens **tokens)
+int	more_tokenizer(t_tokens **tokens, t_type flag)
 {
 	t_tokens	*head;
+	char		**words;
+	int			i;
 
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != HAVE_QUOTE)
-			if (trim_space(head, head->next, &(head->token)) == ERROR)
-				return (ERROR);
+		words = split_words(head->token, flag);
+		if (!words)
+			return (ERROR);
+		i = 0;
+		while (words[i])
+			remove_quotes(&words[i++]);
+		if (i == 1)
+		{
+			free(head->token);
+			head->token = words[0];
+		}
+		else
+			head = add_new_tokens(&head, words);
+		free(words[i]);
+		free(words);
+		if (i != 1 && !head)
+			return (ERROR);
 		head = head->next;
 	}
 	return (SUCCESS);

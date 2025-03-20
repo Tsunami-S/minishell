@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 19:00:30 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:19:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define REDIRECTERROR -400
 # define CMDERROR -401
 # define EXPORTERROR -402
+# define AMBIGUOUS -403
 # define EXIT_NOCMD 127
 # define EXIT_SYNTAX 2
 

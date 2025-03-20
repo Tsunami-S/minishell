@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 00:38:20 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 17:23:28 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*count_envvar_size(char *str)
 
 static char	*count_doublequot_text_size(char *str, int *malloc_size)
 {
-	*malloc_size -= 1;
+	*malloc_size += 1;
 	if (*str == '\"')
 		str++;
 	while (*str && *str != '\"')

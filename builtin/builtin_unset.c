@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:55 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 16:10:49 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 14:40:43 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ int	builtin_unset(t_tokens **tokens, t_var **varlist)
 		return (EXIT_SUCCESS);
 	while (head)
 	{
-		*varlist = remove_var(varlist, head->token);
+		if (ft_strcmp(head->token, "?") && ft_strcmp(head->token, "SHLVL"))
+			*varlist = remove_var(varlist, head->token);
 		head = head->next;
 	}
 	return (EXIT_SUCCESS);

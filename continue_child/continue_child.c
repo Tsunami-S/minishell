@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:10:32 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/20 17:21:39 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,19 @@
 static void	check_syntax(t_child *child, t_tokens **tokens)
 {
 	t_tokens	*head;
+	t_type		type;
 
 	head = *tokens;
 	while (head)
 	{
-		if (head->type != WORD && head->type != HAVE_QUOTE)
+		type = head->type;
+		if (type != WORD && type != HAVE_QUOTE && type != VAR)
 		{
 			head = head->next;
+			type = head->type;
 			if (!head)
 				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, "newline");
-			if (head->type != WORD && head->type != HAVE_QUOTE)
+			if (type != WORD && type != HAVE_QUOTE && type != VAR)
 				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->token);
 			head = head->next;
 		}
