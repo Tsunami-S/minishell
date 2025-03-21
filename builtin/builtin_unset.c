@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:55 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 14:40:43 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 04:18:28 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	builtin_unset(t_tokens **tokens, t_var **varlist)
 		return (EXIT_SUCCESS);
 	while (head)
 	{
-		if (ft_strcmp(head->token, "?") && ft_strcmp(head->token, "SHLVL"))
+		if (ft_strcmp(head->token, "?"))
 			*varlist = remove_var(varlist, head->token);
 		head = head->next;
 	}

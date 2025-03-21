@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 20:08:16 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:23:32 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,31 @@ static void	put_errmsg(char *msg1, char *msg2)
 	ft_strlcat(strerr, "\n", total_len);
 	ft_eprintf("%s", strerr);
 	free(strerr);
+}
+
+void	exit_child_sigint(t_child *child, char *buf, char *file)
+{
+	g_signal = 0;
+	free(buf);
+	free(file);
+	if (child->tokens)
+		free_tokens(child->tokens);
+	if (child->varlist)
+		free_varlist(child->varlist);
+	if (child->cmds)
+		free(child->cmds);
+	if (child->fullpath)
+		free(child->fullpath);
+	if (child->envp)
+		free_strs(child->envp);
+	if (child->paths)
+		free_strs(child->paths);
+	if (child->tmpfile)
+	{
+		unlink(child->tmpfile);
+		free(child->tmpfile);
+	}
+	exit(130);
 }
 
 void	exit_child(t_child *child, int status, int errnum, char *msg)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:06:14 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:22:52 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,25 @@ static int	open_tmpfile(t_child *child, char **file)
 	return (fd);
 }
 
-char	*child_heredoc(t_child *child, char *limiter, t_type type,
-		t_var **varlist)
+char	*heredoc_loop(int filefd, char *limiter, t_type type, t_var **varlist)
 {
-	int			lim_len;
-	int			filefd;
-	char		*buf;
-	static char	*file;
+	char	*buf;
+	int		lim_len;
 
-	filefd = open_tmpfile(child, &file);
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
 		buf = readline("> ");
-		if (!buf)
-			break ;
-		else if (!ft_strncmp(limiter, buf, lim_len))
+		if (g_signal == SIGINT
+			|| (buf && !ft_strncmp(limiter, buf, lim_len)))
 		{
 			free(buf);
+			break ;
+		}
+		else if (!buf)
+		{
+			ft_eprintf("minishell: warning: here-document wanted `%s'\n",
+				limiter);
 			break ;
 		}
 		if (type == WORD)
@@ -94,6 +95,22 @@ char	*child_heredoc(t_child *child, char *limiter, t_type type,
 		ft_putendl_fd(buf, filefd);
 		free(buf);
 	}
+	return (buf);
+}
+
+char	*child_heredoc(t_child *child, char *limiter, t_type type,
+		t_var **varlist)
+{
+	int			filefd;
+	char		*buf;
+	static char	*file;
+
+	filefd = open_tmpfile(child, &file);
+	signal(SIGINT, sigint_handler_heredoc);
+	buf = heredoc_loop(filefd, limiter, type, varlist);
+	signal(SIGINT, sigint_handler_inprocess);
+	if (g_signal == SIGINT)
+		exit_child_sigint(child, buf, file);
 	if (close(filefd) == -1)
 		exit_child(child, EXIT_FAILURE, errno, file);
 	return (file);

@@ -12,58 +12,12 @@
 
 #include "minishell.h"
 
-int	expand_cmds(t_status **st_head, t_var **varlist)
-{
-	t_status	*st;
-
-	if (!st_head || !*st_head)
-		return (ERROR);
-	st = *st_head;
-	while (st)
-	{
-		st->token = expander(st->cmds, varlist);
-		if (!st->token)
-			return (ERROR);
-		st = st->next;
-	}
-	return (SUCCESS);
-}
-
-int	check_built_in(t_status **st_head, t_status *st)
-{
-	char		**builtin_cmds;
-	int			i;
-
-	if (!st_head || !*st_head || !st)
-		return (ERROR);
-	if (!st->token)
-		return (SUCCESS);
-	builtin_cmds = init_builtin_cmds();
-	if (!builtin_cmds)
-		return (error_node(ERRNO_ONE), ERROR);
-	while (st)
-	{
-		i = -1;
-		while (builtin_cmds[++i])
-		{
-			if (!ft_strcmp(st->token->token, builtin_cmds[i]))
-			{
-				st->is_builtin = 1;
-				break ;
-			}
-		}
-		st = st->next;
-	}
-	free_builtin_cmds(builtin_cmds);
-	return (SUCCESS);
-}
+volatile sig_atomic_t	g_signal = 0;
 
 int	recursive_continue_line(char *input, t_var **varlist)
 {
 	t_status	*state;
 	t_brackets	brackets;
-
-	(void)varlist;
 
 	if (!input)
 		return (0);
@@ -89,8 +43,7 @@ int	continue_line(char *input, t_var **varlist)
 	t_status	*state;
 	t_brackets	brackets;
 
-	(void)varlist;
-
+	signal(SIGINT, sigint_handler_inprocess);
 	if (!input)
 		return (0);
 	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
@@ -110,30 +63,46 @@ int	continue_line(char *input, t_var **varlist)
 	return (SUCCESS);
 }
 
-int	main(int argc, char **argv, char **envp)
+void	main_loop(t_var **varlist)
 {
 	char	*input;
+
+	while (1)
+	{
+		if (signal(SIGINT, sigint_handler) == SIG_ERR)
+		{
+			perror("minishell: signal");
+			free_varlist(varlist);
+			exit(1);
+		}
+		input = readline("minishell$ ");
+		if (!input)
+		{
+			printf("exit\n");
+			free_varlist(varlist);
+			exit(0);
+		}
+		if (*input)
+			add_history(input);
+		continue_line(input, varlist);
+		free(input);
+		input = NULL;
+	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
 	t_var	*varlist;
 
 	if (argc != 1)
 		return (ft_eprintf("minishell: too many argument\n"), FAILED);
 	(void)argv;
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		return (perror("minishell: signal"), 1);
 	varlist = init_varlist(envp, ft_strdup("?"), ft_strdup("0"));
 	if (!varlist)
 		return (FAILED);
-	while (1)
-	{
-		input = readline("minishell$ ");
-		if (!input)
-		{
-			printf("exit\n");
-			return (free_varlist(&varlist), 0);
-		}
-		if (*input)
-			add_history(input);
-		continue_line(input, &varlist);
-		free(input);
-		input = NULL;
-	}
+	count_up_shlvl(&varlist);
+	main_loop(&varlist);
 	return (free_varlist(&varlist), 0);
 }

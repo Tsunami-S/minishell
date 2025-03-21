@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_expand_vars.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:06:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:34:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ char	*heredoc_expand_var(char *buf, t_var **varlist)
 
 	words_size = heredoc_vars_count(buf);
 	if (!words_size)
+	{
 		words = dup_null();
+		words_size = 1;
+	}
 	else
 		words = heredoc_split_token(buf, words_size, varlist);
 	if (!words)

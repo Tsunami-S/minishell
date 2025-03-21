@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_vars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 17:23:27 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:35:30 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ void	free_words(char **words, int size)
 	int	i;
 
 	i = 0;
+	if (!words)
+		return ;
 	while (i < size)
 	{
-		if (words[i])
-			free(words[i]);
+		free(words[i]);
 		i++;
 	}
 	free(words);

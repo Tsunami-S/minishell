@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/20 20:11:51 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:23:10 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,13 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <signal.h>
 # include "error_num.h"
 # include "ft_eprintf/ft_eprintf.h"
 
 # define MAX_STACK_BRACKETS 500
+
+extern volatile sig_atomic_t	g_signal;
 
 typedef struct s_saved
 {
@@ -165,6 +168,17 @@ void	frees(t_status *st_head, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
 int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 int	ft_atoi(const char *str);
+
+void	sigint_handler(int signal);
+void	sigint_handler_inprocess(int signal);
+void	sig_ignore(int signal);
+void	sigint_handler_heredoc(int signal);
+int	check_built_in(t_status **st_head, t_status *st);
+int	expand_cmds(t_status **st_head, t_var **varlist);
+int	count_up_shlvl(t_var **varlist);
+void	exit_child_sigint(t_child *child, char *buf, char *file);
+void	heredoc_loop_builtin(int fd, char *limiter, t_type type,
+	t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hito <hito@student.42.fr>                  +#+  +:+       +#+         #
+#    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/20 20:09:54 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/22 05:49:53 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS =	minishell_main.c \
 		builtin/builtin_set_stdio.c \
 		builtin/builtin_redirect.c \
 		builtin/builtin_here_doc.c \
+		builtin/builtin_here_doc_help.c \
 		builtin/builtin_export.c \
 		builtin/builtin_export_list.c \
 		builtin/builtin_env.c \
@@ -42,6 +43,7 @@ SRCS =	minishell_main.c \
 		parent_process/pipe.c \
 		parent_process/fork.c \
 		parent_process/fork2.c \
+		parent_process/help.c \
 		ft_split.c \
 		export_utils.c \
 		init_varlist.c \
@@ -68,6 +70,7 @@ SRCS =	minishell_main.c \
 		here_doc/heredoc_expand_vars.c \
 		here_doc/heredoc_vars_count.c \
 		here_doc/heredoc_vars_split.c \
+		signal.c \
 		free_utils.c
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))

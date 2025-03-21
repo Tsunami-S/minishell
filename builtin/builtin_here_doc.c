@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_here_doc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 22:13:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 06:07:25 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,26 +78,15 @@ static int	open_tmpfile(char **file)
 
 static int	builtin_heredoc(int fd, char *limiter, t_type type, t_var **varlist)
 {
-	int		lim_len;
-	char	*buf;
+	int		save_stdin;
 
-	lim_len = ft_strlen(limiter);
-	while (1)
-	{
-		buf = NULL;
-		buf = readline("> ");
-		if (!buf)
-			break ;
-		else if (!ft_strncmp(limiter, buf, lim_len))
-		{
-			free(buf);
-			break ;
-		}
-		if (type == WORD)
-			buf = heredoc_expand_var(buf, varlist);
-		ft_putendl_fd(buf, fd);
-		free(buf);
-	}
+	save_stdin = STDIN_FILENO;
+	signal(SIGINT, sigint_handler_heredoc);
+	heredoc_loop_builtin(fd, limiter, type, varlist);
+	if (g_signal == SIGINT)
+		g_signal = 0;
+	signal(SIGINT, sigint_handler_inprocess);
+	dup2(STDIN_FILENO, save_stdin);
 	return (SUCCESS);
 }
 

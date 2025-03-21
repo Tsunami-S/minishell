@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 15:15:38 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/22 02:18:47 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,21 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 		if (st->pid > 0)
 		{
 			waitpid(st->pid, NULL, 0);
+			if (g_signal == SIGINT)
+			{
+				write(STDOUT_FILENO, "\n", 1);
+				g_signal = 0;
+			}
 			wait_count++;
 		}
 		st = st->next;
 	}
 	return (update_exit_code(exit_code, varlist));
+}
+
+void	sigint_child_handler(int signal)
+{
+	(void)signal;
 }
 
 void	fork_process(t_status *st, t_var **varlist,
@@ -87,6 +97,14 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 	lp.result = 0;
 	while (st)
 	{
+		if (g_signal == SIGINT)
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			g_signal = 0;
+			lp.count_forked = 0;
+			lp.result = 130;
+			break ;
+		}
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
 		else if (st->is_builtin && (!st->next || st->next->has_and
