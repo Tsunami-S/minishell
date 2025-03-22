@@ -6,11 +6,21 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 17:23:30 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 15:35:07 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_var(char *str)
+{
+	if (*str != '$')
+		return (0);
+	str++;
+	if (*str &&( ft_isalnum(*str) || *str == '_' || *str == '?'))
+		return (1);
+	return (0);
+}
 
 static char	*dup_singlequot_text(char *str, char **words, int *i)
 {
@@ -45,10 +55,12 @@ static char	*dup_doublequot_text(char *str, char **words, int *i,
 	words[*i] = NULL;
 	while (*end && *end != '\"')
 	{
-		if (*start == '$')
+		if (is_var(start))
 			end = dup_var(start, words, HAVE_QUOTE, varlist);
 		else
 		{
+			while(*end == '$')
+				end++;
 			while (*end && *end != '\"' && *end != '$')
 				end++;
 			words[*i] = ft_strndup(start, end - start);
@@ -84,16 +96,6 @@ static char	*dup_plain_text(char *str, char **words, int *i)
 	return (end);
 }
 
-static int	is_var(char *str)
-{
-	if (*str != '$')
-		return (0);
-	str++;
-	if (ft_isalnum(*str) || *str == '_' || *str == '?')
-		return (1);
-	return (0);
-}
-
 char	**split_token(char *token, int malloc_size, t_var **varlist)
 {
 	char	**words;
@@ -119,6 +121,11 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 			token = dup_plain_text(token, words, &i);
 		if (!token)
 			return (free_words(words, malloc_size), NULL);
+	}
+	while(i < malloc_size)
+	{
+		words[i] = NULL;
+		i++;
 	}
 	return (words);
 }

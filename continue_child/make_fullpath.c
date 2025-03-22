@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:53 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 19:37:52 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 15:07:48 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static char	*check_original_path(t_child *child, char *cmd)
 {
 	char	*fullpath;
+	struct stat	path_stat;
 
 	fullpath = ft_strdup(cmd);
 	if (!fullpath)
@@ -22,18 +23,24 @@ static char	*check_original_path(t_child *child, char *cmd)
 	if (access(fullpath, F_OK))
 	{
 		free(fullpath);
-		exit_child(child, EXIT_FAILURE, ENOENT, cmd);
+		exit_child(child, EXIT_NOCMD, ENOENT, cmd);
+	}
+	if (!stat(fullpath, &path_stat) && S_ISDIR(path_stat.st_mode))
+	{
+		free(fullpath);
+		exit_child(child, EXIT_PERM, EISDIR, cmd);
 	}
 	if (access(fullpath, X_OK))
 	{
 		free(fullpath);
-		exit_child(child, EXIT_FAILURE, EACCES, cmd);
+		exit_child(child, EXIT_PERM, EACCES, cmd);
 	}
 	return (fullpath);
 }
 
 static char	*concat_home_with_cmd(t_child *child, char *cmd, t_var **varlist)
 {
+	struct stat	path_stat;
 	char	*fullpath;
 	t_var	*home;
 
@@ -45,9 +52,11 @@ static char	*concat_home_with_cmd(t_child *child, char *cmd, t_var **varlist)
 	if (!fullpath)
 		exit_child(child, EXIT_FAILURE, errno, "malloc error");
 	if (access(fullpath, F_OK))
-		exit_child(child, EXIT_FAILURE, ENOENT, cmd);
+		exit_child(child, EXIT_NOCMD, ENOENT, cmd);
+	if (!stat(fullpath, &path_stat) && S_ISDIR(path_stat.st_mode))
+		exit_child(child, EXIT_PERM, EISDIR, fullpath);
 	if (access(fullpath, X_OK))
-		exit_child(child, EXIT_FAILURE, EACCES, cmd);
+		exit_child(child, EXIT_PERM, EACCES, cmd);
 	return (fullpath);
 }
 

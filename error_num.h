@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 07:39:57 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 14:52:19 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define EXPORTERROR -402
 # define AMBIGUOUS -403
 # define EXIT_NOCMD 127
+# define EXIT_PERM 126
 # define EXIT_SYNTAX 2
 
 # define ERRNO_ONE 1

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 17:23:28 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 15:34:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,14 @@ static char	*count_envvar_size(char *str)
 {
 	if (*str == '$')
 		str++;
-	while (*str && (ft_isalnum(*str) || *str == '_'))
-		str++;
+	if(!*str)
+		return str;
+	else if(*str == '$')
+		while(*str == '$')
+			str++;
+	else
+		while (*str && (ft_isalnum(*str) || *str == '_'))
+			str++;
 	return (str);
 }
 

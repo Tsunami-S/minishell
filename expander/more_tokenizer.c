@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:30:29 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 11:18:54 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 14:45:04 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	remove_quotes(char **words)
 		while (str[i] && str[i] != ope)
 			i++;
 		ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
-		str += i + 1;
+		str += i ;
 	}
 }
 

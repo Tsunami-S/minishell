@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 19:28:03 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 15:20:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 				return (builtin_error(EISDIR, head->next->token));
 			status = redirect(STDOUT_FILENO, head->type, head->next->token, -1);
 		}
-		if (status != SUCCESS)
+		if (status == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 		head = head->next;
 	}
@@ -139,8 +139,8 @@ int	redirect_builtin(t_tokens **tokens, t_saved *saved, t_var **varlist)
 		unlink(tmpfile);
 		free(tmpfile);
 	}
+	delete_redirect(tokens);
 	if (status != SUCCESS)
 		return (EXIT_FAILURE);
-	delete_redirect(tokens);
 	return (EXIT_SUCCESS);
 }
