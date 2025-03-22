@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 11:07:52 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:32:09 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,12 @@ static int	add_newvar(t_var **varlist, char *str, int name_len)
 	return (SUCCESS);
 }
 
-int	builtin_export(t_tokens **tokens, t_var **varlist)
+int	builtin_export(t_tokens **tokens, t_var **varlist, int exit_num)
 {
 	t_tokens	*head;
 	int			i;
-	int error_flag;
 
 	head = (*tokens)->next;
-	error_flag = 0;
 	if (!head)
 		return (builtin_export_list(varlist));
 	while (head)
@@ -127,10 +125,8 @@ int	builtin_export(t_tokens **tokens, t_var **varlist)
 				add_newvar(varlist, head->token, i);
 		}
 		else
-			error_flag = 1;
+			exit_num = 1;
 		head = head->next;
 	}
-	if(error_flag)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	return (exit_num);
 }

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 06:23:32 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 11:34:38 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ static void	put_syntaxerr_msg(char *msg)
 	char	*strerr;
 
 	total_len = ft_strlen("minishell: ");
-	total_len += ft_strlen("syntax error near unexpected token '");
+	total_len += ft_strlen("syntax error near unexpected token `");
 	total_len += ft_strlen(msg) + 3;
 	strerr = (char *)malloc(sizeof(char) * total_len);
 	if (!strerr)
 		return ;
 	ft_strlcpy(strerr, "minishell: ", total_len);
-	ft_strlcat(strerr, "syntax error near unexpected token '", total_len);
+	ft_strlcat(strerr, "syntax error near unexpected token `", total_len);
 	ft_strlcat(strerr, msg, total_len);
 	ft_strlcat(strerr, "'\n", total_len);
 	ft_eprintf("%s", strerr);

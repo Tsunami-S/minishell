@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/19 18:29:41 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/22 11:32:42 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	if (ft_strcmp(token->token, "pwd") == 0)
 		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)
-		status = builtin_export(tokens, varlist);
+		status = builtin_export(tokens, varlist, 0);
 	if (ft_strcmp(token->token, "unset") == 0)
 		status = builtin_unset(tokens, varlist);
 	if (ft_strcmp(token->token, "env") == 0)
@@ -75,7 +75,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	if (ft_strcmp(token->token, "pwd") == 0)
 		status = builtin_pwd();
 	if (ft_strcmp(token->token, "export") == 0)
-		status = builtin_export(tokens, varlist);
+		status = builtin_export(tokens, varlist, 0);
 	if (ft_strcmp(token->token, "unset") == 0)
 		status = builtin_unset(tokens, varlist);
 	if (ft_strcmp(token->token, "env") == 0)

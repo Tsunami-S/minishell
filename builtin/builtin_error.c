@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 17:15:04 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:33:15 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static void	put_redirecterr_msg(char *msg)
 	char	*strerr;
 
 	total_len = ft_strlen("minishell: ");
-	total_len += ft_strlen("syntax error near unexpected token '");
+	total_len += ft_strlen("syntax error near unexpected token `");
 	total_len += ft_strlen(msg) + 3;
 	strerr = (char *)malloc(sizeof(char) * total_len);
 	if (!strerr)
 		return ;
 	ft_strlcpy(strerr, "minishell: ", total_len);
-	ft_strlcat(strerr, "syntax error near unexpected token '", total_len);
+	ft_strlcat(strerr, "syntax error near unexpected token `", total_len);
 	ft_strlcat(strerr, msg, total_len);
 	ft_strlcat(strerr, "'\n", total_len);
 	ft_eprintf("%s", strerr);

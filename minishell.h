@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 10:39:27 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:46:02 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,7 +266,7 @@ int	builtin_reset_stdio(t_saved *saved);
 int builtin_error(int errnum, char *msg);
 int builtin_unset(t_tokens **tokens, t_var **varlist);
 int	builtin_env(t_tokens **tokens, t_var **varlist);
-int	builtin_export(t_tokens **tokens, t_var **varlist);
+int	builtin_export(t_tokens **tokens, t_var **varlist, int exit_num);
 int builtin_export_list(t_var **varlist);
 int	builtin_echo(t_tokens **tokens, t_var **varlist);
 
