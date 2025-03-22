@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 21:31:24 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 12:15:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 17:09:37 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@ static void	manage_flag(t_wild **files, char **words, char *name)
 		else if (*words[i] == '/' && head->type != DT_DIR)
 			head->flag = 0;
 		i++;
-		if(words[i] && *words[i] && !*name)
+		if (words[i] && *words[i] && !*name)
 		{
-			if(*words[i] != '*' || (words[i + 1] && *words[i + 1]))
-			head->flag = 0;
+			if (*words[i] != '*' || (words[i + 1] && *words[i + 1]))
+				head->flag = 0;
 		}
 	}
 }

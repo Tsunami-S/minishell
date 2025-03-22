@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 11:34:38 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 17:08:45 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	put_syntaxerr_msg(char *msg)
 	free(strerr);
 }
 
-static void	put_errmsg(char *msg1, char *msg2)
+static void	put_msg(char *msg1, char *msg2)
 {
 	int		total_len;
 	char	*strerr;
@@ -50,6 +50,18 @@ static void	put_errmsg(char *msg1, char *msg2)
 	ft_strlcat(strerr, "\n", total_len);
 	ft_eprintf("%s", strerr);
 	free(strerr);
+}
+
+static void	put_errmsg(int errnum, char *msg)
+{
+	if (errnum == CMDERROR)
+		put_msg(msg, "command not found");
+	else if (errnum == REDIRECTERROR)
+		put_syntaxerr_msg(msg);
+	else if (errnum == AMBIGUOUS)
+		put_msg(msg, "ambiguous redirect");
+	else if (errnum > 0)
+		put_msg(msg, strerror(errnum));
 }
 
 void	exit_child_sigint(t_child *child, char *buf, char *file)
@@ -79,14 +91,7 @@ void	exit_child_sigint(t_child *child, char *buf, char *file)
 
 void	exit_child(t_child *child, int status, int errnum, char *msg)
 {
-	if (errnum == CMDERROR)
-		put_errmsg(msg, "command not found");
-	else if (errnum == REDIRECTERROR)
-		put_syntaxerr_msg(msg);
-	else if (errnum == AMBIGUOUS)
-		put_errmsg(msg, "ambiguous redirect");
-	else if (errnum > 0)
-		put_errmsg(msg, strerror(errnum));
+	put_errmsg(errnum, msg);
 	if (child->tokens)
 		free_tokens(child->tokens);
 	if (child->varlist)

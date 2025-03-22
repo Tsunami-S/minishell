@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 15:20:08 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 17:10:03 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 			status = redirect(STDIN_FILENO, head->type, head->next->token, -1);
 		else if (head->type == TRUNC || head->type == APPEND)
 		{
-			if (!stat(head->next->token, &path_stat) && S_ISDIR(path_stat.st_mode))
+			if (!stat(head->next->token, &path_stat)
+				&& S_ISDIR(path_stat.st_mode))
 				return (builtin_error(EISDIR, head->next->token));
 			status = redirect(STDOUT_FILENO, head->type, head->next->token, -1);
 		}

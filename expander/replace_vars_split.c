@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 15:42:08 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 15:35:07 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 17:09:03 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	is_var(char *str)
 	if (*str != '$')
 		return (0);
 	str++;
-	if (*str &&( ft_isalnum(*str) || *str == '_' || *str == '?'))
+	if (*str && (ft_isalnum(*str) || *str == '_' || *str == '?'))
 		return (1);
 	return (0);
 }
@@ -59,7 +59,7 @@ static char	*dup_doublequot_text(char *str, char **words, int *i,
 			end = dup_var(start, words, HAVE_QUOTE, varlist);
 		else
 		{
-			while(*end == '$')
+			while (*end == '$')
 				end++;
 			while (*end && *end != '\"' && *end != '$')
 				end++;
@@ -122,7 +122,7 @@ char	**split_token(char *token, int malloc_size, t_var **varlist)
 		if (!token)
 			return (free_words(words, malloc_size), NULL);
 	}
-	while(i < malloc_size)
+	while (i < malloc_size)
 	{
 		words[i] = NULL;
 		i++;

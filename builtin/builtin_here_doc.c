@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 09:28:55 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 17:10:00 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	open_tmpfile(char **file)
 
 static int	builtin_heredoc(int fd, char *limiter, t_type type, t_var **varlist)
 {
-	int		save_stdin;
+	int	save_stdin;
 
 	save_stdin = STDIN_FILENO;
 	if (signal(SIGINT, sigint_handler_heredoc) == SIG_ERR)

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 18:45:24 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 17:09:52 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static int	env_syntax_error(char *token)
 	err = ft_strjoin_three("env: '", token, "’: No such file or directory\n");
 	if (err)
 		ft_eprintf("%s", err);
+	free(err);
 	return (EXIT_SYNTAX);
 }
 

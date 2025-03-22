@@ -6,20 +6,20 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 11:32:09 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 17:09:56 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *make_error_word(char *str)
+static char	*make_error_word(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i] && !ft_isspace(str[i]))
-			i++;
-	return ft_strndup(str, i);
+	while (str[i] && !ft_isspace(str[i]))
+		i++;
+	return (ft_strndup(str, i));
 }
 
 static int	check_syntax(char *token)
@@ -42,7 +42,7 @@ static int	check_syntax(char *token)
 	}
 	if (i && !flag)
 		return (SUCCESS);
-	if(!i)
+	if (!i)
 		var = make_error_word(token);
 	else
 		var = ft_strndup(token, i);

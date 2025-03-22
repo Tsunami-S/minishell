@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:53 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 15:07:48 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 17:03:14 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static char	*check_original_path(t_child *child, char *cmd)
 {
-	char	*fullpath;
+	char		*fullpath;
 	struct stat	path_stat;
 
 	fullpath = ft_strdup(cmd);
@@ -41,8 +41,8 @@ static char	*check_original_path(t_child *child, char *cmd)
 static char	*concat_home_with_cmd(t_child *child, char *cmd, t_var **varlist)
 {
 	struct stat	path_stat;
-	char	*fullpath;
-	t_var	*home;
+	char		*fullpath;
+	t_var		*home;
 
 	home = get_var(varlist, "HOME");
 	if (home)
