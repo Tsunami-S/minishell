@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 17:17:11 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 22:09:18 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 
 	token = *tokens;
 	status = redirect_builtin(tokens, &saved, varlist);
-	if(status != EXIT_FAILURE)
+	if (status != EXIT_FAILURE)
 	{
 		if (ft_strcmp(token->token, "echo") == 0)
 			status = builtin_echo(tokens, varlist);
@@ -69,7 +69,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 
 	token = *tokens;
 	status = redirect_builtin(tokens, &saved, varlist);
-	if(status != EXIT_FAILURE)
+	if (status != EXIT_FAILURE)
 	{
 		if (ft_strcmp(token->token, "echo") == 0)
 			status = builtin_echo(tokens, varlist);

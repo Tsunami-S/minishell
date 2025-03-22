@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 03:44:48 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 04:15:52 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 19:23:22 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,9 @@ int	check_shlvl(t_var **varlist, t_var *var)
 
 	if (!var || !var->value)
 		return (make_shlvl(varlist));
-	if (var->value)
-		len = ft_strlen(var->value);
+	len = ft_strlen(var->value);
+	if (len > 3)
+		return (make_shlvl(varlist));
 	i = 0;
 	while (i < len)
 	{
@@ -99,6 +100,8 @@ int	check_shlvl(t_var **varlist, t_var *var)
 		i++;
 	}
 	shlvl = ft_atoi(var->value);
+	if (shlvl < 0 || shlvl >= 999)
+		return (make_shlvl(varlist));
 	free(var->value);
 	var->value = ft_itoa(++shlvl);
 	return (0);

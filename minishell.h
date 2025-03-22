@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 11:46:02 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 22:05:08 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_status
 	int				has_brackets;
 	int				has_or;
 	int				has_and;
+	int				has_and_single;
 	int				is_builtin;
 	struct s_status	*next;
 }	t_status;
@@ -126,6 +127,7 @@ typedef struct s_last_process
 	pid_t		last_pid;
 	int			result;
 	int			count_forked;
+	char		*input;
 }	t_lp;
 
 char	**init_builtin_cmds(void);
@@ -178,6 +180,7 @@ void	frees(t_status *st_head, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
 int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 int	ft_atoi(const char *str);
+int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input);
 
 void	sigint_handler(int signal);
 void	sigint_handler_inprocess(int signal);
@@ -190,6 +193,8 @@ void	exit_child_sigint(t_child *child, char *buf, char *file);
 void	heredoc_loop_builtin(int fd, char *limiter, t_type type,
 	t_var **varlist);
 	int	update_exit_code(int exit_code, t_var **varlist);
+int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head);
+int	ft_atoi_exit(const char *str);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
@@ -269,5 +274,7 @@ int	builtin_env(t_tokens **tokens, t_var **varlist);
 int	builtin_export(t_tokens **tokens, t_var **varlist, int exit_num);
 int builtin_export_list(t_var **varlist);
 int	builtin_echo(t_tokens **tokens, t_var **varlist);
+
+void	free_lst_status_(t_status *st_head, char *cmds);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:42:18 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 03:13:29 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 22:07:59 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,30 @@ void	free_lst_status(t_status *st_head, t_status *st)
 		if (current->cmds)
 			free(current->cmds);
 		if (current->token && (!st || (st && st != current)))
+			free_tokens(&current->token);
+		if (current->input_pipefd != -1)
+			close(current->input_pipefd);
+		if (current->output_pipefd != -1)
+			close(current->output_pipefd);
+		free(current);
+		current = next_node;
+	}
+}
+
+void	free_lst_status_(t_status *st_head, char *cmds)
+{
+	t_status	*current;
+	t_status	*next_node;
+
+	if (!st_head)
+		return ;
+	current = st_head;
+	while (current)
+	{
+		next_node = current->next;
+		if (current->cmds && current->cmds != cmds)
+			free(current->cmds);
+		if (current->token)
 			free_tokens(&current->token);
 		if (current->input_pipefd != -1)
 			close(current->input_pipefd);

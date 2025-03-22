@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:24:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:03:38 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 20:20:56 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_status	*ft_new_node(const char *cmds, int has_brackets)
 	new_node->has_brackets = has_brackets;
 	new_node->has_or = 0;
 	new_node->has_and = 0;
+	new_node->has_and_single = 0;
 	new_node->is_builtin = 0;
 	new_node->previous = NULL;
 	new_node->next = NULL;

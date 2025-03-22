@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/20 00:19:50 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/22 22:09:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	update_pwd(t_var **varlist, char *cwd)
 
 	name_dup = ft_strdup("PWD");
 	if (!name_dup)
-		return(free(cwd), error_node(ERRNO_ONE), FAILED);
+		return (free(cwd), error_node(ERRNO_ONE), FAILED);
 	value_dup = ft_strdup(cwd);
 	free(cwd);
 	if (!value_dup)
-		return(free(name_dup), error_node(ERRNO_ONE), FAILED);
+		return (free(name_dup), error_node(ERRNO_ONE), FAILED);
 	add_var(varlist, name_dup, value_dup);
 	return (SUCCESS);
 }
@@ -46,14 +46,14 @@ int	update_oldpwd(t_var **varlist)
 	char	*cwd;
 	char	*name_dup;
 	char	*value_dup;
-	
+
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (perror("minishell: cd"), FAILED);
 	oldpwd = get_path(varlist, "PWD");
 	name_dup = ft_strdup("OLDPWD");
 	if (!name_dup)
-		return(free(cwd), error_node(ERRNO_ONE), FAILED);
+		return (free(cwd), error_node(ERRNO_ONE), FAILED);
 	if (!oldpwd)
 	{
 		add_var(varlist, name_dup, NULL);
@@ -61,7 +61,7 @@ int	update_oldpwd(t_var **varlist)
 	}
 	value_dup = ft_strdup(oldpwd);
 	if (!value_dup)
-		return(free(name_dup), free(cwd), error_node(ERRNO_ONE), FAILED);
+		return (free(name_dup), free(cwd), error_node(ERRNO_ONE), FAILED);
 	add_var(varlist, name_dup, value_dup);
 	return (update_pwd(varlist, cwd));
 }

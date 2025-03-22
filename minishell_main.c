@@ -1,43 +1,18 @@
-/*************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell_main.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 22:11:19 by haito             #+#    #+#             */
-/*   Updated: 2025/03/17 15:28:30 by tssaito          ###   ########.fr       */
+/*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
+/*   Updated: 2025/03/22 22:05:39 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal = 0;
-
-int	recursive_continue_line(char *input, t_var **varlist)
-{
-	t_status	*state;
-	t_brackets	brackets;
-
-	if (!input)
-		return (0);
-	if (find_brackets_pair(input, &brackets, ft_strlen(input),
-			varlist) == ERROR)
-		return (free_varlist(varlist), ERROR);
-	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
-	if (!state)
-		return (free_varlist(varlist), ERROR);
-	if (make_pipe(&state, varlist) == ERROR)
-		return (frees(state, varlist), ERROR);
-	if (expand_cmds(&state, varlist) == ERROR)
-		return (frees(state, varlist), ERROR);
-	if (check_built_in(&state, state))
-		return (frees(state, varlist), ERROR);
-	if (fork_and_wait(&state, varlist) == ERROR)
-		return (frees(state, varlist), ERROR);
-	frees(state, varlist);
-	return (SUCCESS);
-}
 
 int	continue_line(char *input, t_var **varlist)
 {

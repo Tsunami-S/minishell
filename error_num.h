@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 14:52:19 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:18:40 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define ERRNO_FOUR 4
 
 # define IS_OR 1
-# define IS_AND 2
+# define IS_ANDAND 2
+# define IS_AND 3
 
 #endif

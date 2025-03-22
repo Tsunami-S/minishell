@@ -6,13 +6,13 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/22 08:13:00 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 19:40:20 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_numeric_argument(const char *arg)
+int	is_numeric_argument(const char *arg)
 {
 	int	i;
 
@@ -61,11 +61,12 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	{
 		if (!is_numeric_argument(token->next->token))
 		{
-			ft_eprintf("minishell: exit: %s: numeric argument required\n", token->token);
+			ft_eprintf("minishell: exit: %s: numeric argument required\n",
+				token->token);
 			frees(st_head, varlist);
 			exit(2);
 		}
-		exit_code = ft_atoi(token->next->token) % 256;
+		exit_code = ft_atoi_exit(token->next->token) % 256;
 		frees(st_head, varlist);
 		exit(exit_code);
 	}

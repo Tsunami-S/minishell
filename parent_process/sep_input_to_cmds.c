@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:05:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 20:53:08 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,9 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 	{
 		if (input[ps.i] == '\'' || input[ps.i] == '\"')
 			ps.i = handle_quotes(input, &ps.cmds, ps.i, ps.var);
+		else if (input[ps.i] == '#')
+			while (input[ps.i])
+				ps.i++;
 		else if (input[ps.i] == '(')
 			ps.i = handle_brackets(input, brackets, &st_head, &ps);
 		else if (input[ps.i] == '|' && input[ps.i + 1] == '|')
@@ -97,6 +100,8 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 			ps.i = handle_operator("&&", input, &st_head, &ps);
 		else if (input[ps.i] == '|')
 			ps.i = handle_operator("|", input, &st_head, &ps);
+		else if (input[ps.i] == '&')
+			ps.i = handle_operator("&", input, &st_head, &ps);
 		else
 			ps.cmds = add_char(ps.cmds, input[ps.i], &ps.i, var);
 		if (ps.i == ERROR)

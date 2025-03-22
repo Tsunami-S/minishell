@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/22 10:56:06 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/22 22:03:00 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,9 @@ SRCS =	minishell_main.c \
 		parent_process/pipe.c \
 		parent_process/fork.c \
 		parent_process/fork2.c \
+		parent_process/wait.c \
 		parent_process/help.c \
+		parent_process/recursive.c \
 		ft_split.c \
 		export_utils.c \
 		init_varlist.c \

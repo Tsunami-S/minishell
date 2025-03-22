@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:11:02 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 20:20:12 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	is_operator(const char *cmds)
 {
 	if (!ft_strcmp(cmds, "||") || !ft_strcmp(cmds, "&&")
-		|| !ft_strcmp(cmds, "|"))
+		|| !ft_strcmp(cmds, "|") || !ft_strcmp(cmds, "&"))
 		return (1);
 	return (0);
 }
@@ -28,8 +28,10 @@ int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope,
 	st_next = st_next->next;
 	if (ope == IS_OR)
 		st_next->has_or = 1;
-	if (ope == IS_AND)
+	if (ope == IS_ANDAND)
 		st_next->has_and = 1;
+	if (ope == IS_AND)
+		st_next->previous->has_and_single = 1;
 	ft_remove_node(st_head, st_next->previous);
 	return (SUCCESS);
 }
@@ -60,9 +62,11 @@ int	process_operator(t_status **st_head, t_status *st, t_var **var)
 	else if (!ft_strcmp(st_next->cmds, "||"))
 		return (process_and_or_operator(st_head, st_next, IS_OR, var));
 	else if (!ft_strcmp(st_next->cmds, "&&"))
-		return (process_and_or_operator(st_head, st_next, IS_AND, var));
+		return (process_and_or_operator(st_head, st_next, IS_ANDAND, var));
 	else if (!ft_strcmp(st_next->cmds, "|"))
 		return (process_pipe_operator(st_head, st, st_next, var));
+	else if (!ft_strcmp(st_next->cmds, "&"))
+		return (process_and_or_operator(st_head, st_next, IS_AND, var));
 	return (SUCCESS);
 }
 
