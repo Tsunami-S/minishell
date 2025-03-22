@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   find_brackets_pair.c                               :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:50:47 by haito             #+#    #+#             */
-/*   Updated: 2025/03/15 03:19:09 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 07:45:21 by haito            ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -33,12 +33,15 @@ void	save_pair(t_brackets *b, int i)
 	}
 }
 
-int	skip_quotes(const char *input, int i, char quote)
+int	skip_quotes(const char *input, int i, char quote, t_var **var)
 {
 	while (input[i] && input[i] != quote)
 		i++;
 	if (!input[i])
+	{
+		update_exit_code(SYNERR, var);
 		return (ft_eprintf("minishell: nothing quote pair %c\n", quote), -1);
+	}
 	return (i);
 }
 
@@ -67,7 +70,8 @@ int	process_bracket(const char *input, t_brackets *b, int i)
 	return (0);
 }
 
-int	find_brackets_pair(const char *input, t_brackets *b, int length)
+int	find_brackets_pair(const char *input, t_brackets *b, int length,
+		t_var **var)
 {
 	int	i;
 
@@ -79,11 +83,11 @@ int	find_brackets_pair(const char *input, t_brackets *b, int length)
 	while (++i < length)
 	{
 		if (input[i] == '\'' || input[i] == '"')
-			i = skip_quotes(input, i + 1, input[i]);
+			i = skip_quotes(input, i + 1, input[i], var);
 		else
 		{
 			if (process_bracket(input, b, i) == ERROR)
-				return (ERROR);
+				return (update_exit_code(SYNERR, var), ERROR);
 		}
 		if (i == ERROR)
 			return (ERROR);
@@ -91,7 +95,7 @@ int	find_brackets_pair(const char *input, t_brackets *b, int length)
 	if (b->top >= 0)
 	{
 		ft_eprintf("minishell: syntax error near unexpected token `('\n");
-		return (ERROR);
+		return (update_exit_code(SYNERR, var), ERROR);
 	}
 	return (0);
 }

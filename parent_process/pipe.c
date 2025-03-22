@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 14:17:51 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 08:11:02 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@ int	is_operator(const char *cmds)
 	return (0);
 }
 
-int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope)
+int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope,
+		t_var **var)
 {
 	if (!st_next->next)
-		return (error_pipe(ERRNO_TWO));
+		return (error_pipe(ERRNO_TWO, var));
 	st_next = st_next->next;
 	if (ope == IS_OR)
 		st_next->has_or = 1;
@@ -33,14 +34,15 @@ int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope)
 	return (SUCCESS);
 }
 
-int	process_pipe_operator(t_status **st_head, t_status *st, t_status *st_next)
+int	process_pipe_operator(t_status **st_head, t_status *st, t_status *st_next,
+		t_var **var)
 {
 	int	pipefd[2];
 
 	if (!st_next->next)
-		return (error_pipe(ERRNO_TWO));
+		return (error_pipe(ERRNO_TWO, var));
 	if (pipe(pipefd) == -1)
-		return (error_pipe(ERRNO_THREE));
+		return (error_pipe(ERRNO_THREE, var));
 	st->output_pipefd = pipefd[1];
 	st_next = st_next->next;
 	st_next->input_pipefd = pipefd[0];
@@ -48,7 +50,7 @@ int	process_pipe_operator(t_status **st_head, t_status *st, t_status *st_next)
 	return (SUCCESS);
 }
 
-int	process_operator(t_status **st_head, t_status *st)
+int	process_operator(t_status **st_head, t_status *st, t_var **var)
 {
 	t_status	*st_next;
 
@@ -56,15 +58,15 @@ int	process_operator(t_status **st_head, t_status *st)
 	if (!st_next)
 		return (SUCCESS);
 	else if (!ft_strcmp(st_next->cmds, "||"))
-		return (process_and_or_operator(st_head, st_next, IS_OR));
+		return (process_and_or_operator(st_head, st_next, IS_OR, var));
 	else if (!ft_strcmp(st_next->cmds, "&&"))
-		return (process_and_or_operator(st_head, st_next, IS_AND));
+		return (process_and_or_operator(st_head, st_next, IS_AND, var));
 	else if (!ft_strcmp(st_next->cmds, "|"))
-		return (process_pipe_operator(st_head, st, st_next));
+		return (process_pipe_operator(st_head, st, st_next, var));
 	return (SUCCESS);
 }
 
-int	make_pipe(t_status **st_head)
+int	make_pipe(t_status **st_head, t_var **var)
 {
 	t_status	*st;
 
@@ -72,16 +74,16 @@ int	make_pipe(t_status **st_head)
 		return (ERROR);
 	st = *st_head;
 	if (is_operator(st->cmds))
-		return (error_pipe(ERRNO_ONE));
+		return (error_pipe(ERRNO_ONE, var));
 	while (st)
 	{
 		if (!is_operator(st->cmds))
 		{
-			if (process_operator(st_head, st) == ERROR)
+			if (process_operator(st_head, st, var) == ERROR)
 				return (ERROR);
 		}
 		else
-			return (error_pipe(ERRNO_FOUR));
+			return (error_pipe(ERRNO_FOUR, var));
 		st = st->next;
 	}
 	return (SUCCESS);

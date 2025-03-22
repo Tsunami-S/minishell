@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 02:18:47 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 09:49:53 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,6 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 	return (update_exit_code(exit_code, varlist));
 }
 
-void	sigint_child_handler(int signal)
-{
-	(void)signal;
-}
-
 void	fork_process(t_status *st, t_var **varlist,
 		t_lp *lp, t_status *st_head)
 {
@@ -101,14 +96,15 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			g_signal = 0;
-			lp.count_forked = 0;
 			lp.result = 130;
+			lp.count_forked = 0;
 			break ;
 		}
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
 		else if (st->is_builtin && (!st->next || st->next->has_and
-				|| st->next->has_or) && st->has_brackets == 0)
+				|| st->next->has_or) && st->has_brackets == 0
+			&& st->input_pipefd == -1 && st->output_pipefd == -1)
 			lp.result = call_builtin(&st->token, varlist, *st_head);
 		else
 		{

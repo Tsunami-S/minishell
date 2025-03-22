@@ -21,12 +21,13 @@ int	recursive_continue_line(char *input, t_var **varlist)
 
 	if (!input)
 		return (0);
-	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
+	if (find_brackets_pair(input, &brackets, ft_strlen(input),
+			varlist) == ERROR)
 		return (free_varlist(varlist), ERROR);
-	state = sep_input_to_cmds(input, &brackets, NULL);
+	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
 		return (free_varlist(varlist), ERROR);
-	if (make_pipe(&state) == ERROR)
+	if (make_pipe(&state, varlist) == ERROR)
 		return (frees(state, varlist), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
 		return (frees(state, varlist), ERROR);
@@ -43,15 +44,18 @@ int	continue_line(char *input, t_var **varlist)
 	t_status	*state;
 	t_brackets	brackets;
 
-	signal(SIGINT, sigint_handler_inprocess);
+	if (signal(SIGINT, sigint_handler_inprocess) == SIG_ERR)
+		return (perror("minishell: signal"), update_exit_code(1, varlist),
+			ERROR);
 	if (!input)
 		return (0);
-	if (find_brackets_pair(input, &brackets, ft_strlen(input)) == ERROR)
+	if (find_brackets_pair(input, &brackets, ft_strlen(input),
+			varlist) == ERROR)
 		return (ERROR);
-	state = sep_input_to_cmds(input, &brackets, NULL);
+	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
 		return (ERROR);
-	if (make_pipe(&state) == ERROR)
+	if (make_pipe(&state, varlist) == ERROR)
 		return (free_lst_status(state, NULL), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
 		return (free_lst_status(state, NULL), ERROR);
@@ -99,6 +103,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("minishell: signal"), 1);
+	signal(SIGPIPE, SIG_DFL);
 	varlist = init_varlist(envp, ft_strdup("?"), ft_strdup("0"));
 	if (!varlist)
 		return (FAILED);

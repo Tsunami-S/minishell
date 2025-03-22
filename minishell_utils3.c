@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 22:58:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 01:10:12 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 08:02:24 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_strcpy(char *new_str, char *str)
 	new_str[i] = '\0';
 }
 
-char	*add_char(char *cmds, char c, int *i)
+char	*add_char(char *cmds, char c, int *i, t_var **var)
 {
 	size_t	len;
 	char	*new_cmds;
@@ -70,7 +70,7 @@ char	*add_char(char *cmds, char c, int *i)
 	{
 		new_cmds = (char *)malloc(2);
 		if (!new_cmds)
-			return (error_add_char(i, NULL));
+			return (update_exit_code(FAILED, var), error_add_char(i, NULL));
 		new_cmds[0] = c;
 		new_cmds[1] = '\0';
 		return (new_cmds);
@@ -78,7 +78,7 @@ char	*add_char(char *cmds, char c, int *i)
 	len = ft_strlen(cmds);
 	new_cmds = (char *)malloc(len + 2);
 	if (!new_cmds)
-		return (error_add_char(i, cmds));
+		return (update_exit_code(FAILED, var), error_add_char(i, cmds));
 	ft_strcpy(new_cmds, cmds);
 	new_cmds[len] = c;
 	new_cmds[len + 1] = '\0';

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 06:23:10 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 08:36:05 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_parser
 {
 	int		i;
 	char	*cmds;
+	t_var	**var;
 }	t_parser;
 
 typedef struct s_last_process
@@ -132,9 +133,9 @@ char	**ft_split_sep(const char *str, char **sep, int length);
 int		count_words(const char *str, char c);
 int		count_sep(const char *str, char **sep, int length, int count);
 
-int	find_brackets_pair(const char *input, t_brackets *b, int length);
+int	find_brackets_pair(const char *input, t_brackets *b, int length, t_var **var);
 int	get_brackets_pair(int i, t_brackets *brackets);
-int	add_operator_node(const char *op, char **cmds, t_status **st_head, int i);
+int	add_operator_node(const char *op, char **cmds, t_status **st_head, t_parser *ps);
 t_status	*ft_new_node(const char *cmds, int has_brackets);
 void	ft_add_back_node(t_status **head, t_status *new_node);
 void	ft_remove_node(t_status **head, t_status *node);
@@ -144,19 +145,19 @@ int	continue_line(char *input, t_var **varlist);
 /* added by haruki */
 //changed
 char	*trim_spaces(char *str);
-char	*add_char(char *cmds, char c, int *i);
-int		add_command_node(char **cmds, t_status **st_head);
+char	*add_char(char *cmds, char c, int *i, t_var **var);
+int		add_command_node(char **cmds, t_status **st_head, t_var **var);
 t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
-	t_status *st_head);
-	int	make_pipe(t_status **st_head);
+	t_status *st_head, t_var **var);
+	int	make_pipe(t_status **st_head, t_var **var);
 	int	fork_and_wait(t_status **st_head, t_var **varlist);
 	
 //new
 void	*error_add_char(int *i, char *cmds);
 void	free_lst_status(t_status *st_head, t_status *st);
-int		error_handle_brackets(int error_num);
+int		error_handle_brackets(int error_num, t_var **var);
 int		error_node(int error_num);
-int		error_pipe(int error_num);
+int		error_pipe(int error_num, t_var **var);
 int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void	handle_and_or(t_status *st, t_lp *lp);
 void	handle_parent_process(t_status *st);
@@ -179,6 +180,7 @@ int	count_up_shlvl(t_var **varlist);
 void	exit_child_sigint(t_child *child, char *buf, char *file);
 void	heredoc_loop_builtin(int fd, char *limiter, t_type type,
 	t_var **varlist);
+	int	update_exit_code(int exit_code, t_var **varlist);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);

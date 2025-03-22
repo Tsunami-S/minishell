@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hito <hito@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/19 15:57:14 by hito             ###   ########.fr       */
+/*   Updated: 2025/03/22 08:13:00 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	t_tokens	*token;
 
 	token = *tokens;
-	ft_eprintf("exit\n");
+	printf("exit\n");
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)

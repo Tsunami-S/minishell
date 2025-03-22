@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:32:04 by haito             #+#    #+#             */
-/*   Updated: 2025/03/16 17:47:53 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 08:08:55 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,28 @@ void	*error_add_char(int *i, char *cmds)
 	return (NULL);
 }
 
-int	error_handle_brackets(int error_num)
+int	error_handle_brackets(int error_num, t_var **var)
 {
 	if (error_num == ERRNO_ONE)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error near unexpected token `('\n");
+	}
 	if (error_num == ERRNO_TWO)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error near unexpected token `)'\n");
+	}
 	if (error_num == ERRNO_THREE)
+	{
+		update_exit_code(FAILED, var);
 		perror("minishell: malloc error: ");
+	}
 	if (error_num == ERRNO_FOUR)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error after `)'\n");
+	}
 	return (ERROR);
 }
 
@@ -41,15 +53,27 @@ int	error_node(int error_num)
 	return (ERROR);
 }
 
-int	error_pipe(int error_num)
+int	error_pipe(int error_num, t_var **var)
 {
 	if (error_num == ERRNO_ONE)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error has operator at the head\n");
+	}
 	if (error_num == ERRNO_TWO)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error has operator at the end\n");
+	}
 	if (error_num == ERRNO_THREE)
+	{
+		update_exit_code(FAILED, var);
 		ft_eprintf("minishell: pipe error\n");
+	}
 	if (error_num == ERRNO_FOUR)
+	{
+		update_exit_code(SYNERR, var);
 		ft_eprintf("minishell: syntax error has operator in a row\n");
+	}
 	return (ERROR);
 }

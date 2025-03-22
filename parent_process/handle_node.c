@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:24:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 03:13:39 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 08:03:38 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	ft_remove_node(t_status **head, t_status *node)
 	free(node);
 }
 
-int	add_command_node(char **cmds, t_status **st_head)
+int	add_command_node(char **cmds, t_status **st_head, t_var **var)
 {
 	t_status	*new_node;
 
@@ -77,10 +77,10 @@ int	add_command_node(char **cmds, t_status **st_head)
 	{
 		*cmds = trim_spaces(*cmds);
 		if (!(*cmds))
-			return (ERROR);
+			return (update_exit_code(FAILED, var), ERROR);
 		new_node = ft_new_node(*cmds, 0);
 		if (!new_node)
-			return (ERROR);
+			return (update_exit_code(FAILED, var), ERROR);
 		ft_add_back_node(st_head, new_node);
 		free(*cmds);
 		*cmds = NULL;
@@ -88,15 +88,16 @@ int	add_command_node(char **cmds, t_status **st_head)
 	return (0);
 }
 
-int	add_operator_node(const char *op, char **cmds, t_status **st_head, int i)
+int	add_operator_node(const char *op, char **cmds, t_status **st_head,
+		t_parser *ps)
 {
 	t_status	*new_node;
 
-	if (add_command_node(cmds, st_head) == ERROR)
-		return (error_node(ERRNO_ONE));
+	if (add_command_node(cmds, st_head, ps->var) == ERROR)
+		return (update_exit_code(FAILED, ps->var), error_node(ERRNO_ONE));
 	new_node = ft_new_node(op, 0);
 	if (!new_node)
-		return (error_node(ERRNO_ONE));
+		return (update_exit_code(FAILED, ps->var), error_node(ERRNO_ONE));
 	ft_add_back_node(st_head, new_node);
-	return (i + (ft_strlen(op)));
+	return (ps->i + (ft_strlen(op)));
 }
