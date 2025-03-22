@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:03:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/16 13:53:40 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 10:54:59 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,17 @@ void	free_varlist(t_var **varlist)
 		free(tmp->value);
 		free(tmp);
 	}
+}
+
+void	free_words(char **words, int size)
+{
+	int	i;
+
+	i = 0;
+	while (i < size)
+	{
+		free(words[i]);
+		i++;
+	}
+	free(words);
 }

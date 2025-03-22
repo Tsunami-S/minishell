@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 18:20:35 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:18:59 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,10 @@ t_tokens	*expander(char *str, t_var **varlist)
 		return (NULL);
 	check = check_first_token(tokens->token);
 	if (replace_vars(&tokens, varlist) == ERROR)
-	{
-		free_tokens(&tokens);
-		return (NULL);
-	}
+		return (free_tokens(&tokens), NULL);
 	tokens = remove_empty_top_tokens(&tokens);
 	tokens = remove_empty_tokens(&tokens);
+	expand_wildcard(&tokens);
 	more_tokenizer(&tokens, check);
 	replace_home(&tokens, varlist);
 	return (tokens);

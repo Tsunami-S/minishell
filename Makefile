@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/22 05:49:53 by haito            ###   ########.fr        #
+#    Updated: 2025/03/22 10:56:06 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,13 @@ SRCS =	minishell_main.c \
 		expander/replace_vars_count.c \
 		expander/replace_vars_split.c \
 		expander/replace_vars_split2.c \
+		expander/wildcard/expand_wildcard.c \
+		expander/wildcard/search_same_file.c \
+		expander/wildcard/get_files.c \
+		expander/wildcard/get_expanded_files.c \
+		expander/wildcard/split_wildcard.c \
+		expander/wildcard/wildcard_free.c \
+		expander/wildcard/wildcard_utils.c \
 		ft_eprintf/ft_eprintf.c \
 		ft_eprintf/ft_eprintf_option.c \
 		ft_eprintf/ft_eprintf_option2.c \

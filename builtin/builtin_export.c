@@ -6,11 +6,21 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:58 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 14:40:45 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:07:52 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char *make_error_word(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i] && !ft_isspace(str[i]))
+			i++;
+	return ft_strndup(str, i);
+}
 
 static int	check_syntax(char *token)
 {
@@ -30,9 +40,12 @@ static int	check_syntax(char *token)
 			flag = 1;
 		i++;
 	}
-	if (!flag)
+	if (i && !flag)
 		return (SUCCESS);
-	var = ft_strndup(token, i);
+	if(!i)
+		var = make_error_word(token);
+	else
+		var = ft_strndup(token, i);
 	if (!var)
 		return (builtin_error(errno, "malloc error"));
 	return (builtin_error(EXPORTERROR, var));
@@ -94,8 +107,10 @@ int	builtin_export(t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*head;
 	int			i;
+	int error_flag;
 
 	head = (*tokens)->next;
+	error_flag = 0;
 	if (!head)
 		return (builtin_export_list(varlist));
 	while (head)
@@ -111,7 +126,11 @@ int	builtin_export(t_tokens **tokens, t_var **varlist)
 			else
 				add_newvar(varlist, head->token, i);
 		}
+		else
+			error_flag = 1;
 		head = head->next;
 	}
+	if(error_flag)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:30:29 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/20 17:23:20 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 11:18:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,21 @@ static void	remove_quotes(char **words)
 		while (str[i] && str[i] != ope)
 			i++;
 		ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+		str += i + 1;
 	}
 }
 
-static t_tokens	*add_new_tokens(t_tokens **prev, char **words)
+static t_tokens	*add_new_tokens(t_tokens **prev_token, char **words)
 {
 	t_tokens	*new;
-	t_tokens	*token_prev;
+	t_tokens	*prev;
 	int			i;
 
-	token_prev = *prev;
-	free(token_prev->token);
-	token_prev->token = words[0];
+	prev = *prev_token;
+	free(prev->token);
+	prev->token = words[0];
+	if (!words[1])
+		return (prev);
 	i = 1;
 	while (words[i])
 	{
@@ -52,15 +55,15 @@ static t_tokens	*add_new_tokens(t_tokens **prev, char **words)
 			return (NULL);
 		new->type = WORD;
 		new->token = words[i];
-		new->next = token_prev->next;
-		token_prev->next = new;
-		token_prev = new;
+		new->next = prev->next;
+		prev->next = new;
+		prev = new;
 		i++;
 	}
 	return (new);
 }
 
-int	more_tokenizer(t_tokens **tokens, t_type flag)
+int	more_tokenizer(t_tokens **tokens, t_type type)
 {
 	t_tokens	*head;
 	char		**words;
@@ -69,22 +72,18 @@ int	more_tokenizer(t_tokens **tokens, t_type flag)
 	head = *tokens;
 	while (head)
 	{
-		words = split_words(head->token, flag);
+		words = split_words(head->token, type);
 		if (!words)
 			return (ERROR);
 		i = 0;
 		while (words[i])
-			remove_quotes(&words[i++]);
-		if (i == 1)
 		{
-			free(head->token);
-			head->token = words[0];
+			remove_quotes(&words[i]);
+			i++;
 		}
-		else
-			head = add_new_tokens(&head, words);
-		free(words[i]);
+		head = add_new_tokens(&head, words);
 		free(words);
-		if (i != 1 && !head)
+		if (!head)
 			return (ERROR);
 		head = head->next;
 	}

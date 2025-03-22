@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:36:05 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 10:39:27 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <fcntl.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <dirent.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -32,6 +33,14 @@
 # define MAX_STACK_BRACKETS 500
 
 extern volatile sig_atomic_t	g_signal;
+
+typedef struct s_wild
+{
+	int flag;
+	char *name;
+	unsigned char type;
+	struct s_wild *next;
+}	t_wild;
 
 typedef struct s_saved
 {
@@ -214,6 +223,21 @@ int	count_words_and_vars(char *str);
 char	**split_token(char *token, int malloc_size, t_var **varlist);
 char	**split_words(char *str, t_type flag);
 char	*dup_var(char *str, char **words, t_type type, t_var **varlist);
+
+/* wildcard */
+void expand_wildcard(t_tokens **tokens);
+char **split_dir(char *str);
+t_wild *get_files(char *name);
+void connect_to_the_end(t_wild **files, t_wild **new_files);
+int check_wildcard(char *str);
+char **split_wildcards(char *str, int malloc_size);
+t_wild *remove_filename(t_wild **files);
+void free_file(t_wild **file);
+void free_all_files(t_wild **files);
+void concat_files(char *dirname, t_wild **files);
+int	count_wild_words(char *str);
+void	search_same_file(t_wild **files, char *str);
+t_wild *get_expanded_files(char **dirs, t_wild **based_files, int index);
 
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);

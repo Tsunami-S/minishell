@@ -6,26 +6,11 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 06:35:30 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/22 10:56:52 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_words(char **words, int size)
-{
-	int	i;
-
-	i = 0;
-	if (!words)
-		return ;
-	while (i < size)
-	{
-		free(words[i]);
-		i++;
-	}
-	free(words);
-}
 
 static char	*concat_words(char **words, int size, char **prev_token)
 {

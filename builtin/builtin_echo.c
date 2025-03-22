@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:14:18 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/19 23:07:38 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 04:27:22 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static char	*make_total_str(t_tokens **tokens, int malloc_size, int option)
 
 int	builtin_echo(t_tokens **tokens, t_var **varlist)
 {
-	int			option;
+	int			is_option;
 	size_t		malloc_size;
 	char		*total_str;
 	t_tokens	*head;
@@ -87,9 +87,9 @@ int	builtin_echo(t_tokens **tokens, t_var **varlist)
 	head = *tokens;
 	if (head && head->next)
 	{
-		option = check_option(head->next->token);
-		malloc_size = count_size(tokens, option) + 1;
-		total_str = make_total_str(tokens, malloc_size, option);
+		is_option = check_option(head->next->token);
+		malloc_size = count_size(tokens, is_option) + 1;
+		total_str = make_total_str(tokens, malloc_size, is_option);
 		if (!total_str)
 			return (EXIT_FAILURE);
 		ft_putstr_fd(total_str, STDOUT_FILENO);
