@@ -6,33 +6,39 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 01:03:02 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:00:36 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:26:37 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_tokens	*replace_first_token(t_tokens **first, char *name)
+static t_tokens	*replace_first_token(t_tokens **first, char *name, int slush)
 {
 	t_tokens	*head;
 
 	head = *first;
 	free(head->token);
-	head->token = ft_strdup(name);
+	if(slush)
+		head->token = ft_strjoin(name, "/");
+	else
+		head->token = ft_strdup(name);
 	if (!head->token)
 		return (NULL);
 	head->type = WORD;
 	return (head);
 }
 
-static t_tokens	*get_new_token(char *name)
+static t_tokens	*get_new_token(char *name, int slush)
 {
 	t_tokens	*new;
 
 	new = (t_tokens *)malloc(sizeof(t_tokens));
 	if (!new)
 		return (NULL);
-	new->token = ft_strdup(name);
+	if(slush)
+		new->token = ft_strjoin(name, "/");
+	else
+		new->token = ft_strdup(name);
 	if (!new->token)
 		return (free(new), NULL);
 	new->type = WORD;
@@ -47,7 +53,7 @@ static t_tokens	*add_tokens(t_wild **files, t_tokens **first, t_tokens **next)
 	t_tokens	*prev;
 
 	head = *files;
-	if (!replace_first_token(first, head->name))
+	if (!replace_first_token(first, head->name, head->slush))
 		return (NULL);
 	head = head->next;
 	prev = *first;
@@ -55,7 +61,7 @@ static t_tokens	*add_tokens(t_wild **files, t_tokens **first, t_tokens **next)
 		return (prev);
 	while (head)
 	{
-		new = get_new_token(head->name);
+		new = get_new_token(head->name, head->slush);
 		if (!new)
 			return (NULL);
 		prev->next = new;

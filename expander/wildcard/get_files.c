@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 00:48:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:00:05 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:23:01 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ static t_wild	*convert_dirp(struct dirent **dir_entry, t_wild **prev_file)
 		return (free(new), NULL);
 	new->next = NULL;
 	new->flag = 1;
+	new->slush = 0;
 	new->type = entry->d_type;
 	prev = *prev_file;
 	if (prev)

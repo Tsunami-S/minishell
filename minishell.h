@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 16:39:15 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:22:44 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_words
 typedef struct s_wild
 {
 	int flag;
+	int slush;
 	char *name;
 	unsigned char type;
 	struct s_wild *next;
