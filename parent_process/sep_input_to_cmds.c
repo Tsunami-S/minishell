@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 20:53:08 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 21:27:48 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	handle_operator(char *op, const char *input,
 }
 
 t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
-		t_status *st_head, t_var **var)
+	t_status *st_head, t_var **var)
 {
 	t_parser	ps;
 
@@ -105,7 +105,8 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 		else
 			ps.cmds = add_char(ps.cmds, input[ps.i], &ps.i, var);
 		if (ps.i == ERROR)
-			return (free_lst_status(st_head, NULL), NULL);
+			return (add_command_node(&ps.cmds, &st_head, var),
+				free_lst_status(st_head, NULL), NULL);
 	}
 	if (add_command_node(&ps.cmds, &st_head, var) == ERROR)
 		return (free_lst_status(st_head, NULL), NULL);
