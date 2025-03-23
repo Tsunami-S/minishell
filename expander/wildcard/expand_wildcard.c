@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 01:03:02 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:44:07 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 19:15:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,24 @@
 static t_tokens	*replace_first_token(t_tokens **token, char *first, char *name, int slush)
 {
 	t_tokens	*head;
+	char *current;
 	int i;
 
 	head = *token;
 	i = 0;
 	while(!ft_strncmp(&first[i], "./", 2))
 		i += 2;
-	if(i && slush)
-		head->token = ft_strjoin_three(ft_strndup(first, i), name, "/");
+	if(i)
+	{
+		current = ft_strndup(first, i);
+		if(slush)
+			head->token = ft_strjoin_three(current, name, "/");
+		else
+			head->token = ft_strjoin(current, name);
+		free(current);
+	}
 	else if(slush)
 		head->token = ft_strjoin(name, "/");
-	else if (i)
-		head->token = ft_strjoin(ft_strndup(first, i), name);
 	else
 		head->token = ft_strdup(name);
 	if (!head->token)
@@ -38,6 +44,7 @@ static t_tokens	*replace_first_token(t_tokens **token, char *first, char *name, 
 static t_tokens	*get_new_token(char *first, char *name, int slush)
 {
 	t_tokens	*new;
+	char *current;
 	int i;
 
 	new = (t_tokens *)malloc(sizeof(t_tokens));
@@ -46,12 +53,17 @@ static t_tokens	*get_new_token(char *first, char *name, int slush)
 	i = 0;
 	while(!ft_strncmp(&first[i], "./", 2))
 		i += 2;
-	if(i && slush)
-		new->token = ft_strjoin_three(ft_strndup(first, i), name, "/");
+	if(i)
+	{
+		current = ft_strndup(first, i);
+		if(slush)
+			new->token = ft_strjoin_three(current, name, "/");
+		else
+			new->token = ft_strjoin(current, name);
+		free(current);
+	}
 	else if(slush)
 		new->token = ft_strjoin(name, "/");
-	else if (i)
-		new->token = ft_strjoin(ft_strndup(first, i), name);
 	else
 		new->token = ft_strdup(name);
 	if (!new->token)
