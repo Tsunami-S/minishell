@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 12:01:08 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 01:23:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	builtin_pwd(void)
 	return (0);
 }
 
-int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
+int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 {
 	t_tokens	*token;
 	t_saved		saved;
@@ -53,7 +53,7 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 		if (ft_strcmp(token->token, "env") == 0)
 			status = builtin_env(tokens, varlist);
 		if (ft_strcmp(token->token, "exit") == 0)
-			status = builtin_exit(tokens, varlist, st_head);
+			status = builtin_exit_child(tokens, varlist);
 	}
 	builtin_reset_stdio(&saved);
 	free_varlist(varlist);
@@ -79,6 +79,35 @@ int	check_status(int status, t_tokens **tokens, t_var **varlist)
 	if (!name)
 		return (free(new_value), status);
 	add_var(varlist, name, new_value);
+	return (status);
+}
+
+int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head, char *in)
+{
+	t_tokens	*token;
+	t_saved		saved;
+	int			status;
+
+	token = *tokens;
+	status = redirect_builtin(tokens, &saved, varlist);
+	if (status != EXIT_FAILURE)
+	{
+		if (ft_strcmp(token->token, "echo") == 0)
+			status = builtin_echo(tokens, varlist);
+		if (ft_strcmp(token->token, "cd") == 0)
+			status = builtin_cd(tokens, varlist);
+		if (ft_strcmp(token->token, "pwd") == 0)
+			status = builtin_pwd();
+		if (ft_strcmp(token->token, "export") == 0)
+			status = builtin_export(tokens, varlist, 0);
+		if (ft_strcmp(token->token, "unset") == 0)
+			status = builtin_unset(tokens, varlist);
+		if (ft_strcmp(token->token, "env") == 0)
+			status = builtin_env(tokens, varlist);
+		if (ft_strcmp(token->token, "exit") == 0)
+			status = builtin_exit_re(tokens, varlist, st_head, in);
+	}
+	builtin_reset_stdio(&saved);
 	return (status);
 }
 

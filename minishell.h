@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 18:22:44 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 01:24:49 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ typedef struct s_status
 	int				has_or;
 	int				has_and;
 	int				has_and_single;
+	int				has_semicolon;
 	int				is_builtin;
 	struct s_status	*next;
 }	t_status;
@@ -185,15 +186,16 @@ int		error_handle_brackets(int error_num, t_var **var);
 int		error_node(int error_num);
 int		error_pipe(int error_num, t_var **var);
 int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
-void	handle_and_or(t_status *st, t_lp *lp);
+void	handle_and_or(t_status *st, t_lp *lp, t_var **var);
 void	handle_parent_process(t_status *st);
 void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head);
 int	builtin_cd(t_tokens **tokens, t_var **varlist);
 int	builtin_pwd(void);
 int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head);
+int	builtin_exit_child(t_tokens **tokens, t_var **varlist);
 void	frees(t_status *st_head, t_var **varlist);
 int	recursive_continue_line(char *input, t_var **varlist);
-int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
+int	child_call_builtin(t_tokens **tokens, t_var **varlist);
 int	ft_atoi(const char *str);
 int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input);
 
@@ -210,6 +212,9 @@ void	heredoc_loop_builtin(int fd, char *limiter, t_type type,
 	int	update_exit_code(int exit_code, t_var **varlist);
 int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head);
 int	ft_atoi_exit(const char *str);
+int	get_exit_status(t_var **varlist);
+int	builtin_exit_re(t_tokens **tokens, t_var **varlist, t_status *st_head, char *in);
+int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head, char *in);
 
 /* added by tsunami */
 size_t	ft_strlcat(char *dst, const char *src, size_t dsize);

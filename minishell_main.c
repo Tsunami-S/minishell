@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 22:05:39 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 01:09:43 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	continue_line(char *input, t_var **varlist)
 void	main_loop(t_var **varlist)
 {
 	char	*input;
+	int		result;
 
 	while (1)
 	{
@@ -58,8 +59,9 @@ void	main_loop(t_var **varlist)
 		if (!input)
 		{
 			printf("exit\n");
+			result = get_exit_status(varlist);
 			free_varlist(varlist);
-			exit(0);
+			exit(result);
 		}
 		if (*input)
 			add_history(input);

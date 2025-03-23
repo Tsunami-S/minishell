@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 21:17:57 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 01:23:26 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	fork_process_(t_status *st, t_var **varlist,
 		handle_child_process(st, varlist, st_head);
 	}
 	handle_parent_process(st);
-	handle_and_or(st, lp);
+	handle_and_or(st, lp, varlist);
 }
 
 int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
@@ -59,7 +59,7 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 		else if (st->is_builtin && (!st->next || st->next->has_and
 				|| st->next->has_or) && st->has_brackets == 0
 			&& st->input_pipefd == -1 && st->output_pipefd == -1)
-			lp.result = call_builtin(&st->token, varlist, *st_head);
+			lp.result = call_builtin_re(&st->token, varlist, *st_head, lp.input);
 		else
 		{
 			fork_process_(st, varlist, &lp, *st_head);
@@ -75,6 +75,8 @@ int	recursive_continue_line(char *input, t_var **varlist)
 {
 	t_status	*state;
 	t_brackets	brackets;
+	t_var		*exit_var;
+	int			ret;
 
 	if (!input)
 		return (0);
@@ -92,7 +94,7 @@ int	recursive_continue_line(char *input, t_var **varlist)
 		return (frees(state, varlist), free(input), ERROR);
 	if (fork_and_wait_(&state, varlist, input) == ERROR)
 		return (frees(state, varlist), free(input), ERROR);
-	frees(state, varlist);
-	free(input);
-	return (SUCCESS);
+	exit_var = get_var(varlist, "?");
+	ret = ft_atoi_exit(exit_var->value);
+	return (free(input), frees(state, varlist), ret);
 }

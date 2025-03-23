@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 22:02:12 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 01:39:21 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,29 @@ void	fork_process(t_status *st, t_var **varlist,
 	if (st->pid == 0)
 		handle_child_process(st, varlist, st_head);
 	handle_parent_process(st);
-	handle_and_or(st, lp);
+	handle_and_or(st, lp, varlist);
+}
+
+static int	is_direct_builtin(t_status *st)
+{
+	if (!st || !st->is_builtin)
+		return (0);
+	if (st->has_brackets)
+		return (0);
+	if (st->input_pipefd != -1 || st->output_pipefd != -1)
+		return (0);
+	if (!st->next)
+		return (1);
+	if (ft_strcmp(st->token->token, "exit") == 0
+		|| ft_strcmp(st->token->token, "export") == 0
+		|| ft_strcmp(st->token->token, "unset") == 0
+		|| ft_strcmp(st->token->token, "cd") == 0)
+		return (1);
+	if (st->next->has_and || st->next->has_or)
+		return (0);
+	if (st->next->has_semicolon)
+		return (0);
+	return (0);
 }
 
 int	fork_and_wait(t_status **st_head, t_var **varlist)
@@ -70,9 +92,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 		}
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
-		else if (st->is_builtin && (!st->next || st->next->has_and
-				|| st->next->has_or) && st->has_brackets == 0
-			&& st->input_pipefd == -1 && st->output_pipefd == -1)
+		else if (is_direct_builtin(st))
 			lp.result = call_builtin(&st->token, varlist, *st_head);
 		else
 		{

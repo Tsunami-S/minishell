@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 20:20:12 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 22:24:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,15 @@ int	is_operator(const char *cmds)
 int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope,
 		t_var **var)
 {
-	if (!st_next->next)
+	if (!st_next->next && ope != IS_AND && ope != IS_SEMI)
 		return (error_pipe(ERRNO_TWO, var));
+	if (ope == IS_SEMI)
+	{
+		if (st_next->next)
+			st_next->next->has_semicolon = 1;
+		ft_remove_node(st_head, st_next);
+		return (SUCCESS);
+	}
 	st_next = st_next->next;
 	if (ope == IS_OR)
 		st_next->has_or = 1;
@@ -67,6 +74,8 @@ int	process_operator(t_status **st_head, t_status *st, t_var **var)
 		return (process_pipe_operator(st_head, st, st_next, var));
 	else if (!ft_strcmp(st_next->cmds, "&"))
 		return (process_and_or_operator(st_head, st_next, IS_AND, var));
+	else if (!ft_strcmp(st_next->cmds, ";"))
+		return (process_and_or_operator(st_head, st_next, IS_SEMI, var));
 	return (SUCCESS);
 }
 

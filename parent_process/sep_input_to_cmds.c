@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 21:27:48 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 23:07:47 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,25 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 	ps.i = -1;
 	ps.cmds = NULL;
 	ps.var = var;
+	if (input[0] == '#')
+		return (update_exit_code(0, var), NULL);
+	if (input[0] == ';')
+		return (ft_eprintf
+			("minishell: syntax error near unexpected token `;'\n"),
+			update_exit_code(2, var), NULL);
 	while (input[++ps.i])
 	{
 		if (input[ps.i] == '\'' || input[ps.i] == '\"')
 			ps.i = handle_quotes(input, &ps.cmds, ps.i, ps.var);
 		else if (input[ps.i] == '#')
-			while (input[ps.i])
-				ps.i++;
+		{
+			if (ps.cmds)
+			{
+				if (add_command_node(&ps.cmds, &st_head, var) == ERROR)
+					return (free_lst_status(st_head, NULL), NULL);
+			}
+			break ;
+		}
 		else if (input[ps.i] == '(')
 			ps.i = handle_brackets(input, brackets, &st_head, &ps);
 		else if (input[ps.i] == '|' && input[ps.i + 1] == '|')
@@ -102,6 +114,23 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 			ps.i = handle_operator("|", input, &st_head, &ps);
 		else if (input[ps.i] == '&')
 			ps.i = handle_operator("&", input, &st_head, &ps);
+		else if (input[ps.i] == ';')
+		{
+			int	i = 1;
+			while (input[ps.i + i] && input[ps.i + i] == ' ')
+				i++;
+			if (input[ps.i + i] == ';')
+			{
+				add_command_node(&ps.cmds, &st_head, var);
+				free_lst_status(st_head, NULL);
+				ft_eprintf
+				("minishell: syntax error near unexpected token `;'\n");
+				update_exit_code(2, var);
+				return (NULL);
+			}
+			else
+				ps.i = handle_operator(";", input, &st_head, &ps);
+		}
 		else
 			ps.cmds = add_char(ps.cmds, input[ps.i], &ps.i, var);
 		if (ps.i == ERROR)

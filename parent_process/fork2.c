@@ -6,22 +6,25 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 21:50:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 01:02:54 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_and_or(t_status *st, t_lp *lp)
+void	handle_and_or(t_status *st, t_lp *lp, t_var **var)
 {
 	int	status;
 
-	if (st->next && (st->next->has_and || st->next->has_or))
+	if (st->next && (st->next->has_and || st->next->has_or
+			|| st->next->has_semicolon))
 	{
 		waitpid(st->pid, &status, 0);
 		lp->result = WEXITSTATUS(status);
 		lp->count_forked--;
 	}
+	if (st->next && st->next->has_semicolon)
+		update_exit_code(lp->result, var);
 }
 
 void	handle_parent_process(t_status *st)
@@ -53,7 +56,7 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		exit(child_call_builtin(&token, varlist, st_head));
+		exit(child_call_builtin(&token, varlist));
 	}
 	else
 	{
