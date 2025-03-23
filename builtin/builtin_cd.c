@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/22 22:09:45 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 21:34:04 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 	token = *tokens;
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: cd: too many arguments\n"), FAILED);
-	if (!token->next)
+	if ((token->next && ft_strcmp(token->next->token, "--") == 0)
+		|| !token->next)
 	{
 		dir = get_path(varlist, "HOME");
 		if (!dir)

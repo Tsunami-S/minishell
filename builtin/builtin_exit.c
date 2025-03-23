@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/23 21:12:46 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 21:36:37 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 		if (!is_numeric_argument(token->next->token))
 		{
 			ft_eprintf("minishell: exit: %s: numeric argument required\n",
-				token->token);
+				token->next->token);
 			frees(st_head, varlist);
 			exit(2);
 		}
