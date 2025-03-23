@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:23:38 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:59:01 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 21:31:39 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ char *check_top(t_wild **file, t_words **words, char *name)
 		return NULL;
 	}
 	ft_strlcpy(trimed_name, &trimed_name[ft_strlen(head->name)], ft_strlen(&trimed_name[ft_strlen(head->name)]) + 1);
-	if(!head->next && trimed_name[0])
-		target->flag = 0;
 	return trimed_name;
 }
 
@@ -58,7 +56,9 @@ char *check_bottom(t_wild **file, t_words **words, char *name)
 		return name;
 	wlen = ft_strlen(head->name) - 1;
 	nlen = ft_strlen(name) - 1;
-	while(wlen >= 0)
+	if(nlen < 0)
+		target->flag = 0;
+	while(wlen >= 0 && nlen >= 0)
 	{
 		if(head->name[wlen] != name[nlen])
 		{

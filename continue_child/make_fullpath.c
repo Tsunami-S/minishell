@@ -63,6 +63,7 @@ static char	*concat_path_with_cmd(t_child *child, char *cmd, t_var **varlist)
 {
 	t_var	*path_var;
 	char	*fullpath;
+	char	*saved_path;
 	int		i;
 
 	path_var = get_var(varlist, "PATH");
@@ -70,6 +71,7 @@ static char	*concat_path_with_cmd(t_child *child, char *cmd, t_var **varlist)
 	if (!child->paths)
 		exit_child(child, EXIT_FAILURE, errno, "malloc error");
 	i = 0;
+	saved_path = NULL;
 	while (child->paths[i])
 	{
 		fullpath = ft_strjoin_three(child->paths[i], "/", cmd);
@@ -77,11 +79,16 @@ static char	*concat_path_with_cmd(t_child *child, char *cmd, t_var **varlist)
 			exit_child(child, EXIT_FAILURE, errno, "malloc error");
 		if (!access(fullpath, X_OK))
 			break ;
-		free(fullpath);
+		if(!access(fullpath, F_OK) && !saved_path)
+			saved_path = fullpath;
+		else
+			free(fullpath);
 		fullpath = NULL;
 		i++;
 	}
-	if (!fullpath)
+	if (!fullpath && saved_path)
+		exit_child(child, EXIT_PERM, PATHERROR, saved_path);
+	else if (!fullpath)
 		exit_child(child, EXIT_NOCMD, CMDERROR, cmd);
 	return (fullpath);
 }
