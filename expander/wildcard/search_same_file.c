@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 21:31:24 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:27:46 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:34:30 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ static void	manage_flag(t_wild **files, t_words **words, char *name)
 		head = head->next;
 	if(head && (head->name[0] == '/' || (head->next && head->next->name[0] == '/')))
 	{
-		target->slush = 1;
+		if(target->type != DT_DIR)
+			target->flag = 0;
+		else
+			target->slush = 1;
 		return;
 	}
 	while(head && head->type != SLUSH && head->next && target->flag)

@@ -6,20 +6,27 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 01:03:02 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 18:26:37 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:44:07 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_tokens	*replace_first_token(t_tokens **first, char *name, int slush)
+static t_tokens	*replace_first_token(t_tokens **token, char *first, char *name, int slush)
 {
 	t_tokens	*head;
+	int i;
 
-	head = *first;
-	free(head->token);
-	if(slush)
+	head = *token;
+	i = 0;
+	while(!ft_strncmp(&first[i], "./", 2))
+		i += 2;
+	if(i && slush)
+		head->token = ft_strjoin_three(ft_strndup(first, i), name, "/");
+	else if(slush)
 		head->token = ft_strjoin(name, "/");
+	else if (i)
+		head->token = ft_strjoin(ft_strndup(first, i), name);
 	else
 		head->token = ft_strdup(name);
 	if (!head->token)
@@ -28,15 +35,23 @@ static t_tokens	*replace_first_token(t_tokens **first, char *name, int slush)
 	return (head);
 }
 
-static t_tokens	*get_new_token(char *name, int slush)
+static t_tokens	*get_new_token(char *first, char *name, int slush)
 {
 	t_tokens	*new;
+	int i;
 
 	new = (t_tokens *)malloc(sizeof(t_tokens));
 	if (!new)
 		return (NULL);
-	if(slush)
+	i = 0;
+	while(!ft_strncmp(&first[i], "./", 2))
+		i += 2;
+	if(i && slush)
+		new->token = ft_strjoin_three(ft_strndup(first, i), name, "/");
+	else if(slush)
 		new->token = ft_strjoin(name, "/");
+	else if (i)
+		new->token = ft_strjoin(ft_strndup(first, i), name);
 	else
 		new->token = ft_strdup(name);
 	if (!new->token)
@@ -51,17 +66,19 @@ static t_tokens	*add_tokens(t_wild **files, t_tokens **first, t_tokens **next)
 	t_wild		*head;
 	t_tokens	*new;
 	t_tokens	*prev;
+	char *token_head;
 
 	head = *files;
-	if (!replace_first_token(first, head->name, head->slush))
+	prev = *first;
+	token_head = prev->token;
+	if (!replace_first_token(first, token_head, head->name, head->slush))
 		return (NULL);
 	head = head->next;
-	prev = *first;
 	if (!head)
 		return (prev);
 	while (head)
 	{
-		new = get_new_token(head->name, head->slush);
+		new = get_new_token(token_head, head->name, head->slush);
 		if (!new)
 			return (NULL);
 		prev->next = new;
