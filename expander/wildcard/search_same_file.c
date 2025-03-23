@@ -6,99 +6,72 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 21:31:24 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 11:36:58 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:29:43 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	isvalid_secret(t_wild **file, char *word, char *name)
+static void free_allwords(t_words **words)
 {
-	t_wild	*head;
+	t_words *head;
+	t_words *tmp;
 
-	head = *file;
-	if (word[0] != '.' && name[0] == '.')
-		head->flag = 0;
-	return (head->flag);
+	head = *words;
+	while(head)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->name);
+		free(tmp);
+	}
 }
 
-//static int	isvalid_wildcard(t_wild **files, char *word, char *name)
-//{
-//	t_wild	*head;
-//	int		i;
-//
-//	head = *files;
-//	i = 0;
-//	while (name[i])
-//	{
-//		while (name[i] && name[i] != *word)
-//			i++;
-//		if (!ft_strncmp(&name[i], word, ft_strlen(word)))
-//			return (i + ft_strlen(word));
-//		if (name[i])
-//			i++;
-//		if (!name[i])
-//			head->flag = 0;
-//	}
-//	return (0);
-//}
-//
-//static int	isvalid_file(t_wild **files, char *word, char *name)
-//{
-//	t_wild	*head;
-//
-//	head = *files;
-//	if (ft_strncmp(name, word, ft_strlen(word)))
-//	{
-//		head->flag = 0;
-//		return (0);
-//	}
-//	return (ft_strlen(word));
-//}
-
-static int set_end(char **words)
+static int	isvalid_secret(t_wild **file, t_words **words, char *name)
 {
-	int i;
-	int end;
+	t_wild	*target;
+	t_words *head;
 
-	i = 0;
-	while(words[i])
-		i++;
-	end = i;
-	if(end > 0 && words[end - 1][0] == '/')
-		end -= 1;
-	if(end > 0 && words[end - 1][0] != '*')
-		end -= 1;
-	if(end > 0 && words[end - 1][0] == '*')
-		end -= 1;
-	return end;
+	target = *file;
+	if(name[0] != '.')
+		return target->flag;
+	head = *words;
+	while(head && !ft_strcmp(head->name, "./"))
+		head = head->next;
+	if (ft_strcmp(head->name, "."))
+		target->flag = 0;
+	return (target->flag);
 }
 
-static void	manage_flag(t_wild **files, char **words, char *name, int i)
+static void	manage_flag(t_wild **files, t_words **words, char *name)
 {
-	t_wild *head;
-	int end;
+	t_wild *target;
+	t_words *head;
 	char *saved;
 
-	head = *files;
-	if(!head->flag || !name)
+	head = *words;
+	target = *files;
+	if(!target->flag || !name || !head)
 		return ;
-	end = set_end(words);
-	while(i < end && head->flag)
+	if((head && head->name[0] == '/') || (head->next &&head->next->name[0] == '/'))
+		return;
+	if(head->type == WILD)
+		head = head->next;
+	while(head && head->type != SLUSH && head->next && target->flag)
 	{
-		while(*name && ft_strncmp(name, words[i], ft_strlen(words[i])))
+		while(*name && ft_strncmp(name, head->name, ft_strlen(head->name)))
 			name++;
 		if(!*name)
-			head->flag = 0;
+			target->flag = 0;
 		else
 		{
 			saved = name;
-			name += ft_strlen(words[i]);
-			manage_flag(files, words, name, i + 1);
-			if(head->flag)
+			name += ft_strlen(head->name);
+			manage_flag(files, &(head->next), name);
+			if(target->flag)
 				break;
 			else
-				head->flag = 1;
+				target->flag = 1;
 			name = saved + 1;
 		}
 	}
@@ -107,35 +80,35 @@ static void	manage_flag(t_wild **files, char **words, char *name, int i)
 void	search_same_file(t_wild **files, char *str)
 {
 	t_wild	*head;
-	char	**words;
+	t_words	*words;
+	t_words	*saved_words;
 	char	*trimed_name;
-	int len;
 
 	if (!*files)
 		return ;
-	len = count_wild_words(str);
-	words = split_wildcards(str, len);
-	if (!words)
+	saved_words = split_wildcards(str);
+	if (!saved_words)
 		return ;
 	head = *files;
 	while (head)
 	{
-		if (isvalid_secret(&head, words[0], head->name))
+		words = saved_words;
+		if (isvalid_secret(&head, &words, head->name))
 		{
-			trimed_name =  check_top(&head, words, head->name);
-			trimed_name =  check_bottom(&head, words, trimed_name);
-			int index = 0;
-			if(!ft_strcmp(words[0], "./"))
-				index += 1;
-			if(words[index][0] != '*')
-				index += 1;
-			if(words[index][0] == '*')
-				index += 1;
-			manage_flag(&head, words, trimed_name, index);
-	//		check_dir(&head, words);
+			trimed_name =  check_top(&head, &words, head->name);
+			trimed_name =  check_bottom(&head, &words, trimed_name);
+			while(words && !ft_strcmp(words->name, "./"))
+				words = words->next;
+			if(words && words->name[0] != '*')
+				words = words->next;
+			if(words && words->type == ELSE && words->name[0] == '*')
+				words = words->next;
+			manage_flag(&head, &words, trimed_name);
+	//if(head && head->name[0] == '/' && target->type != DT_DIR)
+	//	target->flag = 0;
 			free(trimed_name);
 		}
 		head = head->next;
 	}
-	free_strs(words);
+	free_allwords(&saved_words);
 }

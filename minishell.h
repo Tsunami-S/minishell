@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 14:11:16 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:39:15 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,19 @@
 
 extern volatile sig_atomic_t	g_signal;
 
-typedef struct s_dirs
+typedef enum e_wtype
 {
-	int wild;
+	WILD,
+	SLUSH,
+	ELSE,
+}	t_wtype;
+
+typedef struct s_words
+{
 	char *name;
-	struct s_dirs *next;
-}	t_dirs;
+	t_wtype type;
+	struct s_words *next;
+}	t_words;
 
 typedef struct s_wild
 {
@@ -242,7 +249,7 @@ char **split_dir(char *str);
 t_wild *get_files(char *name);
 void connect_to_the_end(t_wild **files, t_wild **new_files);
 int check_wildcard(char *str);
-char **split_wildcards(char *str, int malloc_size);
+t_words	*split_wildcards(char *str);
 t_wild *remove_filename(t_wild **files);
 void free_file(t_wild **file);
 void free_all_files(t_wild **files);
@@ -251,8 +258,8 @@ int	count_wild_words(char *str);
 void	search_same_file(t_wild **files, char *str);
 t_wild *get_expanded_files(char **dirs, t_wild **based_files, int index);
 void check_dir(t_wild **file, char **words);
-char *check_bottom(t_wild **file, char **words, char *name);
-char *check_top(t_wild **file, char **words, char *name);
+char *check_bottom(t_wild **file, t_words **words, char *name);
+char *check_top(t_wild **file, t_words **words, char *name);
 
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);

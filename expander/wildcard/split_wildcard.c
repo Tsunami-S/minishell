@@ -6,85 +6,119 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 20:33:11 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 20:19:13 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:25:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_wild_words(char *str)
+static int get_len(char *str)
 {
-	int	i;
-	int	size;
+	int index;
+	int j;
+	char ope;
 
-	size = 0;
-	while (*str && *str != '/')
+	if(str[0] == '*')
+		return 1;
+	index = 0;
+	while(str[index])
 	{
-		i = 0;
-		if (str[i] != '*')
-			while (str[i] && str[i] != '*' && str[i] != '/')
-				i++;
-		else if (str[i] == '*')
-			while (str[i] == '*')
-				i++;
-		size++;
-		str += i;
+		if(str[index] == '*' || str[index] == '/')
+			break;
+		if(str[index] == '\"' || str[index] == '\'')
+		{
+			ope = str[index];
+			j = 1;
+			while(str[index + j] && str[index + j] != ope)
+				j++;
+			if(str[index + j] == ope)
+				index += j + 1;
+			else
+				index++;
+		}
+		else
+			index++;
 	}
-	if (*str == '/')
-		size++;
-	return (size);
+	return index;
 }
 
-static char	*set_words(char **words, int *size, char *str, int len)
+static int get_dir_len(char *str)
 {
-	if (len)
+	int index;
+
+	if(str[0] == '/')
+		return 1;
+	index = 0;
+	while(str[index])
 	{
-		*words = ft_strndup(str, len);
-		if (!*words)
-			return (NULL);
+		if(ft_strncmp(&str[index], "./", 2))
+			break;
+		index += 2;
 	}
+	return index;
+}
+
+static char *remove_quotes(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] != '\'' && str[i] != '\"')
+			i++;
+		else
+			ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i]));
+	}
+	return str;
+}
+
+static t_words *make_new_words(char *str, int len)
+{
+	t_words *new;
+
+	new = (t_words *)malloc(sizeof(t_words));
+	if(!new)
+		return NULL;
+	new->name = ft_strndup(str, len);
+	if(!new->name)
+		return free(new), NULL;
+	if(len == 1 && !ft_strcmp(new->name, "*"))
+		new->type = WILD;
+	else if(!ft_strcmp(new->name, "/") || !ft_strncmp(new->name, "./", 2))
+		new->type = SLUSH;
 	else
 	{
-		*words = ft_strdup(str);
-		if (!*words)
-			return (NULL);
+		new->type = ELSE;
+		new->name = remove_quotes(new->name);
 	}
-	*size += 1;
-	return (*words);
+	new->next = NULL;
+	return new;
 }
 
-static int	get_len(char *str)
+t_words	*split_wildcards(char *str)
 {
-	char	*saved;
+	t_words *words;
+	t_words *prev;
+	t_words *new;
+	int		len;
 
-	saved = str;
-	while (*str && *str != '*' && *str != '/')
-		str++;
-	return (str - saved);
-}
-
-char	**split_wildcards(char *str, int malloc_size)
-{
-	char	**words;
-	int		size;
-
-	words = (char **)malloc(sizeof(char *) * (malloc_size + 1));
-	if (!words)
-		return (NULL);
-	size = 0;
-	while (*str && *str != '/')
+	words = NULL;
+	while (*str)
 	{
-		if (*str != '*' && !set_words(&words[size], &size, str, get_len(str)))
-			return (words);
-		while (*str && *str != '*' && *str != '/')
-			str++;
-		if (*str == '*' && !set_words(&words[size], &size, "*", 0))
-			return (words);
-		while (*str == '*')
-			str++;
+		if(*str == '/' || !ft_strncmp(str, "./", 2))
+			len = get_dir_len(str);
+		else
+			len = get_len(str);
+		new = make_new_words(str, len);
+		if(!new)
+			return words;
+		if(!words)
+			words = new;
+		else 
+			prev->next = new;
+		str += len;
+		prev = new;
 	}
-	if (*str == '/' && !set_words(&words[size], &size, "/", 0))
-		return (words);
-	words[size] = NULL;
 	return (words);
 }

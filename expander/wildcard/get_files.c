@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 00:48:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 14:21:51 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 18:00:05 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,37 +34,16 @@ static int	get_name_len(char *str)
 	return (i);
 }
 
-//char **remove_quotes(char ***strs)
-//{
-//	char	**dirs;
-//	int i;
-//	int j;
-//
-//	dirs = *strs;
-//	i = 0;
-//	while(dirs[i])
-//	{
-//		j = 0;
-//		while(dirs[i][j])
-//		{
-//			if(dirs[i][j] != '\'' && dirs[i][j] != '\"')
-//				j++;
-//			else
-//				ft_strlcpy(&dirs[i][j], &dirs[i][1], ft_strlen(dirs[i]));
-//		}
-//		i++;
-//	}
-//	return dirs;
-//}
-
 char	**split_dir(char *str)
 {
 	int		count;
 	char	**dirs;
 	char	*copy_str;
 
-	copy_str = str;
 	count = 1;
+	while(!ft_strncmp(str, "./", 2))
+		str += 2;
+	copy_str = str;
 	while (*copy_str)
 	{
 		copy_str += get_name_len(copy_str);
