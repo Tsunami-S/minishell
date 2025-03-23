@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 22:05:08 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 14:11:16 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@
 # define MAX_STACK_BRACKETS 500
 
 extern volatile sig_atomic_t	g_signal;
+
+typedef struct s_dirs
+{
+	int wild;
+	char *name;
+	struct s_dirs *next;
+}	t_dirs;
 
 typedef struct s_wild
 {
@@ -243,6 +250,9 @@ void concat_files(char *dirname, t_wild **files);
 int	count_wild_words(char *str);
 void	search_same_file(t_wild **files, char *str);
 t_wild *get_expanded_files(char **dirs, t_wild **based_files, int index);
+void check_dir(t_wild **file, char **words);
+char *check_bottom(t_wild **file, char **words, char *name);
+char *check_top(t_wild **file, char **words, char *name);
 
 /* continue_child */
 void	continue_child(t_tokens **tokens, t_var **varlist);

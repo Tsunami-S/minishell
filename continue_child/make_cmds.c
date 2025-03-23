@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:00:45 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/18 21:09:52 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:01:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,6 @@ void	make_cmds(t_child *child, t_tokens **tokens)
 	child->cmds = copy_cmds(child, tokens, malloc_size);
 	if (!*child->cmds)
 		exit_child(child, EXIT_SUCCESS, errno, NULL);
+	if (!ft_strcmp(child->cmds[0], "."))
+		exit_child(child, EXIT_SYNTAX, FILENUMERROR, ".");
 }

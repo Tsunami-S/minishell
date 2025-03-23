@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 20:58:59 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/21 21:30:21 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 11:23:05 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	free_all_files(t_wild **files)
 
 static int	is_invalid_name(char *str)
 {
-	if (!ft_strcmp(str, ".") || !ft_strcmp(str, ".."))
+	if (!str || !ft_strcmp(str, ".") || !ft_strcmp(str, ".."))
 		return (ERROR);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 20:33:11 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 00:49:25 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:19:13 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int	count_wild_words(char *str)
 		size++;
 		str += i;
 	}
-	if (*(str - 1) != '*')
-		size++;
 	if (*str == '/')
 		size++;
 	return (size);
@@ -85,8 +83,6 @@ char	**split_wildcards(char *str, int malloc_size)
 		while (*str == '*')
 			str++;
 	}
-	if (words[size - 1][0] != '*' && !set_words(&words[size], &size, "", 0))
-		return (words);
 	if (*str == '/' && !set_words(&words[size], &size, "/", 0))
 		return (words);
 	words[size] = NULL;

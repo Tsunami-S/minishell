@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 20:33:16 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/21 21:30:23 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 13:53:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,21 @@ void	concat_files(char *dirname, t_wild **files)
 int	check_wildcard(char *str)
 {
 	int		i;
-	char	ope;
+	int		j;
 
 	i = 0;
 	while (str[i])
 	{
 		if (str[i] == '*')
 			return (1);
-		else if (str[i] == '\'' || str[i] == '\"')
+		else if (str[i] == '\'')
 		{
-			ope = str[i];
-			i++;
-			while (str[i] != ope)
-				i++;
-			i++;
+			j = 1;
+			while (str[i + j] && str[i + j] != '\'')
+				j++;
+			if(str[i + j] == '\'')
+				i += j + 1;
+			else i++;
 		}
 		else
 			i++;

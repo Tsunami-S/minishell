@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 01:03:02 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 01:03:03 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:21:09 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,28 @@ static t_tokens	*add_tokens(t_wild **files, t_tokens **first, t_tokens **next)
 	return (new);
 }
 
+static int isvalid_type(t_type prev, char *str)
+{
+	if(prev != APPEND && prev != TRUNC && prev != INPUT && prev != HEREDOC)
+		return SUCCESS;
+	if(ft_strcmp(str, "*"))
+		return SUCCESS;
+	return ERROR;
+}
+
 void	expand_wildcard(t_tokens **tokens)
 {
 	t_tokens	*head;
 	t_tokens	*next;
 	t_wild		*files;
 	char		**dirs;
+	t_type		prev_type;
 
 	head = *tokens;
+	prev_type = WORD;
 	while (head)
 	{
-		if (check_wildcard(head->token))
+		if (isvalid_type(prev_type, head->token) != ERROR && check_wildcard(head->token))
 		{
 			dirs = split_dir(head->token);
 			if (!dirs)
@@ -91,6 +102,9 @@ void	expand_wildcard(t_tokens **tokens)
 			}
 		}
 		if (head)
+		{
+			prev_type = head->type;
 			head = head->next;
+		}
 	}
 }

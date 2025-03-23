@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/22 22:03:00 by haito            ###   ########.fr        #
+#    Updated: 2025/03/23 11:59:43 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,7 @@ SRCS =	minishell_main.c \
 		expander/wildcard/split_wildcard.c \
 		expander/wildcard/wildcard_free.c \
 		expander/wildcard/wildcard_utils.c \
+		expander/wildcard/check_edge.c \
 		ft_eprintf/ft_eprintf.c \
 		ft_eprintf/ft_eprintf_option.c \
 		ft_eprintf/ft_eprintf_option2.c \

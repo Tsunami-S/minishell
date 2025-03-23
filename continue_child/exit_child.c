@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 17:08:45 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:08:06 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static void	put_errmsg(int errnum, char *msg)
 		put_syntaxerr_msg(msg);
 	else if (errnum == AMBIGUOUS)
 		put_msg(msg, "ambiguous redirect");
+	else if (errnum == FILENUMERROR)
+		put_msg(msg, "filename argument required");
 	else if (errnum > 0)
 		put_msg(msg, strerror(errnum));
 }

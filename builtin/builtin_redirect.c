@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 17:10:03 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/23 12:07:53 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static int	redirects(t_tokens **tokens, char *tmpfile)
 		if (head->type == HEREDOC)
 			status = redirect(STDIN_FILENO, head->type, tmpfile, -1);
 		else if (next && next->token[0] == '$' && next->type == VAR)
+			return (builtin_error(AMBIGUOUS, head->next->token));
+		else if (next && !ft_strcmp(next->token, "*"))
 			return (builtin_error(AMBIGUOUS, head->next->token));
 		else if (head->type == INPUT)
 			status = redirect(STDIN_FILENO, head->type, head->next->token, -1);

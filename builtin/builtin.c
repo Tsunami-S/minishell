@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 22:09:18 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 12:01:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,27 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	return (status);
 }
 
+int	check_status(int status, t_tokens **tokens, t_var **varlist)
+{
+	t_tokens	*head;
+	char		*new_value;
+	char		*name;
+
+	if (status != EXIT_SUCCESS)
+		return (status);
+	head = *tokens;
+	while (head && head->next)
+		head = head->next;
+	new_value = ft_strdup(head->token);
+	if (!new_value)
+		return (status);
+	name = ft_strdup("_");
+	if (!name)
+		return (free(new_value), status);
+	add_var(varlist, name, new_value);
+	return (status);
+}
+
 int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 {
 	t_tokens	*token;
@@ -87,5 +108,5 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 			status = builtin_exit(tokens, varlist, st_head);
 	}
 	builtin_reset_stdio(&saved);
-	return (status);
+	return (check_status(status, tokens, varlist));
 }
