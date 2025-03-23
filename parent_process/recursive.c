@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 22:08:11 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 21:17:57 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,18 @@ int	recursive_continue_line(char *input, t_var **varlist)
 		return (0);
 	if (find_brackets_pair(input, &brackets, ft_strlen(input),
 			varlist) == ERROR)
-		return (free_varlist(varlist), ERROR);
+		return (free_varlist(varlist), free(input), ERROR);
 	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
-		return (free_varlist(varlist), ERROR);
+		return (free_varlist(varlist), free(input), ERROR);
 	if (make_pipe(&state, varlist) == ERROR)
-		return (frees(state, varlist), ERROR);
+		return (frees(state, varlist), free(input), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
-		return (frees(state, varlist), ERROR);
+		return (frees(state, varlist), free(input), ERROR);
 	if (check_built_in(&state, state))
-		return (frees(state, varlist), ERROR);
+		return (frees(state, varlist), free(input), ERROR);
 	if (fork_and_wait_(&state, varlist, input) == ERROR)
-		return (frees(state, varlist), ERROR);
+		return (frees(state, varlist), free(input), ERROR);
 	frees(state, varlist);
 	free(input);
 	return (SUCCESS);

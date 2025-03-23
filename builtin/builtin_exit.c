@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/22 19:40:20 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/23 21:12:46 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ int	get_exit_status(t_var **varlist)
 	return (exit_status);
 }
 
+void	handle_exit_nonop(t_tokens **tokens)
+{
+	t_tokens	*token;
+	t_tokens	*nonop;
+
+	token = *tokens;
+	nonop = token->next;
+	token->next = token->next->next;
+	free(nonop->token);
+	free(nonop);
+}
+
 int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 {
 	int			exit_code;
@@ -55,6 +67,8 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 
 	token = *tokens;
 	printf("exit\n");
+	if (token->next && ft_strcmp(token->next->token, "--") == 0)
+		handle_exit_nonop(tokens);
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
