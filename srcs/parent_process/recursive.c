@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 11:24:47 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:06:10 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,16 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 			lp.count_forked = 0;
 			break ;
 		}
+		if (st->token)
+			free_tokens(&(st->token));
+		st->token = expander(st->cmds, varlist);
+		if (!st->token)
+			return (update_exit_code(1, varlist), ERROR);
+		if (check_built_in(st) == ERROR)
+			return (update_exit_code(1, varlist), ERROR);
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
-		else if (st->is_builtin && (!st->next || st->next->has_and
-				|| st->next->has_or) && st->has_brackets == 0
-			&& st->input_pipefd == -1 && st->output_pipefd == -1)
+		else if (is_direct_builtin(st))
 			lp.result = call_builtin_re(&st->token, varlist, *st_head,
 					lp.input);
 		else
@@ -88,10 +93,6 @@ int	recursive_continue_line(char *input, t_var **varlist)
 	if (!state)
 		return (free_varlist(varlist), free(input), ERROR);
 	if (make_pipe(&state, varlist) == ERROR)
-		return (frees(state, varlist), free(input), ERROR);
-	if (expand_cmds(&state, varlist) == ERROR)
-		return (frees(state, varlist), free(input), ERROR);
-	if (check_built_in(&state, state))
 		return (frees(state, varlist), free(input), ERROR);
 	if (fork_and_wait_(&state, varlist, input) == ERROR)
 		return (frees(state, varlist), free(input), ERROR);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 11:10:39 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:09:24 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void		sigint_handler(int signal);
 void		sigint_handler_inprocess(int signal);
 void		sig_ignore(int signal);
 void		sigint_handler_heredoc(int signal);
-int			check_built_in(t_status **st_head, t_status *st);
+int			check_built_in(t_status *st);
 int			expand_cmds(t_status **st_head, t_var **varlist);
 int			count_up_shlvl(t_var **varlist);
 void		exit_child_sigint(t_child *child, char *buf, char *file);
@@ -69,5 +69,6 @@ int			ft_atoi_exit(const char *str);
 int			get_exit_status(t_var **varlist);
 int			call_builtin_re(t_tokens **tokens, t_var **varlist,
 				t_status *st_head, char *in);
+int			is_direct_builtin(t_status *st);
 
 #endif

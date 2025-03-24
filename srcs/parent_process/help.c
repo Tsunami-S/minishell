@@ -6,55 +6,32 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 03:44:48 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 17:38:42 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 20:50:22 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	expand_cmds(t_status **st_head, t_var **varlist)
-{
-	t_status	*st;
-
-	if (!st_head || !*st_head)
-		return (ERROR);
-	st = *st_head;
-	while (st)
-	{
-		if (st->token)
-			free_tokens(&(st->token));
-		st->token = expander(st->cmds, varlist);
-		if (!st->token)
-			return (ERROR);
-		st = st->next;
-	}
-	return (SUCCESS);
-}
-
-int	check_built_in(t_status **st_head, t_status *st)
+int	check_built_in(t_status *st)
 {
 	char	**builtin_cmds;
 	int		i;
 
-	if (!st_head || !*st_head || !st)
+	if (!st)
 		return (ERROR);
 	if (!st->token)
 		return (SUCCESS);
 	builtin_cmds = init_builtin_cmds();
 	if (!builtin_cmds)
 		return (error_node(ERRNO_ONE), ERROR);
-	while (st)
+	i = -1;
+	while (builtin_cmds[++i])
 	{
-		i = -1;
-		while (builtin_cmds[++i])
+		if (!ft_strcmp(st->token->token, builtin_cmds[i]))
 		{
-			if (!ft_strcmp(st->token->token, builtin_cmds[i]))
-			{
-				st->is_builtin = 1;
-				break ;
-			}
+			st->is_builtin = 1;
+			break ;
 		}
-		st = st->next;
 	}
 	free_builtin_cmds(builtin_cmds);
 	return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 18:48:29 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:09:35 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	fork_process(t_status *st, t_var **varlist,
 	handle_and_or(st, lp, varlist);
 }
 
-static int	is_direct_builtin(t_status *st)
+int	is_direct_builtin(t_status *st)
 {
 	if (!st || !st->is_builtin)
 		return (0);
@@ -90,16 +90,19 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			lp.count_forked = 0;
 			break ;
 		}
+		if (st->token)
+			free_tokens(&(st->token));
+		st->token = expander(st->cmds, varlist);
+		if (!st->token)
+			return (update_exit_code(1, varlist), ERROR);
+		if (check_built_in(st) == ERROR)
+			return (update_exit_code(1, varlist), ERROR);
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
 		else if (is_direct_builtin(st))
-		{
-			expand_cmds(&st, varlist);
 			lp.result = call_builtin(&st->token, varlist, *st_head);
-		}
 		else
 		{
-			expand_cmds(&st, varlist);
 			fork_process(st, varlist, &lp, *st_head);
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
 				lp.last_pid = st->pid;
