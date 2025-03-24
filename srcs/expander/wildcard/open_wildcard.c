@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 23:42:34 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 00:16:08 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 19:22:02 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static t_tokens	*add_tokens(t_wild **files, t_tokens **first, t_tokens **next)
 		return (NULL);
 	head = head->next;
 	if (!head)
-		return (prev);
+		return (free(token_head), prev);
 	while (head)
 	{
 		new = add_new_token(token_head, head->name, head->slash);
