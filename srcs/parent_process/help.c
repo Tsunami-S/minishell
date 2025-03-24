@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 03:44:48 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 19:23:22 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 17:38:42 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	expand_cmds(t_status **st_head, t_var **varlist)
 	st = *st_head;
 	while (st)
 	{
+		if (st->token)
+			free_tokens(&(st->token));
 		st->token = expander(st->cmds, varlist);
 		if (!st->token)
 			return (ERROR);
@@ -31,8 +33,8 @@ int	expand_cmds(t_status **st_head, t_var **varlist)
 
 int	check_built_in(t_status **st_head, t_status *st)
 {
-	char		**builtin_cmds;
-	int			i;
+	char	**builtin_cmds;
+	int		i;
 
 	if (!st_head || !*st_head || !st)
 		return (ERROR);
@@ -83,9 +85,9 @@ int	make_shlvl(t_var **varlist)
 
 int	check_shlvl(t_var **varlist, t_var *var)
 {
-	int		i;
-	int		shlvl;
-	int		len;
+	int	i;
+	int	shlvl;
+	int	len;
 
 	if (!var || !var->value)
 		return (make_shlvl(varlist));

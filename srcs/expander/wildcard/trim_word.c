@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:23:38 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 01:47:03 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:36:29 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*trim_word_end(t_wild **file, t_words **words, char *name)
 	int		nlen;
 
 	target = *file;
-	if (!target->flag || !name)
+	if (!target->flag || !name || !*name)
 		return (NULL);
 	head = *words;
 	while (head && head->next && head->next->name[0] != '/')
@@ -70,7 +70,7 @@ char	*trim_word_end(t_wild **file, t_words **words, char *name)
 		if (head->name[wlen--] != name[nlen--])
 		{
 			target->flag = 0;
-			return (free(name), NULL);
+			return (NULL);
 		}
 	}
 	name[nlen + 1] = '\0';

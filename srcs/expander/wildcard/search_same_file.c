@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 21:31:24 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 00:06:14 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:36:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,8 @@ void	search_same_file(t_wild **files, char *str)
 	t_wild	*head;
 	t_words	*words;
 	t_words	*saved_words;
-	char	*trimed_name;
+	char	*saved_trimed_name;
 
-	if (!*files)
-		return ;
 	saved_words = split_wildcards(str);
 	if (!saved_words)
 		return ;
@@ -75,11 +73,11 @@ void	search_same_file(t_wild **files, char *str)
 		words = saved_words;
 		if (isvalid_secret(&head, &words, head->name))
 		{
-			trimed_name = trim_word_start(&head, &words, head->name);
-			trimed_name = trim_word_end(&head, &words, trimed_name);
+			saved_trimed_name = trim_word_start(&head, &words, head->name);
+			trim_word_end(&head, &words, saved_trimed_name);
 			words = move_words_start(&words);
-			manage_flag(&head, &words, trimed_name);
-			free(trimed_name);
+			manage_flag(&head, &words, saved_trimed_name);
+			free(saved_trimed_name);
 		}
 		head = head->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 23:42:34 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 00:34:07 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:24:53 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	manage_flag(t_wild **files, t_words **words, char *name)
 			target->flag = 0;
 		else
 		{
-			manage_flag(files, &(head->next), name += ft_strlen(head->name));
+			manage_flag(files, &(head->next), name + ft_strlen(head->name));
 			if (target->flag)
 				break ;
 			else

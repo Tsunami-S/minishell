@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 00:48:37 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 23:36:42 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:36:59 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static t_wild	*make_new_expanded_files(char *dir)
 	t_wild	*files;
 
 	files = get_files(".");
-	search_same_file(&files, dir);
+	if (files)
+		search_same_file(&files, dir);
 	files = remove_filename(&files);
 	return (files);
 }

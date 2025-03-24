@@ -6,13 +6,25 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 01:09:43 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 17:39:14 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal = 0;
+
+static void	init_tokens(t_status **status)
+{
+	t_status	*st;
+
+	st = *status;
+	while (st)
+	{
+		st->token = NULL;
+		st = st->next;
+	}
+}
 
 int	continue_line(char *input, t_var **varlist)
 {
@@ -30,6 +42,7 @@ int	continue_line(char *input, t_var **varlist)
 	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
 		return (ERROR);
+	init_tokens(&state);
 	if (make_pipe(&state, varlist) == ERROR)
 		return (free_lst_status(state, NULL), ERROR);
 	if (expand_cmds(&state, varlist) == ERROR)
