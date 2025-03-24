@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 01:39:21 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 12:25:18 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,13 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 			;
 		else if (is_direct_builtin(st))
+		{
+			expand_cmds(&st, varlist);
 			lp.result = call_builtin(&st->token, varlist, *st_head);
+		}
 		else
 		{
+			expand_cmds(&st, varlist);
 			fork_process(st, varlist, &lp, *st_head);
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
 				lp.last_pid = st->pid;

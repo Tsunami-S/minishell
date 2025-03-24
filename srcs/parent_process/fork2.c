@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 01:02:54 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/24 12:07:29 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 {
 	t_tokens	*token;
 	int			result;
-	char		*cmds;
 
 	if (st->input_pipefd != -1)
 		dup2(st->input_pipefd, STDIN_FILENO);
@@ -47,9 +46,8 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 		dup2(st->output_pipefd, STDOUT_FILENO);
 	if (st->has_brackets)
 	{
-		cmds = st->cmds;
-		free_lst_status_(st_head, cmds);
-		result = recursive_continue_line(cmds, varlist);
+		free_lst_status_(st_head, st->cmds);
+		result = recursive_continue_line(st->cmds, varlist);
 		exit(result);
 	}
 	if (st->is_builtin)
