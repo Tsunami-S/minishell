@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 11:26:29 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 02:12:09 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	handle_brackets(const char *input, t_brackets *brackets,
 	while (input[ps->i + 1] && input[ps->i + 1] == ' ')
 		ps->i++;
 	if ((input[ps->i + 1] != '\0' && input[ps->i + 1] != '|'
-			&& input[ps->i + 1] != '&')
+			&& input[ps->i + 1] != '&' && input[ps->i + 1] != ';')
 		|| (input[ps->i + 1] == '&' && input[ps->i + 2] != '&'))
 		return (error_handle_brackets(ERRNO_FOUR, ps->var));
 	return (ps->i);

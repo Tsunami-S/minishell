@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 01:03:03 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 01:56:09 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 	lp.result = 0;
 	while (st)
 	{
-		if (g_signal == SIGINT || g_signal == SIGQUIT)
+		if (g_signal == SIGINT)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			g_signal = 0;
@@ -90,8 +90,13 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			lp.count_forked = 0;
 			break ;
 		}
-		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
+		if (lp.result == 131)
 			break ;
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
+		{
+			st = st->next;
+			continue ;
+		}
 		if (st->token)
 			free_tokens(&(st->token));
 		st->token = expander(st->cmds, varlist);

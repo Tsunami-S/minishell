@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/25 16:29:35 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 02:18:12 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 	token = *tokens;
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: cd: too many arguments\n"), FAILED);
-	if ((token->next && ft_strcmp(token->next->token, "--") == 0)
+	if ((token->next && (ft_strcmp(token->next->token, "--") == 0
+				|| ft_strcmp(token->next->token, "~") == 0))
 		|| !token->next)
 	{
 		dir = get_path(varlist, "HOME");
@@ -98,6 +99,8 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 			return (ft_eprintf("minishell: cd: OLDPWD not set\n"), FAILED);
 		printf("%s\n", dir);
 	}
+	else if (ft_strcmp(token->next->token, "") == 0)
+		dir = ".";
 	else
 		dir = token->next->token;
 	if (access(dir, F_OK) == 0 && access(dir, X_OK) == -1)
