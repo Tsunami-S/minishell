@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 19:44:50 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 03:17:07 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,20 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 	lp.input = input;
 	while (st)
 	{
-		if (g_signal == SIGINT || g_signal == SIGQUIT)
+		if (g_signal == SIGINT)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			g_signal = 0;
 			lp.result = 130;
 			lp.count_forked = 0;
 			break ;
+		}
+		if (lp.result == 131)
+			break ;
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
+		{
+			st = st->next;
+			continue ;
 		}
 		if (st->token)
 			free_tokens(&(st->token));
@@ -65,8 +72,6 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
-		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
-			;
 		else if (is_direct_builtin(st))
 			lp.result = call_builtin_re(&st->token, varlist, *st_head,
 					lp.input);
