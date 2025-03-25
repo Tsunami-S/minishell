@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 23:25:36 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 01:59:49 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/25 12:47:56 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,10 @@ static char	*concat_path_with_cmd(t_child *child, char *cmd, t_var **varlist)
 
 void	make_fullpath(t_child *child, char *cmd, t_var **varlist)
 {
-	if (!cmd || !cmd[0])
+	if (!cmd)
 		return ;
+	if (!cmd[0])
+		exit_child(child, EXIT_NOCMD, CMDERROR, cmd);
 	if (cmd[0] == '/' || !ft_strncmp(cmd, "./", 2))
 		child->fullpath = check_original_path(child, cmd);
 	else if (varlist && !ft_strncmp(cmd, "~/", 2))

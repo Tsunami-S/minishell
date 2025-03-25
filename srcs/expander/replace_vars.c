@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 01:13:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/25 13:37:32 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,33 +41,47 @@ static char	*concat_words(char **words, int size, char **prev_token)
 	return (expanded_token);
 }
 
-static int	isvalid_var(t_type type, char *token, char **words, int size)
+static int	isvalid_file_for_redirect(int size, char **words)
 {
 	int	i;
 	int	j;
-	int	count;
 
-	if (token[0] != '$' || type == WORD || type == HAVE_QUOTE || type == VAR)
-		return (SUCCESS);
-	i = -1;
-	while (token[++i])
-		if (token[i] == '\'' || token[i] == '\"')
-			return (SUCCESS);
 	i = 0;
-	count = 0;
 	while (i < size)
 	{
 		j = 0;
 		if (words[i])
+		{
 			while (words[i][j])
-				if (ft_isspace(words[i][j++]))
+			{
+				if (ft_isspace(words[i][j]))
 					return (ERROR);
-		count += j;
+				j++;
+			}
+		}
 		i++;
 	}
-	if (!count)
-		return (ERROR);
 	return (SUCCESS);
+}
+
+static int	isvalid_var(t_type type, char *token, char **words, int size)
+{
+	int	i;
+
+	if (token[0] != '$' || type == WORD || type == HAVE_QUOTE || type == VAR)
+		return (1);
+	else if (type == HEREDOC || !size)
+		return (0);
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == '\'' || token[i] == '\"')
+			return (1);
+		i++;
+	}
+	if (isvalid_file_for_redirect(size, words) == ERROR)
+		return (0);
+	return (1);
 }
 
 int	replace_vars(t_tokens **tokens, t_var **varlist)
@@ -85,7 +99,7 @@ int	replace_vars(t_tokens **tokens, t_var **varlist)
 		words = get_words(head->token, varlist, words_size);
 		if (!words)
 			return (ERROR);
-		if (!isvalid_var(prev_type, head->token, words, words_size))
+		if (isvalid_var(prev_type, head->token, words, words_size))
 			head->token = concat_words(words, words_size, &(head->token));
 		else
 			head->type = VAR;
