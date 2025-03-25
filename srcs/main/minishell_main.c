@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:43:53 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 00:48:35 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	main_loop(t_var **varlist)
 			free_varlist(varlist);
 			exit(1);
 		}
+		g_signal = 0;
 		input = readline("minishell$ ");
 		if (!input)
 		{

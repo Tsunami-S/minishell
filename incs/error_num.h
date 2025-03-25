@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 10:56:02 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 01:32:42 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define IS_ANDAND 2
 # define IS_AND 3
 # define IS_SEMI 4
+# define IS_PIPE 5
+# define IS_CMD 6
 
 /* my errno */
 # define REDIRECTERROR -400

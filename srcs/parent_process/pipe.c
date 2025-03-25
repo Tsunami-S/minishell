@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 07:48:56 by haito             #+#    #+#             */
-/*   Updated: 2025/03/23 22:24:45 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 01:38:19 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope,
 		t_var **var)
 {
 	if (!st_next->next && ope != IS_AND && ope != IS_SEMI)
-		return (error_pipe(ERRNO_TWO, var));
+		return (error_pipe(ERRNO_ONE, var, ope, NULL));
 	if (ope == IS_SEMI)
 	{
 		if (st_next->next)
@@ -32,6 +32,8 @@ int	process_and_or_operator(t_status **st_head, t_status *st_next, int ope,
 		ft_remove_node(st_head, st_next);
 		return (SUCCESS);
 	}
+	if (!st_next->next)
+		return (error_pipe(ERRNO_ONE, var, ope, NULL));
 	st_next = st_next->next;
 	if (ope == IS_OR)
 		st_next->has_or = 1;
@@ -49,9 +51,9 @@ int	process_pipe_operator(t_status **st_head, t_status *st, t_status *st_next,
 	int	pipefd[2];
 
 	if (!st_next->next)
-		return (error_pipe(ERRNO_TWO, var));
+		return (error_pipe(ERRNO_ONE, var, IS_PIPE, st->cmds));
 	if (pipe(pipefd) == -1)
-		return (error_pipe(ERRNO_THREE, var));
+		return (error_pipe(ERRNO_TWO, var, IS_PIPE, NULL));
 	st->output_pipefd = pipefd[1];
 	st_next = st_next->next;
 	st_next->input_pipefd = pipefd[0];
@@ -87,7 +89,7 @@ int	make_pipe(t_status **st_head, t_var **var)
 		return (ERROR);
 	st = *st_head;
 	if (is_operator(st->cmds))
-		return (error_pipe(ERRNO_ONE, var));
+		return (error_pipe(ERRNO_ONE, var, IS_CMD, st->cmds));
 	while (st)
 	{
 		if (!is_operator(st->cmds))
@@ -96,7 +98,7 @@ int	make_pipe(t_status **st_head, t_var **var)
 				return (ERROR);
 		}
 		else
-			return (error_pipe(ERRNO_FOUR, var));
+			return (error_pipe(ERRNO_ONE, var, IS_CMD, st->cmds));
 		st = st->next;
 	}
 	return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 07:31:54 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 20:07:08 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,14 @@ char	*child_heredoc(t_child *child, char *limiter, t_type type,
 	static char	*file;
 
 	filefd = open_tmpfile(child, &file);
-	if (signal(SIGINT, sigint_handler_heredoc) == SIG_ERR)
+	if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
+		return (perror("minishell: signal"), NULL);
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	buf = heredoc_loop(filefd, limiter, type, varlist);
 	if (signal(SIGINT, sigint_handler_inprocess) == SIG_ERR)
+		return (perror("minishell: signal"), NULL);
+	if (signal(SIGINT, sigquit_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	if (g_signal == SIGINT)
 		exit_child_sigint(child, buf, file);

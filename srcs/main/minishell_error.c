@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:32:04 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:59:19 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 01:34:14 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,27 +53,31 @@ int	error_node(int error_num)
 	return (ERROR);
 }
 
-int	error_pipe(int error_num, t_var **var)
+int	error_pipe(int error_num, t_var **var, int ope, char *cmds)
 {
+	char	*cmd;
+
+	if (ope == IS_AND)
+		cmd = ft_strdup("&");
+	else if (ope == IS_ANDAND)
+		cmd = ft_strdup("&&");
+	else if (ope == IS_PIPE)
+		cmd = ft_strdup("|");
+	else if (ope == IS_OR)
+		cmd = ft_strdup("||");
+	else if (ope == IS_SEMI)
+		cmd = ft_strdup(";");
+	else if (ope == IS_CMD)
+		cmd = ft_strdup(cmds);
 	if (error_num == ERRNO_ONE)
 	{
 		update_exit_code(SYNERR, var);
-		ft_eprintf("minishell: syntax error has operator at the head\n");
+		ft_eprintf("minishell: syntax error near unexpected token `%s'\n", cmd);
 	}
 	if (error_num == ERRNO_TWO)
-	{
-		update_exit_code(SYNERR, var);
-		ft_eprintf("minishell: syntax error has operator at the end\n");
-	}
-	if (error_num == ERRNO_THREE)
 	{
 		update_exit_code(FAILED, var);
 		perror("minishell: pipe error");
 	}
-	if (error_num == ERRNO_FOUR)
-	{
-		update_exit_code(SYNERR, var);
-		ft_eprintf("minishell: syntax error has operator in a row\n");
-	}
-	return (ERROR);
+	return (free(cmd), ERROR);
 }

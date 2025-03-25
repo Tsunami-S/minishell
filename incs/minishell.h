@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:45:18 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 01:33:02 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void		*error_add_char(int *i, char *cmds);
 void		free_lst_status(t_status *st_head, t_status *st);
 int			error_handle_brackets(int error_num, t_var **var);
 int			error_node(int error_num);
-int			error_pipe(int error_num, t_var **var);
+int			error_pipe(int error_num, t_var **var, int ope, char *cmds);
 int			call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head);
 void		handle_and_or(t_status *st, t_lp *lp, t_var **var);
 void		handle_parent_process(t_status *st);
@@ -56,7 +56,7 @@ int			fork_and_wait_(t_status **st_head, t_var **varlist, char *input);
 void		sigint_handler(int signal);
 void		sigint_handler_inprocess(int signal);
 void		sig_ignore(int signal);
-void		sigint_handler_heredoc(int signal);
+void		sig_handler_heredoc(int signal);
 int			check_built_in(t_status *st);
 int			expand_cmds(t_status **st_head, t_var **varlist);
 int			count_up_shlvl(t_var **varlist);

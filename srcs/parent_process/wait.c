@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 19:02:05 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:44:48 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 00:53:32 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ static int	wait_for_last_pid(t_lp *lp, t_status *st, t_var **varlist)
 	exit_code = WEXITSTATUS(status);
 	if (exit_code == SUCCESS)
 		handle_success_exit(lp, st, varlist);
+	if (g_signal == SIGQUIT)
+		ft_eprintf("Quit (core dumped)\n");
+	g_signal = 0;
 	return (exit_code);
 }
 
@@ -60,11 +63,9 @@ static void	wait_for_all_processes(t_lp *lp, t_status *st)
 		if (st->pid > 0)
 		{
 			waitpid(st->pid, NULL, 0);
-			if (g_signal == SIGINT || g_signal == SIGQUIT)
-			{
-				write(STDOUT_FILENO, "\n", 1);
-				g_signal = 0;
-			}
+			if (g_signal == SIGINT)
+				ft_eprintf("\n");
+			g_signal = 0;
 			wait_count++;
 		}
 		st = st->next;
@@ -85,6 +86,8 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 	else
 	{
 		exit_code = lp->result;
+		if (!st || !st->token)
+			return (update_exit_code(exit_code, varlist));
 		token = st->token;
 		while (token->next)
 			token = token->next;

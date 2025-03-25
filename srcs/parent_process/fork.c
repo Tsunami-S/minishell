@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:44:35 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 01:03:03 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 	lp.count_forked = 0;
 	lp.last_pid = -1;
 	lp.result = 0;
-	lp.is_first = 1;
 	while (st)
 	{
 		if (g_signal == SIGINT || g_signal == SIGQUIT)
@@ -91,20 +90,20 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			lp.count_forked = 0;
 			break ;
 		}
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
+			break ;
 		if (st->token)
 			free_tokens(&(st->token));
 		st->token = expander(st->cmds, varlist);
 		if (!st->token)
 		{
-			if (lp.is_first)
-				return (update_exit_code(0, varlist), ERROR);
-			return (update_exit_code(1, varlist), ERROR);
+			update_exit_code(0, varlist);
+			st = st->next;
+			continue ;
 		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
-		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
-			;
-		else if (is_direct_builtin(st))
+		if (is_direct_builtin(st))
 			lp.result = call_builtin(&st->token, varlist, *st_head);
 		else
 		{
@@ -112,7 +111,6 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
 				lp.last_pid = st->pid;
 		}
-		lp.is_first = 0;
 		st = st->next;
 	}
 	return (wait_process(&lp, varlist, st_head));

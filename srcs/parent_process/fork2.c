@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 14:43:18 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 00:59:58 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ void	handle_and_or(t_status *st, t_lp *lp, t_var **var)
 		lp->result = WEXITSTATUS(status);
 		lp->count_forked--;
 	}
+	if (g_signal == SIGQUIT)
+	{
+		ft_eprintf("Quit (core dumped)\n");
+		lp->result = 131;
+	}
+	g_signal = 0;
 	if (st->next && st->next->has_semicolon)
 		update_exit_code(lp->result, var);
 }

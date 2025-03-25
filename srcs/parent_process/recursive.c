@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 16:44:39 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 19:44:50 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,11 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 			free_tokens(&(st->token));
 		st->token = expander(st->cmds, varlist);
 		if (!st->token)
-			return (update_exit_code(1, varlist), ERROR);
+		{
+			update_exit_code(0, varlist);
+			st = st->next;
+			continue ;
+		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))

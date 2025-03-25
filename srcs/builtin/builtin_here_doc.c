@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/25 16:51:28 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 20:06:46 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,22 +81,17 @@ static int	builtin_heredoc(int fd, char *limiter, t_type type, t_var **varlist)
 	int	save_stdin;
 
 	save_stdin = STDIN_FILENO;
-	if (signal(SIGINT, sigint_handler_heredoc) == SIG_ERR)
+	if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
 		return (perror("minishell: signal"), FAILED);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("minishell: signal"), FAILED);
 	heredoc_loop_builtin(fd, limiter, type, varlist);
 	if (g_signal == SIGINT)
 		g_signal = 0;
-	signal(SIGINT, sigint_handler_inprocess);
-
-
-	signal(SIGQUIT, sigquit_handler_inprocess);
-
-
-
-
-	
+	if (signal(SIGINT, sigint_handler_inprocess) == SIG_ERR)
+		return (perror("minishell: signal"), FAILED);
+	if (signal(SIGQUIT, sigquit_handler_inprocess) == SIG_ERR)
+		return (perror("minishell: signal"), FAILED);
 	dup2(STDIN_FILENO, save_stdin);
 	return (SUCCESS);
 }
