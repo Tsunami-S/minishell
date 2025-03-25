@@ -6,15 +6,21 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 03:16:18 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:35:49 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:43:41 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	sig_ignore(int signal)
+// void	sig_ignore(int signal)
+// {
+// 	(void)signal;
+// }
+
+void	sigquit_handler_inprocess(int signal)
 {
 	(void)signal;
+	g_signal = SIGQUIT;
 }
 
 void	sigint_handler_heredoc(int signal)

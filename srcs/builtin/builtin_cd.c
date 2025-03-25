@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/25 16:09:05 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:29:35 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ int	update_pwd(t_var **varlist, char *cwd)
 	if (!value_dup)
 		return (free(name_dup), error_node(ERRNO_ONE), FAILED);
 	add_var(varlist, name_dup, value_dup);
-	printf("aaaaa\n");
-
 	return (SUCCESS);
 }
 

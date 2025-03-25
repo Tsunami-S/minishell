@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 15:52:44 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:45:18 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ int			call_builtin_re(t_tokens **tokens, t_var **varlist,
 				t_status *st_head, char *in);
 int			is_direct_builtin(t_status *st);
 char	*get_path(t_var **varlist, char *path);
+void	sigquit_handler_inprocess(int signal);
 
 #endif

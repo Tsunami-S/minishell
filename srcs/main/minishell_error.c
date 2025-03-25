@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:32:04 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 08:08:55 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:59:19 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	error_pipe(int error_num, t_var **var)
 	if (error_num == ERRNO_THREE)
 	{
 		update_exit_code(FAILED, var);
-		ft_eprintf("minishell: pipe error\n");
+		perror("minishell: pipe error");
 	}
 	if (error_num == ERRNO_FOUR)
 	{

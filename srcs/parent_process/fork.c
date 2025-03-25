@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 14:56:53 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:44:35 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 	lp.is_first = 1;
 	while (st)
 	{
-		if (g_signal == SIGINT)
+		if (g_signal == SIGINT || g_signal == SIGQUIT)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			g_signal = 0;

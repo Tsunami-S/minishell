@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 14:41:23 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:43:53 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ int	continue_line(char *input, t_var **varlist)
 	if (signal(SIGINT, sigint_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), update_exit_code(1, varlist),
 			ERROR);
+	if (signal(SIGQUIT, sigquit_handler_inprocess) == SIG_ERR)
+		return (perror("minishell: signal"), update_exit_code(1, varlist),
+			ERROR);
 	if (!input)
 		return (0);
 	if (find_brackets_pair(input, &brackets, ft_strlen(input),
@@ -58,6 +61,12 @@ void	main_loop(t_var **varlist)
 
 	while (1)
 	{
+		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		{
+			perror("minishell: signal");
+			free_varlist(varlist);
+			exit(1);
+		}
 		if (signal(SIGINT, sigint_handler) == SIG_ERR)
 		{
 			perror("minishell: signal");
@@ -89,7 +98,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("minishell: signal"), 1);
-	signal(SIGPIPE, SIG_DFL);
 	varlist = init_varlist(envp, ft_strdup("?"), ft_strdup("0"));
 	if (!varlist)
 		return (FAILED);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 19:02:05 by haito             #+#    #+#             */
-/*   Updated: 2025/03/22 19:11:14 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:44:48 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	wait_for_all_processes(t_lp *lp, t_status *st)
 		if (st->pid > 0)
 		{
 			waitpid(st->pid, NULL, 0);
-			if (g_signal == SIGINT)
+			if (g_signal == SIGINT || g_signal == SIGQUIT)
 			{
 				write(STDOUT_FILENO, "\n", 1);
 				g_signal = 0;
