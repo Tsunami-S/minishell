@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/23 21:34:04 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:09:05 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,14 @@ int	update_pwd(t_var **varlist, char *cwd)
 
 	name_dup = ft_strdup("PWD");
 	if (!name_dup)
-		return (free(cwd), error_node(ERRNO_ONE), FAILED);
+	return (free(cwd), error_node(ERRNO_ONE), FAILED);
 	value_dup = ft_strdup(cwd);
 	free(cwd);
 	if (!value_dup)
 		return (free(name_dup), error_node(ERRNO_ONE), FAILED);
 	add_var(varlist, name_dup, value_dup);
+	printf("aaaaa\n");
+
 	return (SUCCESS);
 }
 
@@ -49,7 +51,17 @@ int	update_oldpwd(t_var **varlist)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (perror("minishell: cd"), FAILED);
+	{
+		if (errno == ENOENT)
+		{
+			ft_eprintf("cd: error retrieving current directory: ");
+			ft_eprintf("getcwd: cannot access parent directories:");
+			ft_eprintf(" No such file or directory\n");
+			cwd = ft_strjoin(get_path(varlist, "PWD"), "/..");
+		}
+		else
+			return (perror("minishell: cd"), FAILED);
+	}
 	oldpwd = get_path(varlist, "PWD");
 	name_dup = ft_strdup("OLDPWD");
 	if (!name_dup)
@@ -90,7 +102,18 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 	}
 	else
 		dir = token->next->token;
+	if (access(dir, F_OK) == 0 && access(dir, X_OK) == -1)
+	{
+		dir = getcwd(NULL, 0);
+		int len = ft_strlen(dir);
+		while (--len > 0)
+		{
+			if (dir[len] == '/')
+				break ;
+		}
+		dir[len] = '\0';
+	}
 	if (chdir(dir) == ERROR)
-		return (perror("minishell: cd"), FAILED);
+		return (ft_eprintf("minishell: cd: %s: %s\n", dir, strerror(errno)), FAILED);
 	return (update_oldpwd(varlist));
 }

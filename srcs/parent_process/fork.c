@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 21:09:35 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 14:56:53 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 	lp.count_forked = 0;
 	lp.last_pid = -1;
 	lp.result = 0;
+	lp.is_first = 1;
 	while (st)
 	{
 		if (g_signal == SIGINT)
@@ -94,7 +95,11 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			free_tokens(&(st->token));
 		st->token = expander(st->cmds, varlist);
 		if (!st->token)
+		{
+			if (lp.is_first)
+				return (update_exit_code(0, varlist), ERROR);
 			return (update_exit_code(1, varlist), ERROR);
+		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
 		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
@@ -107,6 +112,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			if (!st->next || (!st->next->has_and && !st->next->has_or))
 				lp.last_pid = st->pid;
 		}
+		lp.is_first = 0;
 		st = st->next;
 	}
 	return (wait_process(&lp, varlist, st_head));

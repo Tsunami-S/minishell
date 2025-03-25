@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/24 11:21:51 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:25:42 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ int	builtin_exit_child(t_tokens **tokens, t_var **varlist)
 	token = *tokens;
 	if (token->next && ft_strcmp(token->next->token, "--") == 0)
 		handle_exit_nonop(tokens);
+	else if (token->next && ft_strcmp(token->next->token, "--") != 0 && !is_numeric_argument(token->next->token))
+	{
+		ft_eprintf("minishell: exit: %s: numeric argument required\n",
+			token->next->token);
+		free_exit_child(tokens, varlist);
+		exit(2);
+	}
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
@@ -61,6 +68,13 @@ int	builtin_exit_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 	token = *tokens;
 	if (token->next && ft_strcmp(token->next->token, "--") == 0)
 		handle_exit_nonop(tokens);
+	else if (token->next && ft_strcmp(token->next->token, "--") != 0 && !is_numeric_argument(token->next->token))
+	{
+		ft_eprintf("minishell: exit: %s: numeric argument required\n",
+			token->next->token);
+		free_exit_re(&in, &st_head, varlist);
+		exit(2);
+	}
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
@@ -90,6 +104,13 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	printf("exit\n");
 	if (token->next && ft_strcmp(token->next->token, "--") == 0)
 		handle_exit_nonop(tokens);
+	else if (token->next && ft_strcmp(token->next->token, "--") != 0 && !is_numeric_argument(token->next->token))
+	{
+		ft_eprintf("minishell: exit: %s: numeric argument required\n",
+			token->next->token);
+		frees(st_head, varlist);
+		exit(2);
+	}
 	if (token->next && token->next->next)
 		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)

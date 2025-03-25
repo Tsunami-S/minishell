@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:40:37 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:50:15 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/25 15:54:11 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		builtin_unset(t_tokens **tokens, t_var **varlist);
 int		builtin_env(t_tokens **tokens, t_var **varlist);
 int		builtin_echo(t_tokens **tokens, t_var **varlist);
 int		builtin_cd(t_tokens **tokens, t_var **varlist);
-int		builtin_pwd(void);
+int		builtin_pwd(t_var **varlist);
 
 /* export */
 int		builtin_export(t_tokens **tokens, t_var **varlist, int exit_num);

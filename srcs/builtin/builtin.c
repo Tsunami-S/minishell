@@ -6,13 +6,13 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 20:53:33 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/25 15:56:56 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_var **varlist)
 {
 	char	*cwd;
 
@@ -24,8 +24,14 @@ int	builtin_pwd(void)
 	}
 	else
 	{
-		perror("minishell: pwd:");
-		return (1);
+		cwd = get_path(varlist, "PWD");
+		if (cwd)
+			printf("%s\n", cwd);
+		else
+		{
+			perror("minishell: pwd");
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -48,7 +54,7 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 		if (ft_strcmp(token->token, "cd") == 0)
 			status = builtin_cd(tokens, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
-			status = builtin_pwd();
+			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
 			status = builtin_export(tokens, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)
@@ -101,7 +107,7 @@ int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 		if (ft_strcmp(token->token, "cd") == 0)
 			status = builtin_cd(tokens, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
-			status = builtin_pwd();
+			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
 			status = builtin_export(tokens, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)
@@ -133,7 +139,7 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 		if (ft_strcmp(token->token, "cd") == 0)
 			status = builtin_cd(tokens, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
-			status = builtin_pwd();
+			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
 			status = builtin_export(tokens, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)

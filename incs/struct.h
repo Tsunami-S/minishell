@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:05:53 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/25 14:57:28 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,11 @@ typedef struct s_parser
 
 typedef struct s_last_process
 {
-	pid_t			last_pid;
-	int				result;
-	int				count_forked;
-	char			*input;
+	pid_t	last_pid;
+	int		result;
+	int		count_forked;
+	char	*input;
+	int		is_first;
 }					t_lp;
 
 #endif
