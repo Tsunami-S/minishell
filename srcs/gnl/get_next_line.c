@@ -6,13 +6,13 @@
 /*   By: tssaito <tssaito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:58:43 by tssaito           #+#    #+#             */
-/*   Updated: 2024/12/13 22:58:17 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:12:32 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+char	*get_next_line_for_heredoc(int fd)
 {
 	char			c;
 	int				check;
@@ -22,6 +22,7 @@ char	*get_next_line(int fd)
 	if (fd < 0)
 		return (NULL);
 	ft_init(&ans);
+	write(STDERR_FILENO, "> ", 2);
 	while (1)
 	{
 		c = ft_getchar(fd, &buf);
@@ -39,28 +40,3 @@ char	*get_next_line(int fd)
 	}
 	return (ans.line);
 }
-
-//# include <fcntl.h>
-//int	main(int argc, char **argv)
-//{
-//	char	*line;
-//	int		fd;
-//
-//	(void)argc;
-//	fd = open(argv[1], O_RDONLY);
-//	while (1)
-//	{
-//		line = get_next_line(fd);
-//		if (!line)
-//		{
-//			printf("line: NULL\n");
-//			printf("=================\n");
-//			break;
-//		}
-//		printf("line: %s", line);
-//		printf("=================\n");
-//		free(line);
-//	}
-//	close(fd);
-//	return (0);
-//}

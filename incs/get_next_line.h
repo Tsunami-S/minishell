@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:58:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 15:04:15 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:06:15 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_line
 	size_t	m_size;
 }			t_line;
 
-char		*get_next_line(int fd);
+char		*get_next_line_for_heredoc(int fd);
 void		add_chars(char *ans, char c, size_t len);
 void		*ft_memcpy(void *dest, const void *src, size_t n);
 int			ft_getchar(int fd, t_buf *buf);
