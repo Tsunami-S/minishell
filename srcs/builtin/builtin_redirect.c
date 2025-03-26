@@ -6,22 +6,26 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:50:49 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:26:06 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	delete_redirect(t_tokens **tokens)
+t_tokens 	*delete_redirect(t_tokens **tokens)
 {
 	t_tokens	*head;
 	t_tokens	*tmp;
+	t_tokens	*first;
 
 	head = *tokens;
+	first = head;
 	while (head)
 	{
 		if (head->type != WORD && head->type != HAVE_QUOTE)
 		{
+			if(first == head)
+				first = first->next->next;
 			tmp = head;
 			head = head->next;
 			free_one_token(tokens, tmp);
@@ -32,7 +36,7 @@ static int	delete_redirect(t_tokens **tokens)
 		else
 			head = head->next;
 	}
-	return (SUCCESS);
+	return (first);
 }
 
 static int	redirect_out(t_tokens **tokens, t_type type, char *file)
@@ -132,7 +136,6 @@ int	redirect_builtin(t_tokens **tokens, t_saved *saved, t_var **varlist)
 		unlink(tmpfile);
 		free(tmpfile);
 	}
-	delete_redirect(tokens);
 	if (status != SUCCESS)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);

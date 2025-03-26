@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 03:44:48 by haito             #+#    #+#             */
-/*   Updated: 2025/03/24 20:50:22 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:21:35 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	check_built_in(t_status *st)
 {
 	char	**builtin_cmds;
 	int		i;
+	t_tokens *head;
 
 	if (!st)
 		return (ERROR);
@@ -25,9 +26,17 @@ int	check_built_in(t_status *st)
 	if (!builtin_cmds)
 		return (error_node(ERRNO_ONE), ERROR);
 	i = -1;
-	while (builtin_cmds[++i])
+	head = st->token;
+	while(head && (head->type >= TRUNC && head->type <= HEREDOC))
 	{
-		if (!ft_strcmp(st->token->token, builtin_cmds[i]))
+		if(head->next)
+			head = head->next->next;
+		else
+			break;
+	}
+	while (head && builtin_cmds[++i])
+	{
+		if (!ft_strcmp(head->token, builtin_cmds[i]))
 		{
 			st->is_builtin = 1;
 			break ;

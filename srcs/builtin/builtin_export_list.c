@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 15:47:51 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 17:09:58 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 13:12:53 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,25 @@ static t_var	*get_first_var(t_var **varlist)
 
 static t_var	*get_next_var(t_var **varlist, t_var *prev)
 {
-	t_var	*now;
+	t_var	*next;
 	t_var	*head;
 
 	head = *varlist;
-	now = prev;
-	while (head && ft_strcmp(now->name, prev->name) <= 0)
+	next = prev;
+	while (head && ft_strcmp(next->name, prev->name) <= 0)
 	{
-		if (ft_strcmp(head->name, now->name) > 0)
-			now = head;
+		if (ft_strcmp(head->name, next->name) > 0)
+			next = head;
 		head = head->next;
 	}
 	while (head)
 	{
-		if (ft_strcmp(head->name, now->name) < 0 && ft_strcmp(head->name,
+		if (ft_strcmp(head->name, next->name) < 0 && ft_strcmp(head->name,
 				prev->name) > 0)
-			now = head;
+			next = head;
 		head = head->next;
 	}
-	return (now);
+	return (next);
 }
 
 int	builtin_export_list(t_var **varlist)

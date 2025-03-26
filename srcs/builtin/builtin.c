@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/25 15:56:56 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:24:36 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist)
 
 	//printf("is builtin\n");
 
-	token = *tokens;
 	status = redirect_builtin(tokens, &saved, varlist);
 	if (status != EXIT_FAILURE)
 	{
+		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
 			status = builtin_echo(tokens, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)
@@ -98,10 +98,10 @@ int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 
 	//printf("is builtin\n");
 
-	token = *tokens;
 	status = redirect_builtin(tokens, &saved, varlist);
 	if (status != EXIT_FAILURE)
 	{
+		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
 			status = builtin_echo(tokens, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)
@@ -130,10 +130,10 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head)
 	//printf("is builtin\n");
 
 
-	token = *tokens;
 	status = redirect_builtin(tokens, &saved, varlist);
 	if (status != EXIT_FAILURE)
 	{
+		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
 			status = builtin_echo(tokens, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)

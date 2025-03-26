@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:03:24 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:12:30 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:03:09 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include "builtin.h"
 # include "utils.h"
 # include "ft_eprintf.h"
+# include "get_next_line.h"
 
 extern volatile sig_atomic_t	g_signal;
 

@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/24 11:58:24 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/26 15:03:55 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ SRCS =	main/minishell_main.c \
 		utils/minishell_utils5.c \
 		utils/ft_split.c \
 		utils/free_utils.c \
+		gnl/get_next_line.c \
+		gnl/get_next_line_utils.c \
 		builtin/builtin.c \
 		builtin/builtin_check_syntax.c \
 		builtin/builtin_error.c \
