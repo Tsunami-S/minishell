@@ -6,13 +6,13 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 15:26:06 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:23:23 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tokens 	*delete_redirect(t_tokens **tokens)
+t_tokens	*delete_redirect(t_tokens **tokens)
 {
 	t_tokens	*head;
 	t_tokens	*tmp;
@@ -24,7 +24,7 @@ t_tokens 	*delete_redirect(t_tokens **tokens)
 	{
 		if (head->type != WORD && head->type != HAVE_QUOTE)
 		{
-			if(first == head)
+			if (first == head)
 				first = first->next->next;
 			tmp = head;
 			head = head->next;

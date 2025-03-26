@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:46:34 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 18:36:35 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 18:07:08 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ void		check_dir(t_wild **file, char **words);
 char		*trim_word_start(t_wild **file, t_words **words, char *name);
 char		*trim_word_end(t_wild **file, t_words **words, char *name);
 void		manage_flag(t_wild **files, t_words **words, char *name);
+t_wild		*sort_files(t_wild **files);
 
 #endif

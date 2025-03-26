@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:43:45 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:04:54 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:51:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ char	*ft_itoa(int n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 int		ft_isalnum(int c);
 int		ft_isdigit(int c);
+int		ft_islower(int c);
+int		ft_isupper(int c);
 
 /* free_utils */
 void	free_strs(char **strs);

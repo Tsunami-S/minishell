@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 00:48:37 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 18:36:59 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 18:07:17 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static t_wild	*make_new_expanded_files(char *dir)
 	if (files)
 		search_same_file(&files, dir);
 	files = remove_filename(&files);
+	files = sort_files(&files);
 	return (files);
 }
 
@@ -36,6 +37,7 @@ static t_wild	*add_expanded_files(t_wild **based_files, char *dir)
 		new_files = get_files(head->name);
 		search_same_file(&new_files, dir);
 		new_files = remove_filename(&new_files);
+		new_files = sort_files(&new_files);
 		concat_files(head->name, &new_files);
 		if (!files)
 			files = new_files;

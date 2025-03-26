@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/26 15:03:55 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/26 18:06:32 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS =	main/minishell_main.c \
 		utils/minishell_utils3.c \
 		utils/minishell_utils4.c \
 		utils/minishell_utils5.c \
+		utils/minishell_utils6.c \
 		utils/ft_split.c \
 		utils/free_utils.c \
 		gnl/get_next_line.c \
@@ -67,6 +68,7 @@ SRCS =	main/minishell_main.c \
 		expander/get_words_utils2.c \
 		expander/wildcard/expand_wildcard.c \
 		expander/wildcard/search_same_file.c \
+		expander/wildcard/sort_files.c \
 		expander/wildcard/get_files.c \
 		expander/wildcard/get_expanded_files.c \
 		expander/wildcard/split_wildcard.c \

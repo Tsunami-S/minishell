@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 12:41:14 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:24:18 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static t_tokens	*remove_empty_tokens(t_tokens **tokens)
 
 	prev = NULL;
 	head = *tokens;
-	if(!head)
-		return NULL;
+	if (!head)
+		return (NULL);
 	while (head)
 	{
 		if (!head->token || !head->token[0])
