@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 00:59:58 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 14:26:42 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,34 @@
 
 void	handle_and_or(t_status *st, t_lp *lp, t_var **var)
 {
-	int	status;
+	int			status;
+	t_status	*st_tmp;
 
 	if (st->next && (st->next->has_and || st->next->has_or
 			|| st->next->has_semicolon))
 	{
+		st_tmp = st;
+		while (st_tmp->input_pipefd != -1)
+		{
+			st_tmp = st_tmp->previous;
+			waitpid(st_tmp->pid, NULL, 0);
+			lp->count_forked--;
+		}
 		waitpid(st->pid, &status, 0);
-		lp->result = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+		{
+			g_signal = WTERMSIG(status);
+			if (g_signal == SIGQUIT)
+				ft_eprintf("Quit (core dumped)\n");
+			lp->result = 128 + g_signal;
+		}
+		else
+			lp->result = WEXITSTATUS(status);
 		lp->count_forked--;
 	}
-	if (g_signal == SIGQUIT)
-	{
-		ft_eprintf("Quit (core dumped)\n");
-		lp->result = 131;
-	}
-	g_signal = 0;
 	if (st->next && st->next->has_semicolon)
 		update_exit_code(lp->result, var);
+	g_signal = 0;
 }
 
 void	handle_parent_process(t_status *st)
