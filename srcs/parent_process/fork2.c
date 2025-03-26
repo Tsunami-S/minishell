@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 15:11:31 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/27 03:53:38 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	int			result;
 	char		*cmds;
 
-	if (st->input_pipefd != -1)
+	if (st->input_pipefd != -1 && !has_heredoc(st))
 		dup2(st->input_pipefd, STDIN_FILENO);
-	if (st->output_pipefd != -1)
+	if (st->output_pipefd != -1 && !has_heredoc(st))
 		dup2(st->output_pipefd, STDOUT_FILENO);
 	if (st->has_brackets)
 	{
@@ -99,6 +99,6 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		continue_child(&token, varlist);
+		continue_child(&token, varlist, st->output_pipefd);
 	}
 }

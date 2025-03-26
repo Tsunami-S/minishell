@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continue_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 14:39:23 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/27 03:25:28 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	check_child_syntax(t_child *child, t_tokens **tokens)
 	}
 }
 
-void	continue_child(t_tokens **tokens, t_var **varlist)
+void	continue_child(t_tokens **tokens, t_var **varlist, pid_t outfd)
 {
 	t_child	child;
 
@@ -48,7 +48,7 @@ void	continue_child(t_tokens **tokens, t_var **varlist)
 	child.tokens = tokens;
 	child.varlist = varlist;
 	check_child_syntax(&child, child.tokens);
-	call_heredoc(&child, tokens, varlist);
+	call_heredoc(&child, tokens, varlist, outfd);
 	redirect_fds(&child, child.tokens);
 	make_cmds(&child, child.tokens);
 	make_envp(&child, child.varlist);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continue_child.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:49:29 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/24 11:05:14 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/27 03:28:53 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "includes.h"
 
 /* continue_child */
-void	continue_child(t_tokens **tokens, t_var **varlist);
+void	continue_child(t_tokens **tokens, t_var **varlist, pid_t outfd);
 void	redirect_fds(t_child *child, t_tokens **tokens);
-void	call_heredoc(t_child *child, t_tokens **tokens, t_var **varlist);
+void	call_heredoc(t_child *child, t_tokens **tokens, t_var **varlist, pid_t outfd);
 char	*child_heredoc(t_child *child, char *limiter, t_type type,
 			t_var **varlist);
 void	make_cmds(t_child *child, t_tokens **tokens);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/25 14:57:28 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/27 02:19:49 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_status
 	int				has_and_single;
 	int				has_semicolon;
 	int				is_builtin;
+	int				done;
 	struct s_status	*next;
 }					t_status;
 
@@ -123,11 +124,11 @@ typedef struct s_parser
 
 typedef struct s_last_process
 {
-	pid_t	last_pid;
-	int		result;
-	int		count_forked;
-	char	*input;
-	int		is_first;
+	pid_t			last_pid;
+	int				result;
+	int				count_forked;
+	char			*input;
+	int				is_first;
 }					t_lp;
 
 #endif
