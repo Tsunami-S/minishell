@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:09:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/22 17:09:52 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 21:05:35 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	env_syntax_error(char *token)
 	if (err)
 		ft_eprintf("%s", err);
 	free(err);
-	return (EXIT_SYNTAX);
+	return (EXIT_NOCMD);
 }
 
 static int	put_errmsg(int errnum)
