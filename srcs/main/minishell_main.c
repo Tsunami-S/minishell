@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 00:48:35 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:48:11 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ int	continue_line(char *input, t_var **varlist)
 	t_status	*state;
 	t_brackets	brackets;
 
-	if (signal(SIGINT, sigint_handler_inprocess) == SIG_ERR)
+	if (signal(SIGINT, sig_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), update_exit_code(1, varlist),
 			ERROR);
-	if (signal(SIGQUIT, sigquit_handler_inprocess) == SIG_ERR)
+	if (signal(SIGQUIT, sig_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), update_exit_code(1, varlist),
 			ERROR);
 	if (!input)
@@ -54,6 +54,22 @@ int	continue_line(char *input, t_var **varlist)
 	return (SUCCESS);
 }
 
+static void	setup_signal_handlers(t_var **varlist)
+{
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+	{
+		perror("minishell: signal");
+		free_varlist(varlist);
+		exit(1);
+	}
+	if (signal(SIGINT, sigint_handler) == SIG_ERR)
+	{
+		perror("minishell: signal");
+		free_varlist(varlist);
+		exit(1);
+	}
+}
+
 void	main_loop(t_var **varlist)
 {
 	char	*input;
@@ -61,18 +77,7 @@ void	main_loop(t_var **varlist)
 
 	while (1)
 	{
-		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		{
-			perror("minishell: signal");
-			free_varlist(varlist);
-			exit(1);
-		}
-		if (signal(SIGINT, sigint_handler) == SIG_ERR)
-		{
-			perror("minishell: signal");
-			free_varlist(varlist);
-			exit(1);
-		}
+		setup_signal_handlers(varlist);
 		g_signal = 0;
 		input = readline("minishell$ ");
 		if (!input)

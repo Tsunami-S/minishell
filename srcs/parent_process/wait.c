@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 19:02:05 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 15:00:38 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 16:03:11 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ static int	wait_for_last_pid(t_lp *lp, t_status *st, t_var **varlist)
 		sig = WTERMSIG(status);
 		if (sig == SIGQUIT)
 			ft_eprintf("Quit (core dumped)\n");
-		if (sig == SIGINT)
-			ft_eprintf("\n");
 		exit_code = 128 + sig;
 	}
 	else
