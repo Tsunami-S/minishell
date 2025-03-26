@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 15:12:07 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:47:41 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int			child_call_builtin(t_tokens **tokens, t_var **varlist);
 int			fork_and_wait_(t_status **st_head, t_var **varlist, char *input);
 
 void		sigint_handler(int signal);
-void		sigint_handler_inprocess(int signal);
+void		sig_handler_inprocess(int signal);
 void		sig_ignore(int signal);
 void		sig_handler_heredoc(int signal);
 int			check_built_in(t_status *st);
@@ -71,7 +71,6 @@ int			call_builtin_re(t_tokens **tokens, t_var **varlist,
 				t_status *st_head, char *in);
 int			is_direct_builtin(t_status *st);
 char	*get_path(t_var **varlist, char *path);
-void	sigquit_handler_inprocess(int signal);
 char	*trim_edges_space(const char *str);
 
 #endif
