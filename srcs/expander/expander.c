@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/23 23:36:52 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:41:14 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static t_tokens	*remove_empty_top_tokens(t_tokens **tokens)
 {
 	t_tokens	*tmp;
 
-	if (*tokens && !(*tokens)->token[0])
+	while (*tokens && !(*tokens)->token[0])
 	{
 		tmp = *tokens;
 		*tokens = (*tokens)->next;
@@ -34,6 +34,8 @@ static t_tokens	*remove_empty_tokens(t_tokens **tokens)
 
 	prev = NULL;
 	head = *tokens;
+	if(!head)
+		return NULL;
 	while (head)
 	{
 		if (!head->token || !head->token[0])
