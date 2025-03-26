@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/26 18:06:32 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/26 20:34:00 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,14 +58,15 @@ SRCS =	main/minishell_main.c \
 		manage_varlist/manage_varlist.c \
 		manage_varlist/init_varlist.c \
 		expander/expander.c \
-		expander/pre_tokenizer.c \
-		expander/more_tokenizer.c \
-		expander/tokenize_split.c \
+		expander/tokenizer.c \
+		expander/remove_empty_tokens.c \
+		expander/split_words.c \
 		expander/replace_vars.c \
 		expander/replace_vars_count.c \
 		expander/get_words.c \
 		expander/get_words_utils1.c \
 		expander/get_words_utils2.c \
+		expander/remove_quotes_and_split_tokens.c \
 		expander/wildcard/expand_wildcard.c \
 		expander/wildcard/search_same_file.c \
 		expander/wildcard/sort_files.c \

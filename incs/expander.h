@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:46:34 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 18:07:08 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 20:30:11 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 /* expander */
 t_tokens	*expander(char *str, t_var **varlist);
-t_tokens	*pre_tokenizer(char *str);
-int			more_tokenizer(t_tokens **tokens, t_type flag);
+t_tokens	*tokenizer(char *str);
+int			remove_quotes_and_split_tokens(t_tokens **tokens, t_type type);
+t_tokens	*remove_empty_tokens(t_tokens **tokens);
 
 /* replace vars */
 int			replace_vars(t_tokens **tokens, t_var **varlist);

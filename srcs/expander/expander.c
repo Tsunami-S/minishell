@@ -6,56 +6,13 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 16:24:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/26 20:30:02 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_tokens	*remove_empty_top_tokens(t_tokens **tokens)
-{
-	t_tokens	*tmp;
-
-	while (*tokens && !(*tokens)->token[0])
-	{
-		tmp = *tokens;
-		*tokens = (*tokens)->next;
-		free(tmp->token);
-		free(tmp);
-	}
-	return (*tokens);
-}
-
-static t_tokens	*remove_empty_tokens(t_tokens **tokens)
-{
-	t_tokens	*head;
-	t_tokens	*prev;
-	t_tokens	*tmp;
-
-	prev = NULL;
-	head = *tokens;
-	if (!head)
-		return (NULL);
-	while (head)
-	{
-		if (!head->token || !head->token[0])
-		{
-			tmp = head;
-			prev->next = head->next;
-			head = head->next;
-			free(tmp->token);
-			free(tmp);
-		}
-		else
-		{
-			prev = head;
-			head = head->next;
-		}
-	}
-	return (*tokens);
-}
-
-static t_type	check_first_token(char *str)
+static t_type	check_first_token_type(char *str)
 {
 	int	i;
 
@@ -99,19 +56,18 @@ static int	replace_home(t_tokens **tokens, t_var **varlist)
 t_tokens	*expander(char *str, t_var **varlist)
 {
 	t_tokens	*tokens;
-	t_type		check;
+	t_type		type;
 
 	tokens = NULL;
-	tokens = pre_tokenizer(str);
+	tokens = tokenizer(str);
 	if (!tokens)
 		return (NULL);
-	check = check_first_token(tokens->token);
+	type = check_first_token_type(tokens->token);
 	if (replace_vars(&tokens, varlist) == ERROR)
 		return (free_tokens(&tokens), NULL);
-	tokens = remove_empty_top_tokens(&tokens);
 	tokens = remove_empty_tokens(&tokens);
 	expand_wildcard(&tokens);
-	more_tokenizer(&tokens, check);
+	remove_quotes_and_split_tokens(&tokens, type);
 	replace_home(&tokens, varlist);
 	return (tokens);
 }
