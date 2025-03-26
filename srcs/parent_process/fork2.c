@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 14:26:42 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:11:31 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	handle_and_or(t_status *st, t_lp *lp, t_var **var)
 {
 	int			status;
 	t_status	*st_tmp;
+	int			sig;
+	int			exit_code;
 
 	if (st->next && (st->next->has_and || st->next->has_or
 			|| st->next->has_semicolon))
@@ -24,21 +26,39 @@ void	handle_and_or(t_status *st, t_lp *lp, t_var **var)
 		while (st_tmp->input_pipefd != -1)
 		{
 			st_tmp = st_tmp->previous;
-			waitpid(st_tmp->pid, NULL, 0);
-			lp->count_forked--;
+			if (st_tmp && st_tmp->pid > 0)
+			{
+				waitpid(st_tmp->pid, &status, 0);
+				if (WIFSIGNALED(status))
+				{
+					sig = WTERMSIG(status);
+					if (sig == SIGINT)
+						ft_eprintf("\n");
+					lp->result = 128 + WTERMSIG(status);
+				}
+				else
+					lp->result = WEXITSTATUS(status);
+				lp->count_forked--;
+			}
 		}
 		waitpid(st->pid, &status, 0);
 		if (WIFSIGNALED(status))
 		{
-			g_signal = WTERMSIG(status);
-			if (g_signal == SIGQUIT)
+			sig = WTERMSIG(status);
+			if (sig == SIGQUIT)
 				ft_eprintf("Quit (core dumped)\n");
-			lp->result = 128 + g_signal;
+			else if (sig == SIGINT)
+				ft_eprintf("\n");
+			exit_code = 128 + sig;
 		}
 		else
-			lp->result = WEXITSTATUS(status);
+			exit_code = WEXITSTATUS(status);
+		if (exit_code != 0)
+			lp->result = exit_code;
+
 		lp->count_forked--;
 	}
+
 	if (st->next && st->next->has_semicolon)
 		update_exit_code(lp->result, var);
 	g_signal = 0;

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 19:02:05 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 00:53:32 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:00:38 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	handle_success_exit(t_lp *lp, t_status *st, t_var **varlist)
 			break ;
 		st = st->next;
 	}
-	if (!st)
+	if (!st || !st->token)
 		return ;
 	token = st->token;
 	while (token->next)
@@ -40,16 +40,27 @@ static void	handle_success_exit(t_lp *lp, t_status *st, t_var **varlist)
 
 static int	wait_for_last_pid(t_lp *lp, t_status *st, t_var **varlist)
 {
-	int	status;
-	int	exit_code;
+	int		status;
+	int		exit_code;
+	int		sig;
+	pid_t	pid;
 
-	waitpid(lp->last_pid, &status, 0);
-	exit_code = WEXITSTATUS(status);
+	pid = waitpid(lp->last_pid, &status, 0);
+	if (pid == -1)
+		return (perror("minishell: waitpid"), FAILED);
+	if (WIFSIGNALED(status))
+	{
+		sig = WTERMSIG(status);
+		if (sig == SIGQUIT)
+			ft_eprintf("Quit (core dumped)\n");
+		if (sig == SIGINT)
+			ft_eprintf("\n");
+		exit_code = 128 + sig;
+	}
+	else
+		exit_code = WEXITSTATUS(status);
 	if (exit_code == SUCCESS)
 		handle_success_exit(lp, st, varlist);
-	if (g_signal == SIGQUIT)
-		ft_eprintf("Quit (core dumped)\n");
-	g_signal = 0;
 	return (exit_code);
 }
 
@@ -100,5 +111,7 @@ int	wait_process(t_lp *lp, t_var **varlist, t_status **st_head)
 		add_var(varlist, name_dup, value_dup);
 	}
 	wait_for_all_processes(lp, st);
+	g_signal = 0;
 	return (update_exit_code(exit_code, varlist));
 }
+
