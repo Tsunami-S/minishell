@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   fork2.c                                            :+:      :+:    :+:   */
@@ -6,7 +5,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/27 03:53:38 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/27 19:59:10 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +81,11 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 		dup2(st->input_pipefd, STDIN_FILENO);
 	if (st->output_pipefd != -1 && !has_heredoc(st))
 		dup2(st->output_pipefd, STDOUT_FILENO);
+	else if (st->output_pipefd != -1)
+	{
+		st->saved = dup(st->output_pipefd);
+		dup2(st->output_pipefd, STDERR_FILENO);
+	}
 	if (st->has_brackets)
 	{
 		cmds = st->cmds;
@@ -99,6 +103,6 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		continue_child(&token, varlist, st->output_pipefd);
+		continue_child(&token, varlist, st->saved);
 	}
 }

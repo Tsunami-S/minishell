@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/27 02:19:49 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/27 19:59:22 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_status
 	pid_t			pid;
 	pid_t			input_pipefd;
 	pid_t			output_pipefd;
+	int saved;
 	int				has_brackets;
 	int				has_or;
 	int				has_and;
