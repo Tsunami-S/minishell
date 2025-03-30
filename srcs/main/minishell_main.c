@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:27:05 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:50:14 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ int	check_heredoc2(t_status *st, t_tokens *token, t_var **var)
 			if (!st->heredoc)
 				return (ERROR);
 			if (token->next->next)
+			{
 				token = token->next->next;
+				continue ;
+			}
 			else
 				break ;
 		}

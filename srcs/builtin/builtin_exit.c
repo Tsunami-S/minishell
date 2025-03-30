@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/26 03:01:42 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:46:40 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	builtin_exit_child(t_tokens **tokens, t_var **varlist)
 		exit(2);
 	}
 	if (token->next && token->next->next)
-		return (ft_eprintf("minishell: exit: too many arguments\n"), FAILED);
+		return (free(tmp), ft_eprintf("minishell: exit: too many arguments\n"), FAILED);
 	if (token->next)
 	{
 		if (!is_numeric_argument(tmp))
@@ -116,7 +116,7 @@ int	builtin_exit_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 		exit(2);
 	}
 	if (token->next && token->next->next)
-		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
+		return (free(tmp), ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
 	{
 		if (!is_numeric_argument(tmp))
@@ -171,7 +171,7 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 		exit(2);
 	}
 	if (token->next && token->next->next)
-		return (ft_eprintf("minishell: exit: too many arguments\n"), 1);
+		return (free(tmp), ft_eprintf("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
 	{
 		if (!is_numeric_argument(tmp))
