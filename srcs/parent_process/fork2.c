@@ -1,11 +1,12 @@
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   fork2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 17:08:44 by haito             #+#    #+#             */
-/*   Updated: 2025/03/27 19:59:10 by tssaito          ###   ########.fr       */
+/*   Created: 2025/03/27 19:59:10 by tssaito           #+#    #+#             */
+/*   Updated: 2025/03/30 20:13:20 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,32 +78,27 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	int			result;
 	char		*cmds;
 
-	if (st->input_pipefd != -1 && !has_heredoc(st))
+	if (st->input_pipefd != -1)
 		dup2(st->input_pipefd, STDIN_FILENO);
-	if (st->output_pipefd != -1 && !has_heredoc(st))
+	if (st->output_pipefd != -1)
 		dup2(st->output_pipefd, STDOUT_FILENO);
-	else if (st->output_pipefd != -1)
-	{
-		st->saved = dup(st->output_pipefd);
-		dup2(st->output_pipefd, STDERR_FILENO);
-	}
 	if (st->has_brackets)
 	{
 		cmds = st->cmds;
 		free_lst_status_(st_head, st->cmds);
-		result = recursive_continue_line(cmds, varlist);
+		result = recursive_continue_line(cmds, varlist, st->heredoc);
 		exit(result);
 	}
 	if (st->is_builtin)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		exit(child_call_builtin(&token, varlist, NULL));
+		exit(child_call_builtin(&token, varlist, st->heredoc));
 	}
 	else
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		continue_child(&token, varlist, NULL);
+		continue_child(&token, varlist, st->heredoc);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 18:25:05 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 20:03:24 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct s_status
 	int				has_and_single;
 	int				has_semicolon;
 	int				is_builtin;
-	int				done;
+	char			*heredoc;
 	struct s_status	*next;
 }					t_status;
 

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 19:25:00 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 20:06:05 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void		handle_parent_process(t_status *st);
 void		handle_child_process(t_status *st, t_var **varlist,
 				t_status *st_head);
 void		frees(t_status *st_head, t_var **varlist);
-int			recursive_continue_line(char *input, t_var **varlist);
+int			recursive_continue_line(char *input, t_var **varlist, char *heredoc);
 int			child_call_builtin(t_tokens **tokens, t_var **varlist, char *tmpfile);
-int			fork_and_wait_(t_status **st_head, t_var **varlist, char *input);
+int			fork_and_wait_(t_status **st_head, t_var **varlist, char *input, char *heredoc);
 
 void		sigint_handler(int signal);
 void		sig_handler_inprocess(int signal);

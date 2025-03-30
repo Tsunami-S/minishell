@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 15:48:11 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:17:16 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,70 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-static void	init_tokens(t_status **status)
+void	delete_heredoc(t_status *st)
 {
-	t_status	*st;
-
-	st = *status;
 	while (st)
 	{
-		st->token = NULL;
+		if (st->heredoc)
+			unlink(st->heredoc);
 		st = st->next;
 	}
+}
+
+int	check_heredoc2(t_status *st, t_tokens *token, t_var **var)
+{
+	while (token)
+	{
+		if (token->type == HEREDOC)
+		{
+			if (!token->next)
+			{
+				return (ft_eprintf
+					("minishell: syntax error near unexpected token `newline'\n"),
+						ERROR);
+			}
+			if (st->heredoc)
+			{
+				unlink(st->heredoc);
+				free(st->heredoc);
+			}
+			st->heredoc = here_doc(token->next->token, var);
+			if (!st->heredoc)
+				return (ERROR);
+			if (token->next->next)
+				token = token->next->next;
+			else
+				break ;
+		}
+		token = token->next;
+	}
+	return (0);
+}
+
+int	check_heredoc(t_status **st_head, t_var **var)
+{
+	t_status	*st;
+	t_tokens	*token;
+	int			heredoc_result;
+
+	st = *st_head;
+	while (st)
+	{
+		errno = 0;
+		st->token = expander(st->cmds, var);
+		if (!st->token)
+		{
+			if (errno)
+				return (ERROR);
+			return (0);
+		}
+		token = st->token;
+		heredoc_result = check_heredoc2(st, token, var);
+		if (heredoc_result == ERROR)
+			return (ERROR);
+		st = st->next;
+	}
+	return (0);
 }
 
 int	continue_line(char *input, t_var **varlist)
@@ -45,11 +99,13 @@ int	continue_line(char *input, t_var **varlist)
 	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
 		return (ERROR);
-	init_tokens(&state);
 	if (make_pipe(&state, varlist) == ERROR)
+		return (free_lst_status(state, NULL), ERROR);
+	if (check_heredoc(&state, varlist) == ERROR)
 		return (free_lst_status(state, NULL), ERROR);
 	if (fork_and_wait(&state, varlist) == ERROR)
 		return (free_lst_status(state, NULL), ERROR);
+	delete_heredoc(state);
 	free_lst_status(state, NULL);
 	return (SUCCESS);
 }

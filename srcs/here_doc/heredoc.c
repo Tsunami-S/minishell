@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:00:07 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 19:41:56 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 20:17:33 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ char	*here_doc(char *limiter, t_var **varlist)
 	char	*file;
 
 	filefd = open_tmpfile(&file);
-	if(filefd == -1)
-		return NULL;
+	if (filefd == -1)
+		return (NULL);
 	if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)

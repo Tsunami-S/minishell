@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 19:49:54 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 20:04:56 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,48 +73,21 @@ int	is_direct_builtin(t_status *st)
 	return (0);
 }
 
-int	has_heredoc(t_status *st)
-{
-	t_tokens	*token;
+//int	has_heredoc(t_status *st)
+//{
+//	t_tokens	*token;
 
-	if (!st->token)
-		return (0);
-	token = st->token;
-	while (token)
-	{
-		if (token->type == HEREDOC)
-			return (1);
-		token = token->next;
-	}
-	return (0);
-}
-
-void	find_heredoc(t_status *st_start, t_var **varlist, t_lp *lp, t_status **st_head)
-{
-	t_status	*st;
-
-	st = st_start;
-	while (st->output_pipefd != -1)
-	{
-		if (has_heredoc(st))
-		{
-			st->done = 1;
-			st->pid = fork();
-			if (st->pid == -1)
-			{
-				perror("minishell: fork: ");
-				lp->result = FAILED;
-				return ;
-			}
-			if (st->pid == 0)
-				handle_child_process(st, varlist, *st_head);
-			waitpid(st->pid, NULL, 0);
-			if (!st->next || (!st->next->has_and && !st->next->has_or))
-				lp->last_pid = st->pid;
-		}
-		st = st->next;
-	}
-}
+//	if (!st->token)
+//		return (0);
+//	token = st->token;
+//	while (token)
+//	{
+//		if (token->type == HEREDOC)
+//			return (1);
+//		token = token->next;
+//	}
+//	return (0);
+//}
 
 int	fork_and_wait(t_status **st_head, t_var **varlist)
 {
@@ -137,10 +110,8 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 		}
 		if (lp.result == 131)
 			break ;
-		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0) || st->done)
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
 		{
-			if (st->done)
-				handle_parent_process(st);
 			st = st->next;
 			continue ;
 		}
@@ -155,16 +126,8 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
-		if (st->input_pipefd == -1 && st->output_pipefd != -1)
-			find_heredoc(st, varlist, &lp, st_head);
-		if (st->done)
-		{
-			handle_parent_process(st);
-			st = st->next;
-			continue ;
-		}
 		if (is_direct_builtin(st))
-			lp.result = call_builtin(&st->token, varlist, *st_head, NULL);
+			lp.result = call_builtin(&st->token, varlist, *st_head, st->heredoc);
 		else
 		{
 			fork_process(st, varlist, &lp, *st_head);

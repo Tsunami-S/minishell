@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 19:52:16 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 20:06:51 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	fork_process_(t_status *st, t_var **varlist,
 	handle_and_or(st, lp, varlist);
 }
 
-int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
+int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input, char *heredoc)
 {
 	t_status	*st;
 	t_lp		lp;
@@ -46,6 +46,7 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 	lp.input = input;
 	while (st)
 	{
+		st->heredoc = heredoc;
 		if (g_signal == SIGINT)
 		{
 			write(STDOUT_FILENO, "\n", 1);
@@ -74,7 +75,7 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 			return (update_exit_code(1, varlist), ERROR);
 		else if (is_direct_builtin(st))
 			lp.result = call_builtin_re(&st->token, varlist, *st_head,
-					lp.input, NULL);
+					lp.input, st->heredoc);
 		else
 		{
 			fork_process_(st, varlist, &lp, *st_head);
@@ -86,7 +87,7 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 	return (wait_process(&lp, varlist, st_head));
 }
 
-int	recursive_continue_line(char *input, t_var **varlist)
+int	recursive_continue_line(char *input, t_var **varlist, char *heredoc)
 {
 	t_status	*state;
 	t_brackets	brackets;
@@ -97,15 +98,15 @@ int	recursive_continue_line(char *input, t_var **varlist)
 		return (0);
 	if (find_brackets_pair(input, &brackets, ft_strlen(input),
 			varlist) == ERROR)
-		return (free_varlist(varlist), free(input), ERROR);
+		return (free_varlist(varlist), free(input), free(heredoc), ERROR);
 	state = sep_input_to_cmds(input, &brackets, NULL, varlist);
 	if (!state)
-		return (free_varlist(varlist), free(input), ERROR);
+		return (free_varlist(varlist), free(input), free(heredoc), ERROR);
 	if (make_pipe(&state, varlist) == ERROR)
-		return (frees(state, varlist), free(input), ERROR);
-	if (fork_and_wait_(&state, varlist, input) == ERROR)
-		return (frees(state, varlist), free(input), ERROR);
+		return (frees(state, varlist), free(input), free(heredoc), ERROR);
+	if (fork_and_wait_(&state, varlist, input, heredoc) == ERROR)
+		return (frees(state, varlist), free(input), free(heredoc), ERROR);
 	exit_var = get_var(varlist, "?");
 	ret = ft_atoi_exit(exit_var->value);
-	return (free(input), frees(state, varlist), ret);
+	return (free(input), free(heredoc), frees(state, varlist), ret);
 }
