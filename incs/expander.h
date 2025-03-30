@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:46:34 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 17:35:15 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 07:08:24 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "includes.h"
 
 /* expander */
+int			expand_cmds(t_status **st_head, t_var **varlist);
 t_tokens	*expander(char *str, t_var **varlist);
 t_tokens	*tokenizer(char *str);
 t_tokens	*expand_tokens(t_tokens **tokens, t_var **varlist);

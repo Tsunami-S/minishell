@@ -6,15 +6,16 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:32:04 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:27:34 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:55:27 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	error_check_heredoc(void)
+int	error_check_heredoc(t_var **var)
 {
 	ft_eprintf("minishell: syntax error near unexpected token `newline'\n");
+	update_exit_code(2, var);
 	return (ERROR);
 }
 

@@ -1,40 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils6.c                                 :+:      :+:    :+:   */
+/*   my_signal.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 17:50:55 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 05:55:34 by haito            ###   ########.fr       */
+/*   Created: 2025/03/31 06:50:44 by haito             #+#    #+#             */
+/*   Updated: 2025/03/31 07:07:28 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef MY_SIGNAL_H
+# define MY_SIGNAL_H
 
-int	ft_isupper(int c)
-{
-	return ('A' <= c && c <= 'Z');
-}
+# include "includes.h"
 
-int	ft_islower(int c)
-{
-	return ('a' <= c && c <= 'z');
-}
+void		sig_handler_inprocess(int signal);
+void		sig_handler_heredoc(int signal);
+void		sigint_handler(int signal);
+void		setup_signal_handlers(t_var **varlist);
+int			check_signal(t_lp *lp);
+void		exit_child_sigint(t_child *child, char *buf, char *file);
 
-int	ft_isalpha(int c)
-{
-	return (ft_islower(c) || ft_isupper(c));
-}
-
-char	*get_path(t_var **varlist, char *path)
-{
-	t_var	*var;
-
-	var = *varlist;
-	while (var && ft_strcmp(var->name, path) != 0)
-		var = var->next;
-	if (!var)
-		return (NULL);
-	return (var->value);
-}
+#endif

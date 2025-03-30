@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/30 21:32:00 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/31 06:19:06 by haito            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,41 +40,46 @@ SRCS =	main/minishell_main.c \
 		builtin/builtin_unset.c \
 		builtin/builtin_cd.c \
 		builtin/builtin_exit.c \
+		builtin/builtin_exit_child.c \
+		builtin/builtin_exit_re.c \
 		builtin/builtin_exit_utils.c \
+		builtin/check_builtin.c \
 		parent_process/find_brackets_pair.c \
 		parent_process/sep_input_to_cmds.c \
+		parent_process/sep_input_to_cmds2.c \
 		parent_process/handle_node.c \
 		parent_process/trim_space.c \
 		parent_process/pipe.c \
 		parent_process/fork.c \
 		parent_process/fork2.c \
+		parent_process/fork3.c \
 		parent_process/wait.c \
 		parent_process/help.c \
 		parent_process/recursive.c \
 		manage_varlist/manage_varlist.c \
 		manage_varlist/init_varlist.c \
-		expander/check_wildcard.c \
-		expander/expand_tokens.c \
 		expander/expander.c \
-		expander/free_splited.c \
-		expander/get_expanded_tokens.c \
-		expander/get_new_tokens.c \
-		expander/remove_empty_tokens.c \
-		expander/replace_home.c \
-		expander/replace_vars.c \
 		expander/tokenizer.c \
+		expander/expand_tokens.c \
+		expander/check_wildcard.c \
 		expander/split_tokens.c \
 		expander/split_to_words.c \
 		expander/split_utils.c \
+		expander/free_splited.c \
+		expander/replace_vars.c \
+		expander/remove_empty_tokens.c \
+		expander/get_expanded_tokens.c \
+		expander/get_new_tokens.c \
+		expander/replace_home.c \
 		expander/wildcard/expand_wildcard.c \
-		expander/wildcard/get_expanded_files.c \
-		expander/wildcard/get_files.c \
-		expander/wildcard/manage_flag.c \
 		expander/wildcard/search_same_file.c \
 		expander/wildcard/sort_files.c \
-		expander/wildcard/trim_word.c \
+		expander/wildcard/get_files.c \
+		expander/wildcard/get_expanded_files.c \
 		expander/wildcard/wildcard_free.c \
 		expander/wildcard/wildcard_utils.c \
+		expander/wildcard/trim_word.c \
+		expander/wildcard/manage_flag.c \
 		ft_eprintf/ft_eprintf.c \
 		ft_eprintf/ft_eprintf_option.c \
 		ft_eprintf/ft_eprintf_option2.c \
@@ -86,10 +91,11 @@ SRCS =	main/minishell_main.c \
 		continue_child/make_envp.c \
 		continue_child/make_fullpath.c \
 		continue_child/redirect.c \
+		here_doc/check_heredoc.c \
 		here_doc/heredoc.c \
 		here_doc/heredoc_expand_vars.c \
 		here_doc/heredoc_vars_count.c \
-		here_doc/heredoc_vars_split.c 
+		here_doc/heredoc_vars_split.c
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 INC = -Iincs  -Isrcs/ft_eprintf

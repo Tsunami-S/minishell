@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:42:18 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:38:54 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 05:11:16 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	free_lst_status(t_status *st_head, t_status *st)
 	}
 }
 
-void	free_lst_status_(t_status *st_head, char *cmds)
+void	free_lst_status_(t_status *st_head, char *cmds, char *heredoc)
 {
 	t_status	*current;
 	t_status	*next_node;
@@ -67,6 +67,8 @@ void	free_lst_status_(t_status *st_head, char *cmds)
 			close(current->input_pipefd);
 		if (current->output_pipefd != -1)
 			close(current->output_pipefd);
+		if (current->heredoc && current->heredoc != heredoc)
+			free(current->heredoc);
 		free(current);
 		current = next_node;
 	}

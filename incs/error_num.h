@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:44:14 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 17:35:58 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 03:07:08 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # define ERROR -1
 # define FAILED 1
 # define SUCCESS 0
+# define BREAK 4
+# define CONTINUE 5
 # define SYNERR 2
 # define CHANGE 3
 # define STAY 3

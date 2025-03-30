@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:00:07 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 21:28:56 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 01:49:10 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,12 @@ static void	heredoc_loop(int filefd, char *limiter, t_var **varlist)
 	int		lim_len;
 
 	lim_len = ft_strlen(limiter);
+	g_signal = 0;
 	while (1)
 	{
 		buf = readline("> ");
-		if (g_signal == SIGINT || (buf && !lim_len && !*buf) || (buf && lim_len
-				&& !ft_strncmp(limiter, buf, lim_len)))
+		if (g_signal == SIGINT || (buf && !lim_len && !*buf)
+			|| (buf && lim_len && !ft_strncmp(limiter, buf, lim_len)))
 		{
 			free(buf);
 			break ;
@@ -95,27 +96,53 @@ static void	heredoc_loop(int filefd, char *limiter, t_var **varlist)
 	}
 }
 
-char	*here_doc(char *limiter, t_var **varlist)
+void	child_heredoc(t_heredoc *h, char *limiter, t_var **varlist,
+		t_status **st_head)
 {
-	int		filefd;
-	char	*file;
-
-	file = NULL;
-	filefd = open_tmpfile(&file);
-	if (filefd == -1)
-		return (NULL);
 	if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
-		return (perror("minishell: signal"), NULL);
+	{
+		perror("minishell: signal");
+		exit(1);
+	}
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		return (perror("minishell: signal"), NULL);
-	heredoc_loop(filefd, limiter, varlist);
-	if (signal(SIGINT, sig_handler_inprocess) == SIG_ERR)
-		return (perror("minishell: signal"), NULL);
-	if (signal(SIGQUIT, sig_handler_inprocess) == SIG_ERR)
-		return (perror("minishell: signal"), NULL);
+	{
+		perror("minishell: signal");
+		exit(1);
+	}
+	heredoc_loop(h->filefd, limiter, varlist);
+	free_lst_status(*st_head, NULL);
+	free_varlist(varlist);
+	free(h->file);
 	if (g_signal == SIGINT)
-		g_signal = 0;
-	if (close(filefd) == -1)
-		return (perror("minishell: close failed"), free(file), NULL);
-	return (file);
+		exit(1);
+	exit(0);
+}
+
+char	*here_doc(char *limiter, t_var **varlist, t_status **st_head)
+{
+	t_heredoc	h;
+	pid_t		pid;
+	int			status;
+
+	status = 0;
+	h.file = NULL;
+	h.filefd = open_tmpfile(&h.file);
+	if (h.filefd == -1)
+		return (NULL);
+	pid = fork();
+	if (pid == 0)
+		child_heredoc(&h, limiter, varlist, st_head);
+	waitpid(pid, &status, 0);
+	g_signal = 0;
+	if (close(h.filefd) == -1)
+		return (perror("minishell: close failed"), free(h.file), NULL);
+	if (status == 256)
+	{
+		update_exit_code(130, varlist);
+		if (h.file)
+			unlink(h.file);
+		free(h.file);
+		return (NULL);
+	}
+	return (h.file);
 }

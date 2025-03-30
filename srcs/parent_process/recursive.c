@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:06:51 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 05:25:03 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,54 @@ void	fork_process_(t_status *st, t_var **varlist,
 	if (st->pid == 0)
 	{
 		free(lp->input);
-		handle_child_process(st, varlist, st_head);
+		handle_child_process(st, varlist, st_head, lp->heredoc);
 	}
 	handle_parent_process(st);
 	handle_and_or(st, lp, varlist);
 }
 
-int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input, char *heredoc)
+int	has_heredoc(t_status *st)
+{
+	t_tokens	*token;
+
+	token = st->token;
+	while (token)
+	{
+		if (token->type == HEREDOC && token->next)
+			return (1);
+		token = token->next;
+	}
+	return (0);
+}
+
+void	execute_builtin_or_fork_(t_status *st, t_var **varlist, t_lp *lp,
+	t_status *st_head)
+{
+	lp->heredoc_tmp = NULL;
+	if (is_direct_builtin(st))
+	{
+		if (lp->heredoc)
+		{
+			lp->heredoc_tmp = ft_strdup(lp->heredoc);
+			if (!lp->heredoc_tmp)
+			{
+				error_node(ERRNO_ONE);
+				exit(1);
+			}
+		}
+		lp->result = call_builtin_re(&st->token, varlist, st_head,
+				lp);
+	}
+	else
+	{
+		fork_process_(st, varlist, lp, st_head);
+		if (!st->next || (!st->next->has_and && !st->next->has_or))
+			lp->last_pid = st->pid;
+	}
+}
+
+int	fork_and_wait_(t_status **st_head, t_var **varlist,
+		char *input, char *heredoc)
 {
 	t_status	*st;
 	t_lp		lp;
@@ -44,44 +85,20 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input, char *hered
 	lp.last_pid = -1;
 	lp.result = 0;
 	lp.input = input;
+	lp.heredoc = heredoc;
 	while (st)
 	{
-		st->heredoc = heredoc;
-		if (g_signal == SIGINT)
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			g_signal = 0;
-			lp.result = 130;
-			lp.count_forked = 0;
+		if (check_signal(&lp))
 			break ;
-		}
-		if (lp.result == 131)
-			break ;
-		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0))
+		if ((st->has_and && lp.result != 0) || (st->has_or && lp.result == 0)
+			|| !prepare_and_expand_tokens(st, varlist))
 		{
-			st = st->next;
-			continue ;
-		}
-		if (st->token)
-			free_tokens(&(st->token));
-		st->token = expander(st->cmds, varlist);
-		if (!st->token)
-		{
-			update_exit_code(0, varlist);
 			st = st->next;
 			continue ;
 		}
 		if (check_built_in(st) == ERROR)
 			return (update_exit_code(1, varlist), ERROR);
-		else if (is_direct_builtin(st))
-			lp.result = call_builtin_re(&st->token, varlist, *st_head,
-					lp.input, st->heredoc);
-		else
-		{
-			fork_process_(st, varlist, &lp, *st_head);
-			if (!st->next || (!st->next->has_and && !st->next->has_or))
-				lp.last_pid = st->pid;
-		}
+		execute_builtin_or_fork_(st, varlist, &lp, *st_head);
 		st = st->next;
 	}
 	return (wait_process(&lp, varlist, st_head));

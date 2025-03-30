@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit.c                                     :+:      :+:    :+:   */
+/*   builtin_exit_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/31 07:16:17 by haito            ###   ########.fr       */
+/*   Created: 2025/03/31 05:57:49 by haito             #+#    #+#             */
+/*   Updated: 2025/03/31 06:43:57 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_exit(t_status *st_head, t_var **varlist, char *tmp,
-		int exit_code)
+static void	free_exit_child(t_tokens *token, t_var **varlist, char *tmp)
 {
-	if (exit_code == 2)
-		ft_eprintf("minishell: exit: %s: numeric argument required\n",
-			tmp);
-	frees(st_head, varlist);
+	free_tokens(&token);
+	free_varlist(varlist);
 	if (tmp)
 		free(tmp);
-	exit(exit_code);
 }
 
-int	check_numeric_exit(t_tokens *token, t_var **varlist, t_status *st_head,
+void	error_numeric_exit_child(t_tokens *token, t_var **varlist, char *tmp)
+{
+	ft_eprintf("minishell: exit: %s: numeric argument required\n",
+		tmp);
+	free_exit_child(token, varlist, tmp);
+	exit(2);
+}
+
+int	check_numeric_exit_child(t_tokens *token, t_var **varlist,
 		char *tmp)
 {
 	int		exit_code;
@@ -33,31 +37,33 @@ int	check_numeric_exit(t_tokens *token, t_var **varlist, t_status *st_head,
 	if (!tmp)
 		return (error_node(ERRNO_ONE), FAILED);
 	if (token->next && ft_strcmp(tmp, "--") != 0 && !is_numeric_argument(tmp))
-		free_exit(st_head, varlist, tmp, 2);
+		error_numeric_exit_child(token, varlist, tmp);
 	if (token->next && token->next->next)
 		return (free(tmp), ft_eprintf
-			("minishell: exit: too many arguments\n"), 1);
+			("minishell: exit: too many arguments\n"), FAILED);
 	if (token->next)
 	{
 		if (!is_numeric_argument(tmp))
-			free_exit(st_head, varlist, tmp, 2);
+			error_numeric_exit_child(token, varlist, tmp);
 		exit_code = ft_atoi_exit(tmp) % 256;
-		free_exit(st_head, varlist, tmp, exit_code);
+		free_exit_child(token, varlist, tmp);
+		exit(exit_code);
 	}
-	free(tmp);
 	return (0);
 }
 
-int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
+int	builtin_exit_child(t_tokens **tokens, t_var **varlist)
 {
 	int			exit_code;
 	t_tokens	*token;
 	char		*tmp;
 
 	token = *tokens;
-	printf("exit\n");
 	if (!token->next)
-		free_exit(st_head, varlist, NULL, 0);
+	{
+		free_exit_child(token, varlist, NULL);
+		exit(0);
+	}
 	tmp = trim_edges_space(token->next->token);
 	if (!tmp)
 		return (error_node(ERRNO_ONE), FAILED);
@@ -65,10 +71,12 @@ int	builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head)
 		handle_exit_nonop(tokens);
 	free(tmp);
 	if (!token->next)
-		free_exit(st_head, varlist, NULL, 0);
-	if (check_numeric_exit(token, varlist, st_head, NULL))
-		return (FAILED);
+	{
+		free_exit_child(token, varlist, NULL);
+		exit(0);
+	}
+	check_numeric_exit_child(token, varlist, NULL);
 	exit_code = get_exit_status(varlist);
-	free_exit(st_head, varlist, NULL, exit_code);
-	return (exit_code);
+	free_exit_child(token, varlist, NULL);
+	return (exit(exit_code), exit_code);
 }

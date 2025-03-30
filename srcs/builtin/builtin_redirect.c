@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_redirect.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 23:08:52 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 19:18:18 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 04:40:31 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ int	redirect_builtin(t_tokens **tokens, t_saved *saved, char *tmpfile)
 	{
 		unlink(tmpfile);
 		free(tmpfile);
+		tmpfile = NULL;
 	}
 	if (status != SUCCESS)
 		return (EXIT_FAILURE);

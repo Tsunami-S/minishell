@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 19:25:40 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 04:51:08 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ int	check_status(int status, t_tokens **tokens, t_var **varlist)
 }
 
 int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
-		char *in, char *tmpfile)
+		t_lp *lp)
 {
 	t_tokens	*token;
 	t_saved		saved;
 	int			status;
 
-	status = redirect_builtin(tokens, &saved, tmpfile);
+	status = redirect_builtin(tokens, &saved, lp->heredoc_tmp);
 	if (status != EXIT_FAILURE)
 	{
 		token = delete_redirect(tokens);
@@ -110,13 +110,14 @@ int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 		if (ft_strcmp(token->token, "env") == 0)
 			status = builtin_env(tokens, varlist);
 		if (ft_strcmp(token->token, "exit") == 0)
-			status = builtin_exit_re(tokens, varlist, st_head, in);
+			status = builtin_exit_re(tokens, varlist, st_head, lp);
 	}
 	builtin_reset_stdio(&saved);
 	return (status);
 }
 
-int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head, char *tmpfile)
+int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head,
+		char *tmpfile)
 {
 	t_tokens	*token;
 	t_saved		saved;
