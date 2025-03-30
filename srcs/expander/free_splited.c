@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils6.c                                 :+:      :+:    :+:   */
+/*   free_splited.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 17:50:55 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/29 16:15:33 by tssaito          ###   ########.fr       */
+/*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
+/*   Updated: 2025/03/30 13:08:49 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_isupper(int c)
+void	free_splited(t_splited **splited)
 {
-	return ('A' <= c && c <= 'Z');
-}
+	t_splited	*head;
+	t_splited	*tmp;
 
-int	ft_islower(int c)
-{
-	return ('a' <= c && c <= 'z');
-}
-
-int	ft_isalpha(int c)
-{
-	return (ft_islower(c) || ft_isupper(c));
+	head = *splited;
+	while (head)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->str);
+		free(tmp);
+	}
 }

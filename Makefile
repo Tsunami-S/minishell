@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/26 20:34:00 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/30 14:35:34 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,25 +59,26 @@ SRCS =	main/minishell_main.c \
 		manage_varlist/init_varlist.c \
 		expander/expander.c \
 		expander/tokenizer.c \
-		expander/remove_empty_tokens.c \
-		expander/split_words.c \
+		expander/expand_tokens.c \
+		expander/check_wildcard.c \
+		expander/split_tokens.c \
+		expander/split_to_words.c \
+		expander/split_utils.c \
+		expander/free_splited.c \
 		expander/replace_vars.c \
-		expander/replace_vars_count.c \
-		expander/get_words.c \
-		expander/get_words_utils1.c \
-		expander/get_words_utils2.c \
-		expander/remove_quotes_and_split_tokens.c \
+		expander/remove_empty_tokens.c \
+		expander/get_expanded_tokens.c \
+		expander/get_new_tokens.c \
+		expander/replace_home.c \
 		expander/wildcard/expand_wildcard.c \
 		expander/wildcard/search_same_file.c \
 		expander/wildcard/sort_files.c \
 		expander/wildcard/get_files.c \
 		expander/wildcard/get_expanded_files.c \
-		expander/wildcard/split_wildcard.c \
 		expander/wildcard/wildcard_free.c \
 		expander/wildcard/wildcard_utils.c \
 		expander/wildcard/trim_word.c \
 		expander/wildcard/manage_flag.c \
-		expander/wildcard/open_wildcard.c \
 		ft_eprintf/ft_eprintf.c \
 		ft_eprintf/ft_eprintf_option.c \
 		ft_eprintf/ft_eprintf_option2.c \

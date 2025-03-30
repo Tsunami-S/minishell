@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/27 19:59:22 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 18:25:05 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,22 @@
 
 # define MAX_STACK_BRACKETS 500
 
-typedef enum e_wtype
+typedef enum e_stype
 {
-	WILD,
-	SLASH,
-	ELSE,
-}					t_wtype;
+	PLAIN,
+	WILDS,
+	PLAINVAR,
+	QUOTEVAR,
+	SINGLE,
+	DOUBLE,
+}						t_stype;
 
-typedef struct s_words
+typedef struct s_splited
 {
-	char			*name;
-	t_wtype			type;
-	struct s_words	*next;
-}					t_words;
+	char				*str;
+	t_stype				type;
+	struct s_splited	*next;
+}						t_splited;
 
 typedef struct s_wild
 {

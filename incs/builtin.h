@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:40:37 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/26 15:11:59 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 17:49:34 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int			builtin_pwd(t_var **varlist);
 /* export */
 int			builtin_export(t_tokens **tokens, t_var **varlist, int exit_num);
 int			builtin_export_list(t_var **varlist);
+int			is_printable_var(char *name);
 
 /* exit */
 int			builtin_exit(t_tokens **tokens, t_var **varlist, t_status *st_head);

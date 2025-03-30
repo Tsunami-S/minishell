@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/27 20:04:24 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/28 21:20:17 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ char	*heredoc_loop(int filefd, char *limiter, t_type type, t_var **varlist)
 	while (1)
 	{
 		buf = readline("> ");
-		if (g_signal == SIGINT
-			|| (buf && !ft_strncmp(limiter, buf, lim_len)))
+		if (g_signal == SIGINT || (buf && !lim_len && !*buf) 
+				|| (buf && lim_len && !ft_strncmp(limiter, buf, lim_len)))
 		{
 			free(buf);
 			break ;
