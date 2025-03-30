@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:00:07 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 20:17:33 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:26:06 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ char	*here_doc(char *limiter, t_var **varlist)
 	int		filefd;
 	char	*file;
 
+	file = NULL;
 	filefd = open_tmpfile(&file);
 	if (filefd == -1)
 		return (NULL);
