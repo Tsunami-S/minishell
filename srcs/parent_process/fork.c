@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:04:56 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:34:54 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,6 @@ int	is_direct_builtin(t_status *st)
 		return (0);
 	return (0);
 }
-
-//int	has_heredoc(t_status *st)
-//{
-//	t_tokens	*token;
-
-//	if (!st->token)
-//		return (0);
-//	token = st->token;
-//	while (token)
-//	{
-//		if (token->type == HEREDOC)
-//			return (1);
-//		token = token->next;
-//	}
-//	return (0);
-//}
 
 int	fork_and_wait(t_status **st_head, t_var **varlist)
 {

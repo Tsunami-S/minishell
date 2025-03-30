@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 19:59:10 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 20:13:20 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:40:42 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	t_tokens	*token;
 	int			result;
 	char		*cmds;
+	char		*heredoc;
 
 	if (st->input_pipefd != -1)
 		dup2(st->input_pipefd, STDIN_FILENO);
@@ -85,20 +86,23 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	if (st->has_brackets)
 	{
 		cmds = st->cmds;
+		heredoc = st->heredoc;
 		free_lst_status_(st_head, st->cmds);
-		result = recursive_continue_line(cmds, varlist, st->heredoc);
+		result = recursive_continue_line(cmds, varlist, heredoc);
 		exit(result);
 	}
 	if (st->is_builtin)
 	{
 		token = st->token;
+		heredoc = st->heredoc;
 		free_lst_status(st_head, st);
-		exit(child_call_builtin(&token, varlist, st->heredoc));
+		exit(child_call_builtin(&token, varlist, heredoc));
 	}
 	else
 	{
 		token = st->token;
+		heredoc = st->heredoc;
 		free_lst_status(st_head, st);
-		continue_child(&token, varlist, st->heredoc);
+		continue_child(&token, varlist, heredoc);
 	}
 }

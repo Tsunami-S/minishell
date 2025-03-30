@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:11:26 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:06:05 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 20:29:49 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ int			is_direct_builtin(t_status *st);
 char		*get_path(t_var **varlist, char *path);
 char		*trim_edges_space(const char *str);
 int			has_heredoc(t_status *st);
+int		error_check_heredoc(void);
 
 #endif
