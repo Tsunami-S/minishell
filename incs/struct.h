@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 20:03:24 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 21:33:25 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ typedef struct s_splited
 
 typedef struct s_wild
 {
-	int				flag;
-	int				slash;
-	char			*name;
-	unsigned char	type;
-	struct s_wild	*next;
-}					t_wild;
+	int					flag;
+	int					slash;
+	char				*name;
+	unsigned char		type;
+	struct s_wild		*next;
+}						t_wild;
 
 typedef struct s_saved
 {
-	int				in;
-	int				out;
-}					t_saved;
+	int					in;
+	int					out;
+}						t_saved;
 
 typedef enum e_exist
 {
 	NONE,
 	EXIST,
-}					t_exist;
+}						t_exist;
 
 typedef enum e_type
 {
@@ -64,75 +64,75 @@ typedef enum e_type
 	HEREDOC,
 	HAVE_QUOTE,
 	VAR,
-}					t_type;
+}						t_type;
 
 typedef struct s_tokens
 {
-	char			*token;
-	t_type			type;
-	struct s_tokens	*next;
-}					t_tokens;
+	char				*token;
+	t_type				type;
+	struct s_tokens		*next;
+}						t_tokens;
 
 typedef struct s_var
 {
-	char			*name;
-	char			*value;
-	struct s_var	*next;
-}					t_var;
+	char				*name;
+	char				*value;
+	struct s_var		*next;
+}						t_var;
 
 typedef struct s_child
 {
-	t_var			**varlist;
-	t_tokens		**tokens;
-	char			**cmds;
-	char			*fullpath;
-	char			**envp;
-	char			**paths;
-	char			*tmpfile;
-}					t_child;
+	t_var				**varlist;
+	t_tokens			**tokens;
+	char				**cmds;
+	char				*fullpath;
+	char				**envp;
+	char				**paths;
+	char				*tmpfile;
+}						t_child;
 
 typedef struct s_status
 {
-	struct s_status	*previous;
-	char			*cmds;
-	t_tokens		*token;
-	pid_t			pid;
-	pid_t			input_pipefd;
-	pid_t			output_pipefd;
-	int saved;
-	int				has_brackets;
-	int				has_or;
-	int				has_and;
-	int				has_and_single;
-	int				has_semicolon;
-	int				is_builtin;
-	char			*heredoc;
-	struct s_status	*next;
-}					t_status;
+	struct s_status		*previous;
+	char				*cmds;
+	t_tokens			*token;
+	pid_t				pid;
+	pid_t				input_pipefd;
+	pid_t				output_pipefd;
+	int					saved;
+	int					has_brackets;
+	int					has_or;
+	int					has_and;
+	int					has_and_single;
+	int					has_semicolon;
+	int					is_builtin;
+	char				*heredoc;
+	struct s_status		*next;
+}						t_status;
 
 typedef struct s_brackets
 {
-	int				top;
-	int				data[MAX_STACK_BRACKETS + 1];
-	int				pair[MAX_STACK_BRACKETS + 1][2];
-	int				countof_pair;
-	int				location;
-}					t_brackets;
+	int					top;
+	int					data[MAX_STACK_BRACKETS + 1];
+	int					pair[MAX_STACK_BRACKETS + 1][2];
+	int					countof_pair;
+	int					location;
+}						t_brackets;
 
 typedef struct s_parser
 {
-	int				i;
-	char			*cmds;
-	t_var			**var;
-}					t_parser;
+	int					i;
+	char				*cmds;
+	t_var				**var;
+}						t_parser;
 
 typedef struct s_last_process
 {
-	pid_t			last_pid;
-	int				result;
-	int				count_forked;
-	char			*input;
-	int				is_first;
-}					t_lp;
+	pid_t				last_pid;
+	int					result;
+	int					count_forked;
+	char				*input;
+	int					is_first;
+}						t_lp;
 
 #endif

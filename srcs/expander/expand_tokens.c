@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 13:18:34 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 21:29:41 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,23 @@ static int	is_redirect(t_type type)
 
 static int	is_var(char *str, t_var **varlist)
 {
+	int		len;
+	char	*name;
+
 	if (!ft_strcmp(str, "*"))
 		return (1);
-	if (str[0] == '$' && (ft_isalpha(str[1]) || str[1] == '_')
-		&& !get_var(varlist, &str[1]))
-		return (1);
+	if (str[0] == '$' && (ft_isalpha(str[1]) || str[1] == '_'))
+	{
+		len = 1;
+		while (ft_isalpha(str[len]) || str[len] == '_')
+			len++;
+		name = ft_strndup(&str[1], len - 1);
+		if (!name)
+			return (0);
+		if (!get_var(varlist, name))
+			return (free(name), 1);
+		free(name);
+	}
 	return (0);
 }
 
