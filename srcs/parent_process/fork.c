@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/27 03:05:03 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 19:49:54 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int	fork_and_wait(t_status **st_head, t_var **varlist)
 			continue ;
 		}
 		if (is_direct_builtin(st))
-			lp.result = call_builtin(&st->token, varlist, *st_head);
+			lp.result = call_builtin(&st->token, varlist, *st_head, NULL);
 		else
 		{
 			fork_process(st, varlist, &lp, *st_head);

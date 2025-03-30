@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 22:01:42 by haito             #+#    #+#             */
-/*   Updated: 2025/03/26 03:17:07 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/30 19:52:16 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	fork_and_wait_(t_status **st_head, t_var **varlist, char *input)
 			return (update_exit_code(1, varlist), ERROR);
 		else if (is_direct_builtin(st))
 			lp.result = call_builtin_re(&st->token, varlist, *st_head,
-					lp.input);
+					lp.input, NULL);
 		else
 		{
 			fork_process_(st, varlist, &lp, *st_head);

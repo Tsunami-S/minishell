@@ -97,12 +97,12 @@ void	handle_child_process(t_status *st, t_var **varlist, t_status *st_head)
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		exit(child_call_builtin(&token, varlist));
+		exit(child_call_builtin(&token, varlist, NULL));
 	}
 	else
 	{
 		token = st->token;
 		free_lst_status(st_head, st);
-		continue_child(&token, varlist, st->saved);
+		continue_child(&token, varlist, NULL);
 	}
 }

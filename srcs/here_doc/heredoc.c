@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 21:21:35 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/28 21:20:17 by tssaito          ###   ########.fr       */
+/*   Created: 2025/03/30 19:00:07 by tssaito           #+#    #+#             */
+/*   Updated: 2025/03/30 19:41:56 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*make_filename(t_child *child, char *basename, int i)
+static char	*make_filename(char *basename, int i)
 {
 	char	*index;
 	char	*file;
 
 	index = ft_itoa(i);
 	if (!index)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+		return (perror("minishell: malloc failed"), NULL);
 	file = ft_strjoin(basename, index);
 	free(index);
 	if (!file)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+		return (perror("minishell: malloc failed"), NULL);
 	return (file);
 }
 
-static char	*get_filename(t_child *child)
+static char	*get_filename(void)
 {
 	char	*file;
 	char	*basename;
@@ -37,15 +35,14 @@ static char	*get_filename(t_child *child)
 
 	basename = ft_strdup("/tmp/.tmp");
 	if (!basename)
-		exit_child(child, EXIT_FAILURE, errno,
-			"cannot create temp file for here-document");
+		return (perror("minishell: malloc failed"), NULL);
 	file = basename;
 	while (!access(file, F_OK))
 	{
 		i = 0;
 		while (i <= INT_MAX)
 		{
-			file = make_filename(child, basename, i);
+			file = make_filename(basename, i);
 			if (access(file, F_OK))
 				break ;
 			free(file);
@@ -57,19 +54,21 @@ static char	*get_filename(t_child *child)
 	return (file);
 }
 
-static int	open_tmpfile(t_child *child, char **file)
+static int	open_tmpfile(char **file)
 {
 	int	fd;
 
 	if (!*file)
-		*file = get_filename(child);
+		*file = get_filename();
+	if (!*file)
+		return (ERROR);
 	fd = open(*file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		exit_child(child, EXIT_FAILURE, errno, *file);
+		return (free(*file), perror("minishell: open failed"), -1);
 	return (fd);
 }
 
-char	*heredoc_loop(int filefd, char *limiter, t_type type, t_var **varlist)
+static void	heredoc_loop(int filefd, char *limiter, t_var **varlist)
 {
 	char	*buf;
 	int		lim_len;
@@ -90,34 +89,32 @@ char	*heredoc_loop(int filefd, char *limiter, t_type type, t_var **varlist)
 				limiter);
 			break ;
 		}
-		if (type == WORD)
-			buf = heredoc_expand_var(buf, varlist);
+		buf = heredoc_expand_var(buf, varlist);
 		ft_putendl_fd(buf, filefd);
 		free(buf);
 	}
-	return (buf);
 }
 
-char	*child_heredoc(t_child *child, char *limiter, t_type type,
-		t_var **varlist)
+char	*here_doc(char *limiter, t_var **varlist)
 {
-	int			filefd;
-	char		*buf;
-	static char	*file;
+	int		filefd;
+	char	*file;
 
-	filefd = open_tmpfile(child, &file);
+	filefd = open_tmpfile(&file);
+	if(filefd == -1)
+		return NULL;
 	if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
-	buf = heredoc_loop(filefd, limiter, type, varlist);
+	heredoc_loop(filefd, limiter, varlist);
 	if (signal(SIGINT, sig_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	if (signal(SIGQUIT, sig_handler_inprocess) == SIG_ERR)
 		return (perror("minishell: signal"), NULL);
 	if (g_signal == SIGINT)
-		exit_child_sigint(child, buf, file);
+		g_signal = 0;
 	if (close(filefd) == -1)
-		exit_child(child, EXIT_FAILURE, errno, file);
+		return (perror("minishell: close failed"), free(file), NULL);
 	return (file);
 }

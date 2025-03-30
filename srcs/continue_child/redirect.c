@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/27 20:03:10 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 19:42:42 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,30 +50,6 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 		exit_child(child, EXIT_FAILURE, errno, file);
 }
 
-void	call_heredoc(t_child *child, t_tokens **tokens, t_var **varlist, pid_t outfd)
-{
-	t_tokens	*head;
-	t_tokens	*next;
-
-	head = *tokens;
-	while (head)
-	{
-		next = head->next;
-		if (head->type == HEREDOC)
-		{
-			child->tmpfile = child_heredoc(child, next->token, next->type,
-					varlist);
-
-
-			dup2(outfd, STDOUT_FILENO);
-
-
-			
-		}
-		head = head->next;
-	}
-}
-
 void	redirect_fds(t_child *child, t_tokens **tokens)
 {
 	t_tokens	*head;
@@ -97,7 +73,6 @@ void	redirect_fds(t_child *child, t_tokens **tokens)
 	}
 	if (child->tmpfile)
 	{
-		unlink(child->tmpfile);
 		free(child->tmpfile);
 		child->tmpfile = NULL;
 	}

@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/30 14:35:34 by tssaito          ###   ########.fr        #
+#    Updated: 2025/03/30 19:22:23 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,15 +28,11 @@ SRCS =	main/minishell_main.c \
 		utils/minishell_utils6.c \
 		utils/ft_split.c \
 		utils/free_utils.c \
-		gnl/get_next_line.c \
-		gnl/get_next_line_utils.c \
 		builtin/builtin.c \
 		builtin/builtin_check_syntax.c \
 		builtin/builtin_error.c \
 		builtin/builtin_set_stdio.c \
 		builtin/builtin_redirect.c \
-		builtin/builtin_here_doc.c \
-		builtin/builtin_here_doc_help.c \
 		builtin/builtin_export.c \
 		builtin/builtin_export_list.c \
 		builtin/builtin_env.c \
@@ -90,7 +86,7 @@ SRCS =	main/minishell_main.c \
 		continue_child/make_envp.c \
 		continue_child/make_fullpath.c \
 		continue_child/redirect.c \
-		continue_child/here_doc.c \
+		here_doc/heredoc.c \
 		here_doc/heredoc_expand_vars.c \
 		here_doc/heredoc_vars_count.c \
 		here_doc/heredoc_vars_split.c 

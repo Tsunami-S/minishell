@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:40:37 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 17:49:34 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/30 19:25:21 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 # include "includes.h"
 
 int			check_builtin_redirect_syntax(t_tokens **tokens);
-int			redirect_builtin(t_tokens **tokens, t_saved *saved,
-				t_var **varlist);
+int			redirect_builtin(t_tokens **tokens, t_saved *saved, char *tmpfile);
 t_tokens	*delete_redirect(t_tokens **tokens);
-int			check_here_doc(t_tokens **tokens, char **tmpfile, t_var **varlist);
 int			builtin_save_stdio(t_tokens **tokens, t_saved *saved);
 int			builtin_reset_stdio(t_saved *saved);
 int			builtin_error(int errnum, char *msg);
