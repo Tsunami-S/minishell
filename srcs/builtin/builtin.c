@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 04:51:08 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 11:50:35 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,19 @@ int	child_call_builtin(t_tokens **tokens, t_var **varlist, char *tmpfile)
 	{
 		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
-			status = builtin_echo(tokens, varlist);
+			status = builtin_echo(&token, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)
-			status = builtin_cd(tokens, varlist);
+			status = builtin_cd(&token, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
 			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
-			status = builtin_export(tokens, varlist, 0);
+			status = builtin_export(&token, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)
-			status = builtin_unset(tokens, varlist);
+			status = builtin_unset(&token, varlist);
 		if (ft_strcmp(token->token, "env") == 0)
-			status = builtin_env(tokens, varlist);
+			status = builtin_env(&token, varlist);
 		if (ft_strcmp(token->token, "exit") == 0)
-			status = builtin_exit_child(tokens, varlist);
+			status = builtin_exit_child(&token, varlist);
 	}
 	builtin_reset_stdio(&saved);
 	return (free_varlist(varlist), free_tokens(tokens), free(tmpfile), status);
@@ -98,19 +98,19 @@ int	call_builtin_re(t_tokens **tokens, t_var **varlist, t_status *st_head,
 	{
 		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
-			status = builtin_echo(tokens, varlist);
+			status = builtin_echo(&token, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)
-			status = builtin_cd(tokens, varlist);
+			status = builtin_cd(&token, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
 			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
-			status = builtin_export(tokens, varlist, 0);
+			status = builtin_export(&token, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)
-			status = builtin_unset(tokens, varlist);
+			status = builtin_unset(&token, varlist);
 		if (ft_strcmp(token->token, "env") == 0)
-			status = builtin_env(tokens, varlist);
+			status = builtin_env(&token, varlist);
 		if (ft_strcmp(token->token, "exit") == 0)
-			status = builtin_exit_re(tokens, varlist, st_head, lp);
+			status = builtin_exit_re(&token, varlist, st_head, lp);
 	}
 	builtin_reset_stdio(&saved);
 	return (status);
@@ -128,19 +128,19 @@ int	call_builtin(t_tokens **tokens, t_var **varlist, t_status *st_head,
 	{
 		token = delete_redirect(tokens);
 		if (ft_strcmp(token->token, "echo") == 0)
-			status = builtin_echo(tokens, varlist);
+			status = builtin_echo(&token, varlist);
 		if (ft_strcmp(token->token, "cd") == 0)
-			status = builtin_cd(tokens, varlist);
+			status = builtin_cd(&token, varlist);
 		if (ft_strcmp(token->token, "pwd") == 0)
 			status = builtin_pwd(varlist);
 		if (ft_strcmp(token->token, "export") == 0)
-			status = builtin_export(tokens, varlist, 0);
+			status = builtin_export(&token, varlist, 0);
 		if (ft_strcmp(token->token, "unset") == 0)
-			status = builtin_unset(tokens, varlist);
+			status = builtin_unset(&token, varlist);
 		if (ft_strcmp(token->token, "env") == 0)
-			status = builtin_env(tokens, varlist);
+			status = builtin_env(&token, varlist);
 		if (ft_strcmp(token->token, "exit") == 0)
-			status = builtin_exit(tokens, varlist, st_head);
+			status = builtin_exit(&token, varlist, st_head);
 	}
 	builtin_reset_stdio(&saved);
 	return (check_status(status, tokens, varlist));
