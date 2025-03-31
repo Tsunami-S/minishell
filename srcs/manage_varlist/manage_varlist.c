@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_utils.c                                     :+:      :+:    :+:   */
+/*   manage_varlist.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 22:09:13 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/15 21:41:45 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:36:58 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static t_exist	replace_existent_var(t_var **varlist, char *name, char *value)
 	existent_var = get_var(varlist, name);
 	if (!existent_var)
 		return (NONE);
+	if (!value)
+		return (EXIST);
 	free(existent_var->value);
 	existent_var->value = value;
 	free(name);
