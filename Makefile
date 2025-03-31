@@ -6,7 +6,7 @@
 #    By: haito <haito@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 06:53:24 by haito             #+#    #+#              #
-#    Updated: 2025/03/31 06:19:06 by haito            ###   ########.fr        #
+#    Updated: 2025/03/31 10:03:57 by tssaito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,6 +93,7 @@ SRCS =	main/minishell_main.c \
 		continue_child/redirect.c \
 		here_doc/check_heredoc.c \
 		here_doc/heredoc.c \
+		here_doc/heredoc_loop.c \
 		here_doc/heredoc_expand_vars.c \
 		here_doc/heredoc_vars_count.c \
 		here_doc/heredoc_vars_split.c

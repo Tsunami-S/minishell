@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:00:07 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 01:49:10 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 10:03:01 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,34 +66,6 @@ static int	open_tmpfile(char **file)
 	if (fd == -1)
 		return (free(*file), perror("minishell: open failed"), -1);
 	return (fd);
-}
-
-static void	heredoc_loop(int filefd, char *limiter, t_var **varlist)
-{
-	char	*buf;
-	int		lim_len;
-
-	lim_len = ft_strlen(limiter);
-	g_signal = 0;
-	while (1)
-	{
-		buf = readline("> ");
-		if (g_signal == SIGINT || (buf && !lim_len && !*buf)
-			|| (buf && lim_len && !ft_strncmp(limiter, buf, lim_len)))
-		{
-			free(buf);
-			break ;
-		}
-		else if (!buf)
-		{
-			ft_eprintf("minishell: warning: here-document wanted `%s'\n",
-				limiter);
-			break ;
-		}
-		buf = heredoc_expand_var(buf, varlist);
-		ft_putendl_fd(buf, filefd);
-		free(buf);
-	}
 }
 
 void	child_heredoc(t_heredoc *h, char *limiter, t_var **varlist,

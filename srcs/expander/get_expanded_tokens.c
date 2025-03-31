@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:43:06 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 17:37:05 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:02:00 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,24 @@ int	has_char(char *str, char key)
 static t_splited	*get_saved_point(t_splited **splited)
 {
 	t_splited	*head;
+	int			i;
 
 	head = *splited;
 	while (head)
 	{
+		if (head->str && head->type == PLAINVAR && has_char(head->str, ' '))
+		{
+			i = 0;
+			while (head->str[i] && head->str[i] != ' ')
+			{
+				if (head->str[i] == '=')
+					return (NULL);
+				i++;
+			}
+			break ;
+		}
 		if (head->str && has_char(head->str, '='))
 			return (NULL);
-		if (head->str && head->type == PLAINVAR && has_char(head->str, ' '))
-			break ;
 		head = head->next;
 	}
 	return (head);
