@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 02:13:25 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 02:17:16 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 11:34:15 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_tokens	*get_cmd_token(t_tokens *head)
 {
 	while (head && (head->type >= TRUNC && head->type <= HEREDOC))
 	{
-		if (head->next)
+		if (head->next && head->next->next)
 			head = head->next->next;
 		else
 			break ;

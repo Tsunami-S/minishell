@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:37:48 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 04:53:29 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 11:37:39 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,16 @@ typedef enum e_type
 	HAVE_QUOTE,
 	VAR,
 }					t_type;
+
+typedef enum r_type
+{
+	IS_OR,
+	IS_ANDAND,
+	IS_AND,
+	IS_SEMI,
+	IS_PIPE,
+	IS_CMD,
+}					t_ope;
 
 typedef struct s_tokens
 {

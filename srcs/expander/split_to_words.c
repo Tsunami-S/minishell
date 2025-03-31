@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_to_words.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:43:31 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 14:36:46 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:54:47 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ t_splited	*split_to_words(t_splited *pre_splited)
 {
 	t_splited	*new;
 
+	new = NULL;
 	if (!pre_splited->str[0])
 		new = split_for_null();
 	else if (pre_splited->type == PLAIN)

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:32:04 by haito             #+#    #+#             */
-/*   Updated: 2025/03/30 20:55:27 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 10:53:47 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	error_pipe(int error_num, t_var **var, int ope, char *cmds)
 		cmd = ft_strdup("||");
 	else if (ope == IS_SEMI)
 		cmd = ft_strdup(";");
-	else if (ope == IS_CMD)
+	else
 		cmd = ft_strdup(cmds);
 	if (error_num == ERRNO_ONE)
 	{

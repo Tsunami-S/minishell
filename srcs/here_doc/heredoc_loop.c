@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 13:41:50 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 10:03:29 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/03/31 11:17:36 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ void	heredoc_loop(int filefd, char *limiter, t_var **varlist)
 		ft_putendl_fd(buf, filefd);
 		free(buf);
 	}
+	close(filefd);
 }
