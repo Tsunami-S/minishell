@@ -6,11 +6,20 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/31 07:16:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:25:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	free_exit_(t_status *st_head, t_var **varlist, char *tmp,
+		int exit_code)
+{
+	frees(st_head, varlist);
+	if (tmp)
+		free(tmp);
+	exit(exit_code);
+}
 
 static void	free_exit(t_status *st_head, t_var **varlist, char *tmp,
 		int exit_code)
@@ -42,7 +51,7 @@ int	check_numeric_exit(t_tokens *token, t_var **varlist, t_status *st_head,
 		if (!is_numeric_argument(tmp))
 			free_exit(st_head, varlist, tmp, 2);
 		exit_code = ft_atoi_exit(tmp) % 256;
-		free_exit(st_head, varlist, tmp, exit_code);
+		free_exit_(st_head, varlist, tmp, exit_code);
 	}
 	free(tmp);
 	return (0);

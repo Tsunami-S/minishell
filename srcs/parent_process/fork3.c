@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 03:25:02 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 07:31:33 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:20:59 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ void	handle_main_wait(t_status *st, t_lp *lp)
 	}
 	else
 		exit_code = WEXITSTATUS(status);
-	if (exit_code != 0)
-		lp->result = exit_code;
+	lp->result = exit_code;
 	lp->count_forked--;
 }
 

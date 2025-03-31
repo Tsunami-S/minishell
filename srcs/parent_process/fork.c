@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 01:21:03 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 05:48:27 by haito            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:23:29 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	execute_builtin_or_fork(t_status *st, t_var **varlist, t_lp *lp,
 				return (error_node(ERRNO_ONE), ERROR);
 		}
 		lp->result = call_builtin(&st->token, varlist, st_head, heredoc);
-		free(heredoc);
 	}
 	else
 	{
