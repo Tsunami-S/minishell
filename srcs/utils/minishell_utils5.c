@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:49:36 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 07:17:59 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/04 00:40:32 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ int	ft_atoi_exit(const char *str)
 {
 	int				is_nega;
 	unsigned long	result;
+	const char		*str_start;
 
+	str_start = str;
 	result = 0;
 	is_nega = 1;
 	while ((*str >= 9 && *str <= 13) || *str == ' ')
@@ -59,7 +61,9 @@ int	ft_atoi_exit(const char *str)
 		if (is_nega == -1 && result == (unsigned long)LONG_MAX + 1)
 			return ((int)LONG_MIN);
 		if (result > LONG_MAX)
-			return (SYNERR);
+			return (ft_eprintf
+				("minishell: exit: %s: numeric argument required\n", str_start),
+				SYNERR);
 	}
 	return ((int)(result * is_nega));
 }

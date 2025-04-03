@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/04/03 16:47:25 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/04 00:28:10 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ static void	split_var(t_var **varlist, char *envp, char **name, char **value)
 		exit_varlist(varlist, strerror(errno));
 	if (!envp[name_size] || !envp[name_size + 1])
 	{
-		value = NULL;
+		*value = NULL;
+		free(*name);
+		*name = NULL;
 		return ;
 	}
 	ft_strlcpy(*name, envp, name_size + 1);

@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/04/03 15:04:23 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/04 01:12:45 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,15 @@ char	*get_cd_target(t_tokens *token, t_var **varlist)
 	if ((token->next && (!ft_strcmp(token->next->token, "--")
 				|| !ft_strcmp(token->next->token, "~"))) || !token->next)
 	{
-		return (get_path(varlist, "HOME"));
+		dir = get_path(varlist, "HOME");
+		if (!dir)
+			return (ft_eprintf("minishell: cd: HOME not set\n"), NULL);
 	}
 	else if (!ft_strcmp(token->next->token, "-"))
 	{
 		dir = get_path(varlist, "OLDPWD");
 		if (!dir)
-		{
-			ft_eprintf("minishell: cd: OLDPWD not set\n");
-			return (NULL);
-		}
+			return (ft_eprintf("minishell: cd: OLDPWD not set\n"), NULL);
 		printf("%s\n", dir);
 		return (dir);
 	}

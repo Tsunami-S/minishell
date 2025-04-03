@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 22:09:13 by tssaito           #+#    #+#             */
-/*   Updated: 2025/04/03 17:02:44 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/04 00:20:20 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_var	*get_var(t_var **varlist, char *name)
 	if (!varlist || !*varlist)
 		return (NULL);
 	tmp_var = *varlist;
-	while (tmp_var && ft_strcmp(tmp_var->name, name))
+	while (tmp_var && tmp_var->name && ft_strcmp(tmp_var->name, name))
 		tmp_var = tmp_var->next;
 	return (tmp_var);
 }

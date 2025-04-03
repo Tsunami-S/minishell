@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:43:45 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 07:31:00 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/04 01:26:50 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,8 @@ t_status	*ft_new_node(const char *cmds, int has_brackets);
 void		ft_add_back_node(t_status **head, t_status *new_node);
 void		ft_remove_node(t_status **head, t_status *node);
 int			add_command_node(char **cmds, t_status **st_head, t_var **var);
+
+/* init_utils */
+void		init_ps(t_parser *ps, const char *input, t_var **var);
 
 #endif

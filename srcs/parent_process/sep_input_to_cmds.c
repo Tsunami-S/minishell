@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/04/03 15:43:17 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/04 01:25:50 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	sep_brackets_and_operators(t_parser *ps,
 	return (SUCCESS);
 }
 
-int	sep_input_to_cmds2(t_parser *ps,
+int	sep_by_ope(t_parser *ps,
 	t_status **st_head, t_brackets *brackets, t_var **var)
 {
 	int	result;
@@ -94,16 +94,12 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 	t_parser	ps;
 	int			result;
 
-	ps.i = -1;
-	ps.j = 1;
-	ps.cmds = NULL;
-	ps.var = var;
-	ps.input = input;
+	init_ps(&ps, input, var);
 	if (check_first_char(input[0], var))
 		return (NULL);
 	while (input[++ps.i])
 	{
-		result = sep_input_to_cmds2(&ps, &st_head, brackets, var);
+		result = sep_by_ope(&ps, &st_head, brackets, var);
 		if (result == ERROR)
 			return (free_lst_status(st_head, NULL), NULL);
 		if (result == BREAK)

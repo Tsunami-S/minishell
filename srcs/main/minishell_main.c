@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:40:23 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 04:01:13 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/04 00:12:14 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ void	main_loop(t_var **varlist)
 	while (1)
 	{
 		setup_signal_handlers(varlist);
-		g_signal = 0;
 		input = readline("minishell$ ");
+		if (g_signal == SIGINT)
+			update_exit_code(130, varlist);
+		g_signal = 0;
 		if (!input)
 		{
 			printf("exit\n");
@@ -71,11 +73,19 @@ void	main_loop(t_var **varlist)
 int	main(int argc, char **argv, char **envp)
 {
 	t_var	*varlist;
+	char	*name_dup;
+	char	*value_dup;
 
 	if (argc != 1)
 		return (ft_eprintf("minishell: too many argument\n"), FAILED);
 	(void)argv;
-	varlist = init_varlist(envp, ft_strdup("?"), ft_strdup("0"));
+	name_dup = ft_strdup("?");
+	if (!name_dup)
+		return (error_node(ERRNO_ONE));
+	value_dup = ft_strdup("0");
+	if (!value_dup)
+		return (free(name_dup), error_node(ERRNO_ONE));
+	varlist = init_varlist(envp, name_dup, value_dup);
 	count_up_shlvl(&varlist);
 	main_loop(&varlist);
 	return (free_varlist(&varlist), 0);

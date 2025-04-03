@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:25:47 by hito              #+#    #+#             */
-/*   Updated: 2025/03/31 15:25:45 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/04 00:38:05 by haito            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ static void	free_exit_(t_status *st_head, t_var **varlist, char *tmp,
 static void	free_exit(t_status *st_head, t_var **varlist, char *tmp,
 		int exit_code)
 {
-	if (exit_code == 2)
-		ft_eprintf("minishell: exit: %s: numeric argument required\n",
-			tmp);
 	frees(st_head, varlist);
 	if (tmp)
 		free(tmp);
@@ -42,14 +39,20 @@ int	check_numeric_exit(t_tokens *token, t_var **varlist, t_status *st_head,
 	if (!tmp)
 		return (error_node(ERRNO_ONE), FAILED);
 	if (token->next && ft_strcmp(tmp, "--") != 0 && !is_numeric_argument(tmp))
+	{
+		ft_eprintf("minishell: exit: %s: numeric argument required\n", tmp);
 		free_exit(st_head, varlist, tmp, 2);
+	}
 	if (token->next && token->next->next)
 		return (free(tmp), ft_eprintf
 			("minishell: exit: too many arguments\n"), 1);
 	if (token->next)
 	{
 		if (!is_numeric_argument(tmp))
+		{
+			ft_eprintf("minishell: exit: %s: numeric argument required\n", tmp);
 			free_exit(st_head, varlist, tmp, 2);
+		}
 		exit_code = ft_atoi_exit(tmp) % 256;
 		free_exit_(st_head, varlist, tmp, exit_code);
 	}
