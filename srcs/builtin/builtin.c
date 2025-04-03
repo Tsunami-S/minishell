@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:04:12 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 11:50:35 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/03 16:44:26 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ int	check_status(int status, t_tokens **tokens, t_var **varlist)
 	head = *tokens;
 	while (head && head->next)
 		head = head->next;
-	new_value = ft_strdup(head->token);
+	new_value = NULL;
+	if (head && head->token)
+		new_value = ft_strdup(head->token);
 	if (!new_value)
 		return (status);
 	name = ft_strdup("_");

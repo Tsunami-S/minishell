@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:01:01 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 04:24:17 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/03 16:42:01 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	redirect(t_child *child, int oldfd, t_type type, char *file)
 		filefd = open(file, O_RDONLY);
 	}
 	if (filefd == -1)
-		exit_child(child, EXIT_FAILURE, errno, file);
+		return (exit_child(child, EXIT_FAILURE, errno, file));
 	if (dup2(filefd, oldfd) == -1)
 		exit_child(child, EXIT_FAILURE, errno, file);
 	if (close(filefd) == -1)
@@ -62,13 +62,13 @@ void	redirect_fds(t_child *child, t_tokens **tokens)
 		if (head->type == HEREDOC)
 			redirect(child, STDIN_FILENO, head->type, child->tmpfile);
 		else if (next && next->token[0] == '$' && next->type == VAR)
-			exit_child(child, EXIT_FAILURE, AMBIGUOUS, head->next->token);
+			exit_child(child, EXIT_FAILURE, AMBIGUOUS, next->token);
 		else if (next && !ft_strcmp(next->token, "*"))
-			exit_child(child, EXIT_FAILURE, AMBIGUOUS, head->next->token);
-		else if (head->type == INPUT)
-			redirect(child, STDIN_FILENO, head->type, head->next->token);
-		else if (head->type == TRUNC || head->type == APPEND)
-			redirect(child, STDOUT_FILENO, head->type, head->next->token);
+			exit_child(child, EXIT_FAILURE, AMBIGUOUS, next->token);
+		else if (next && head->type == INPUT)
+			redirect(child, STDIN_FILENO, head->type, next->token);
+		else if (next && (head->type == TRUNC || head->type == APPEND))
+			redirect(child, STDOUT_FILENO, head->type, next->token);
 		head = head->next;
 	}
 	if (child->tmpfile)

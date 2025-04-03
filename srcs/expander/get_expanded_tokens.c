@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:43:06 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/31 10:02:00 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/03 15:34:17 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static t_splited	*split_with_space(t_splited **splited)
 	saved->type = head->type;
 	head->next = NULL;
 	if (!saved->str)
-		return (NULL);
+		return (free(saved), NULL);
 	i = 0;
 	while (saved->str[i] && !ft_isspace(saved->str[i]))
 		i++;
@@ -97,6 +97,8 @@ t_tokens	*get_expanded_tokens(t_splited **splited)
 		head = saved;
 		saved = split_with_space(&head);
 		new = check_wildcard(&head);
+		if (!new)
+			return (free_tokens(&start), free_splited(&saved), NULL);
 		if (!start)
 			start = new;
 		else

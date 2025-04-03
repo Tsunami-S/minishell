@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:13:42 by hito              #+#    #+#             */
-/*   Updated: 2025/03/31 05:55:11 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/03 15:04:23 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ int	builtin_cd(t_tokens **tokens, t_var **varlist)
 	int			len;
 
 	token = *tokens;
-	len = 0;
 	dir = get_cd_target(token, varlist);
 	if (!dir)
 		return (FAILED);

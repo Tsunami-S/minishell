@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:32 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 05:36:02 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/03 15:43:17 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ t_status	*sep_input_to_cmds(const char *input, t_brackets *brackets,
 	ps.cmds = NULL;
 	ps.var = var;
 	ps.input = input;
-	result = 0;
 	if (check_first_char(input[0], var))
 		return (NULL);
 	while (input[++ps.i])

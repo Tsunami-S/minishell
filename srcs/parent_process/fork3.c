@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 03:25:02 by haito             #+#    #+#             */
-/*   Updated: 2025/03/31 15:20:59 by haito            ###   ########.fr       */
+/*   Updated: 2025/04/03 15:44:01 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	handle_pipe_wait(t_status *st, t_lp *lp)
 	int			sig;
 
 	st_tmp = st;
-	while (st_tmp->input_pipefd != -1)
+	while (st_tmp && st_tmp->input_pipefd != -1)
 	{
 		st_tmp = st_tmp->previous;
 		if (st_tmp && st_tmp->pid > 0)

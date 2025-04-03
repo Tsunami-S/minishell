@@ -6,23 +6,11 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:21:12 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 14:28:41 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/03 18:21:20 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*concat_strs(char **prev_str, char **next_str)
-{
-	char	*new_str;
-
-	new_str = ft_strjoin(*prev_str, *next_str);
-	free(*prev_str);
-	free(*next_str);
-	if (!new_str)
-		return (NULL);
-	return (new_str);
-}
 
 static t_splited	*make_new_splited_word(t_splited **splited,
 		t_splited **next)
@@ -61,24 +49,42 @@ static void	make_new_splited(t_splited **splited)
 	while (head)
 	{
 		tmp = NULL;
-		if (head->type != WILDS && has_char(head->str, '/'))
+		if (head->type != WILDS && has_char(head->str, '/')
+			&& ft_strcmp(head->str, "/"))
 			tmp = make_new_splited_word(&head, &(head->next));
 		if (tmp)
 			head->next = tmp;
 		head = head->next;
 	}
+}
+
+static char	*concat_strs(t_splited **splited)
+{
+	char		*new_str;
+	t_splited	*head;
+	t_splited	*tmp;
+
 	head = *splited;
+	new_str = NULL;
 	while (head)
 	{
-		if (head->type == PLAIN && head->next && head->next->type == PLAIN)
+		if (head->type == PLAIN && head->next && head->next->type == PLAIN
+			&& ft_strcmp(head->str, "/") && ft_strcmp(head->next->str, "/"))
 		{
-			head->str = concat_strs(&(head->str), &(head->next->str));
+			new_str = ft_strjoin(head->str, head->next->str);
+			free(head->str);
+			free(head->next->str);
+			head->next->str = NULL;
+			if (!new_str)
+				return (NULL);
+			head->str = new_str;
 			tmp = head->next;
 			head->next = head->next->next;
 			free(tmp);
 		}
 		head = head->next;
 	}
+	return (new_str);
 }
 
 static char	*get_new_token(t_splited **splited)
@@ -88,7 +94,7 @@ static char	*get_new_token(t_splited **splited)
 	char		*new_token;
 
 	head = *splited;
-	if (!head->str)
+	if (!head || !head->str)
 		return (NULL);
 	len = 0;
 	while (head)
@@ -129,6 +135,7 @@ t_tokens	*check_wildcard(t_splited **splited)
 	else
 	{
 		make_new_splited(splited);
+		concat_strs(splited);
 		start = expand_wildcard(splited);
 	}
 	free_splited(splited);

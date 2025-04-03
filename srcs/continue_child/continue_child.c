@@ -6,7 +6,7 @@
 /*   By: haito <haito@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 21:52:57 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 19:22:55 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/03 16:45:11 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,13 @@ static void	check_child_syntax(t_child *child, t_tokens **tokens)
 			head = head->next;
 			if (!head)
 				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, "newline");
-			type = head->type;
-			if (type != WORD && type != HAVE_QUOTE && type != VAR)
-				exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->token);
-			head = head->next;
+			else
+			{
+				type = head->type;
+				if (type != WORD && type != HAVE_QUOTE && type != VAR)
+					exit_child(child, EXIT_SYNTAX, REDIRECTERROR, head->token);
+				head = head->next;
+			}
 		}
 		else
 			head = head->next;

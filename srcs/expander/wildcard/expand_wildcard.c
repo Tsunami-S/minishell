@@ -6,7 +6,7 @@
 /*   By: tssaito <tssaito@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 01:03:02 by tssaito           #+#    #+#             */
-/*   Updated: 2025/03/30 13:09:15 by tssaito          ###   ########.fr       */
+/*   Updated: 2025/04/03 17:54:36 by tssaito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ static char	*get_current_str(t_splited **splited)
 
 	head = *splited;
 	count = 0;
-	while (head && !ft_strcmp(head->str, "./"))
+	while (head && !ft_strcmp(head->str, ".") && head->next
+		&& !ft_strcmp(head->next->str, "/"))
 	{
 		count++;
-		head = head->next;
+		head = head->next->next;
 	}
 	if (!count)
 		return (NULL);
@@ -99,7 +100,7 @@ static t_tokens	*add_tokens(t_wild **files, t_splited **splited)
 	{
 		new = add_new_token(&head, splited);
 		if (!new)
-			return (NULL);
+			return (free_tokens(&start), NULL);
 		if (!start)
 			start = new;
 		else
@@ -117,8 +118,9 @@ t_tokens	*expand_wildcard(t_splited **splited)
 	t_splited	*head;
 
 	head = *splited;
-	while (head && !ft_strcmp(head->str, "./"))
-		head = head->next;
+	while (head && !ft_strcmp(head->str, ".") && head->next
+		&& !ft_strcmp(head->next->str, "/"))
+		head = head->next->next;
 	files = get_expanded_files(&head, NULL);
 	new = add_tokens(&files, splited);
 	free_all_files(&files);
